@@ -1,0 +1,164 @@
+{
+  "model": "output_noise_robust_v2g_replay_hardneg\\nuclea_final.keras",
+  "variant": "v2g",
+  "baseline_model": "output_final_hardneg\\nuclea_final.keras",
+  "threshold": 0.58,
+  "target_validation_fpr": 0.01,
+  "validation": {
+    "real_samples": 385,
+    "background_samples": 348,
+    "recall": 0.974025974025974,
+    "precision": 0.9920634920634921,
+    "false_positive_rate": 0.008620689655172414,
+    "tp": 375,
+    "fn": 10,
+    "fp": 3,
+    "tn": 345
+  },
+  "per_speaker_validation": {
+    "amo": {
+      "samples": 5,
+      "detected": 5,
+      "missed": 0,
+      "recall": 1.0
+    },
+    "biladadeiro": {
+      "samples": 10,
+      "detected": 10,
+      "missed": 0,
+      "recall": 1.0
+    },
+    "derik": {
+      "samples": 3,
+      "detected": 3,
+      "missed": 0,
+      "recall": 1.0
+    },
+    "eric": {
+      "samples": 53,
+      "detected": 46,
+      "missed": 7,
+      "recall": 0.8679245283018868
+    },
+    "vinicius": {
+      "samples": 6,
+      "detected": 6,
+      "missed": 0,
+      "recall": 1.0
+    }
+  },
+  "counts": {
+    "real_train": 960,
+    "synthetic_train": 960,
+    "positive_train": 9600,
+    "background_train_weighted": 3799,
+    "background_train_unique": 1477,
+    "hard_negative_train_unique": 86,
+    "real_validation": 77,
+    "temporal_validation": 385,
+    "background_validation": 348,
+    "clean_positive_train": 4445,
+    "noisy_positive_train": 5155,
+    "positive_background_source_counts": {
+      "dataset/background_silence/generated/room": 570,
+      "dataset/background_noise/inmp441_silencio_sessao_001": 300,
+      "dataset/background_noise": 1775,
+      "dataset/background_voice": 1760,
+      "dataset/background_noise/inmp441_ambiente_sessao_001": 615,
+      "dataset/background_voice/inmp441_dialogos_sessao_001": 135
+    },
+    "snr_min": 10.008300755485116,
+    "snr_mean": 17.572530932869192,
+    "snr_max": 24.95952531291384
+  },
+  "noise_augmentation": {
+    "enabled": true,
+    "domain": "waveform_before_mfcc",
+    "train_only": true,
+    "noisy_positive_probability": 0.55,
+    "snr_db_range": [
+      10.0,
+      25.0
+    ],
+    "positive_background_dirs": [
+      "dataset\\background_noise",
+      "dataset\\background_silence\\generated\\room",
+      "dataset\\background_voice"
+    ],
+    "voice_positive_weight": 0.35,
+    "voice_negative_oversample": 5,
+    "hard_negative_oversample": 8,
+    "temporal_offsets_samples": [
+      -4800,
+      -3200,
+      0,
+      3200,
+      4800
+    ],
+    "excluded_dirs": [
+      "dataset/background_test2"
+    ],
+    "positive_manifest": "output_noise_robust_v2g_replay_hardneg\\positive_training_manifest.csv",
+    "negative_manifest": "output_noise_robust_v2g_replay_hardneg\\negative_training_manifest.csv"
+  },
+  "speaker_split": {
+    "amo": {
+      "clean_total": 23,
+      "augmented_total": 92,
+      "train_groups": 18,
+      "validation_groups": 5,
+      "train_clean": 18,
+      "train_augmented": 72,
+      "validation_clean": 5
+    },
+    "biladadeiro": {
+      "clean_total": 48,
+      "augmented_total": 192,
+      "train_groups": 38,
+      "validation_groups": 10,
+      "train_clean": 38,
+      "train_augmented": 152,
+      "validation_clean": 10
+    },
+    "derik": {
+      "clean_total": 13,
+      "augmented_total": 52,
+      "train_groups": 10,
+      "validation_groups": 3,
+      "train_clean": 10,
+      "train_augmented": 40,
+      "validation_clean": 3
+    },
+    "eric": {
+      "clean_total": 274,
+      "augmented_total": 360,
+      "train_groups": 72,
+      "validation_groups": 18,
+      "train_clean": 221,
+      "train_augmented": 284,
+      "validation_clean": 53
+    },
+    "vinicius": {
+      "clean_total": 31,
+      "augmented_total": 124,
+      "train_groups": 25,
+      "validation_groups": 6,
+      "train_clean": 25,
+      "train_augmented": 100,
+      "validation_clean": 6
+    }
+  },
+  "mfcc": {
+    "sample_rate": 16000,
+    "num_samples": 16000,
+    "n_mfcc": 13,
+    "n_fft": 512,
+    "win_length": 400,
+    "hop_length": 320,
+    "n_mels": 40,
+    "fmin": 20,
+    "fmax": 7600,
+    "center": false,
+    "max_frames": 49
+  }
+}

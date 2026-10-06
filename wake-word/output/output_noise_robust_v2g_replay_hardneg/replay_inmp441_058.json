@@ -1,0 +1,334 @@
+{
+  "model": "output_noise_robust_v2g_replay_hardneg\\nuclea_final.keras",
+  "threshold": 0.58,
+  "high_threshold": 1.01,
+  "window_ms": 1000,
+  "strides": {
+    "160": {
+      "dataset/inmp441_v1/positive/sessao_001.wav": {
+        "windows": 939,
+        "events": 64,
+        "mean_score": 0.6550590395927429,
+        "p99_score": 0.9896048903465271,
+        "max_score": 0.9961038827896118,
+        "event_samples": [
+          {
+            "time_ms": 960,
+            "score": 0.981933,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 3040,
+            "score": 0.530447,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 5120,
+            "score": 0.908716,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 7200,
+            "score": 0.877367,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 9280,
+            "score": 0.835757,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 11360,
+            "score": 0.708796,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 13440,
+            "score": 0.977821,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 15520,
+            "score": 0.947605,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 17600,
+            "score": 0.946631,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 19840,
+            "score": 0.896381,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 21920,
+            "score": 0.95626,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 24160,
+            "score": 0.934248,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 26240,
+            "score": 0.977842,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 28320,
+            "score": 0.78353,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 31040,
+            "score": 0.96077,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 33120,
+            "score": 0.84322,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 36640,
+            "score": 0.683712,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 39040,
+            "score": 0.787859,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 41120,
+            "score": 0.299481,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 44160,
+            "score": 0.632979,
+            "reason": "two_of_three"
+          }
+        ]
+      },
+      "dataset/inmp441_v1/positive/sessao_002.wav": {
+        "windows": 1602,
+        "events": 119,
+        "mean_score": 0.7474140524864197,
+        "p99_score": 0.9838433265686035,
+        "max_score": 0.9938700199127197,
+        "event_samples": [
+          {
+            "time_ms": 1440,
+            "score": 0.705301,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 4000,
+            "score": 0.915853,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 6080,
+            "score": 0.65318,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 8320,
+            "score": 0.812999,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 10560,
+            "score": 0.8528,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 12640,
+            "score": 0.617866,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 14720,
+            "score": 0.796943,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 16800,
+            "score": 0.963998,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 18880,
+            "score": 0.943535,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 20960,
+            "score": 0.764848,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 23040,
+            "score": 0.80445,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 25120,
+            "score": 0.809336,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 27200,
+            "score": 0.979183,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 29440,
+            "score": 0.964142,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 31520,
+            "score": 0.709106,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 33600,
+            "score": 0.815685,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 35680,
+            "score": 0.867177,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 37760,
+            "score": 0.963032,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 39840,
+            "score": 0.764374,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 41920,
+            "score": 0.912017,
+            "reason": "two_of_three"
+          }
+        ]
+      },
+      "dataset/inmp441_v1/negative/sessao_001.wav": {
+        "windows": 306,
+        "events": 2,
+        "mean_score": 0.13255831599235535,
+        "p99_score": 0.6168185472488403,
+        "max_score": 0.6966050863265991,
+        "event_samples": [
+          {
+            "time_ms": 3360,
+            "score": 0.696605,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 30880,
+            "score": 0.583287,
+            "reason": "two_of_three"
+          }
+        ]
+      },
+      "dataset/inmp441_v1/ambiente/sessao_001.wav": {
+        "windows": 6990,
+        "events": 14,
+        "mean_score": 0.040528811514377594,
+        "p99_score": 0.5623069405555725,
+        "max_score": 0.9056103229522705,
+        "event_samples": [
+          {
+            "time_ms": 34880,
+            "score": 0.729801,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 50560,
+            "score": 0.606293,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 72480,
+            "score": 0.838637,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 80640,
+            "score": 0.728743,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 108320,
+            "score": 0.637661,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 765280,
+            "score": 0.710407,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 822880,
+            "score": 0.656685,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 838720,
+            "score": 0.804829,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 868160,
+            "score": 0.739717,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 926240,
+            "score": 0.741321,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 934880,
+            "score": 0.735414,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 959680,
+            "score": 0.658409,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 1088320,
+            "score": 0.687248,
+            "reason": "two_of_three"
+          },
+          {
+            "time_ms": 1116960,
+            "score": 0.665536,
+            "reason": "two_of_three"
+          }
+        ]
+      },
+      "dataset/inmp441_v1/silencio/sessao_001.wav": {
+        "windows": 1652,
+        "events": 0,
+        "mean_score": 0.06282295286655426,
+        "p99_score": 0.22616639733314514,
+        "max_score": 0.33288145065307617,
+        "event_samples": []
+      }
+    }
+  }
+}

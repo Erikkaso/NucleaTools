@@ -1,0 +1,6 @@
+tensorflow==2.21.0
+librosa==0.11.0
+numpy==2.2.6
+scipy==1.15.3
+scikit-learn==1.7.2
+pyserial==3.5

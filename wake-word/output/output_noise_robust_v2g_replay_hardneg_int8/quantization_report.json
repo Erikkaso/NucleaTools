@@ -1,0 +1,55 @@
+{
+  "keras_model": "output_noise_robust_v2g_replay_hardneg\\nuclea_final.keras",
+  "tflite_model": "output_noise_robust_v2g_replay_hardneg_int8\\nuclea_int8.tflite",
+  "threshold": 0.58,
+  "tflite_size_bytes": 28624,
+  "input": {
+    "shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "dtype": "<class 'numpy.int8'>",
+    "scale": 3.209484815597534,
+    "zero_point": 69
+  },
+  "output": {
+    "shape": [
+      1,
+      2
+    ],
+    "dtype": "<class 'numpy.int8'>",
+    "scale": 0.00390625,
+    "zero_point": -128
+  },
+  "validation_samples": 425,
+  "keras_metrics": {
+    "threshold": 0.58,
+    "tp": 70,
+    "fn": 7,
+    "fp": 3,
+    "tn": 345,
+    "recall": 0.9090909090909091,
+    "precision": 0.958904109589041,
+    "fpr": 0.008620689655172414,
+    "accuracy": 0.9764705882352941
+  },
+  "int8_metrics": {
+    "threshold": 0.58,
+    "tp": 70,
+    "fn": 7,
+    "fp": 4,
+    "tn": 344,
+    "recall": 0.9090909090909091,
+    "precision": 0.9459459459459459,
+    "fpr": 0.011494252873563218,
+    "accuracy": 0.9741176470588235
+  },
+  "classification_agreement": 0.9929411764705882,
+  "score_error": {
+    "mean_absolute": 0.007388010621070862,
+    "p95_absolute": 0.043519724160432816,
+    "max_absolute": 0.17517578601837158
+  }
+}

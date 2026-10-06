@@ -1,0 +1,22 @@
+idf_component_register(
+    SRCS 
+        "app_main.cc"
+        "audio_capture.cc"
+        "detection_gate.cc"
+        "mfcc.cc"
+        "status_led.cc"
+        "wakeword_detector.cc"
+        "generated/mfcc_tables.cc"
+        "model/nuclea_model.cc"
+    INCLUDE_DIRS 
+        "."
+        "generated"
+    REQUIRES 
+        esp_timer
+        led_strip
+        esp-tflite-micro
+    PRIV_REQUIRES 
+        esp_driver_gpio 
+        esp_driver_i2s
+)
+

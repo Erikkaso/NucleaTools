@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+
+# ESP-IDF regeneration output
+esp32_wakeword/build/
+esp32_wakeword/managed_components/
+esp32_wakeword/sdkconfig.old
+
+venv
+.vscode
+

@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisper-model-cache
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisper-runtime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whisper-runtime
+  template:
+    metadata:
+      labels:
+        app: whisper-runtime
+    spec:
+      containers:
+        - name: whisper-runtime
+          image: nuclic/whisper_runtime:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: WHISPER_MODEL
+              value: small
+            - name: WHISPER_DEVICE
+              value: cpu
+            - name: WHISPER_COMPUTE_TYPE
+              value: int8
+            - name: WHISPER_LANGUAGE
+              value: pt
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          volumeMounts:
+            - name: model-cache
+              mountPath: /root/.cache
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: whisper-model-cache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whisper-runtime
+spec:
+  selector:
+    app: whisper-runtime
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8000

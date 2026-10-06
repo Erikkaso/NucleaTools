@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: voice-model-cache
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: voice-conditionals-cache
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: voice-assets
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voice-runtime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voice-runtime
+  template:
+    metadata:
+      labels:
+        app: voice-runtime
+    spec:
+      containers:
+        - name: voice-runtime
+          image: nuclic/voice_runtime:2.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: WHISPER_MODEL
+              value: small
+            - name: WHISPER_DEVICE
+              value: cpu
+            - name: WHISPER_COMPUTE_TYPE
+              value: int8
+            - name: TTS_VOICE
+              value: default
+            - name: TTS_LANGUAGE_ID
+              value: pt
+            - name: TTS_MODEL_REVISION
+              value: v3
+            - name: TTS_VOICES_DIR
+              value: /voices
+            - name: TTS_VOICE_CACHE_DIR
+              value: /voice-cache
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+            requests:
+              nvidia.com/gpu: "1"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 10
+            failureThreshold: 90
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          volumeMounts:
+            - name: model-cache
+              mountPath: /root/.cache
+            - name: conditionals-cache
+              mountPath: /voice-cache
+            - name: voice-assets
+              mountPath: /voices
+              readOnly: true
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: voice-model-cache
+        - name: conditionals-cache
+          persistentVolumeClaim:
+            claimName: voice-conditionals-cache
+        - name: voice-assets
+          persistentVolumeClaim:
+            claimName: voice-assets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voice-runtime
+spec:
+  selector:
+    app: voice-runtime
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8000

@@ -1,0 +1,27 @@
+services:
+  voice-runtime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8000"
+    gpus: all
+    environment:
+      WHISPER_MODEL: small
+      WHISPER_DEVICE: cpu
+      WHISPER_COMPUTE_TYPE: int8
+      TTS_VOICE: ${TTS_VOICE:-default}
+      TTS_VOICES_DIR: /voices
+      TTS_VOICE_CACHE_DIR: /voice-cache
+      TTS_MODEL_REVISION: v3
+      TTS_LANGUAGE_ID: pt
+      TTS_EXAGGERATION: "0.5"
+      TTS_CFG_WEIGHT: "0.5"
+    volumes:
+      - ./voices:/voices:ro
+      - voice-models:/root/.cache
+      - voice-cache:/voice-cache
+
+volumes:
+  voice-models:
+  voice-cache:

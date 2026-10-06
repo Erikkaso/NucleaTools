@@ -1,0 +1,14 @@
+file,label,kind,source_file,clip_start_s,clip_end_s,rms_dbfs
+ambient_0001.wav,negative,ambient,sessao_001.wav,500.440,501.440,-41.71
+ambient_0002.wav,negative,ambient,sessao_001.wav,500.600,501.600,-42.06
+ambient_0003.wav,negative,ambient,sessao_001.wav,500.760,501.760,-42.11
+ambient_0004.wav,negative,ambient,sessao_001.wav,500.920,501.920,-42.13
+ambient_0005.wav,negative,ambient,sessao_001.wav,501.080,502.080,-41.32
+ambient_0006.wav,negative,ambient,sessao_001.wav,501.240,502.240,-41.22
+ambient_0007.wav,negative,ambient,sessao_001.wav,501.400,502.400,-39.52
+ambient_0008.wav,negative,ambient,sessao_001.wav,501.560,502.560,-39.21
+ambient_0009.wav,negative,ambient,sessao_001.wav,501.720,502.720,-38.24
+ambient_0010.wav,negative,ambient,sessao_001.wav,501.880,502.880,-37.59
+ambient_0011.wav,negative,ambient,sessao_001.wav,502.040,503.040,-37.50
+ambient_0012.wav,negative,ambient,sessao_001.wav,502.200,503.200,-37.34
+ambient_0013.wav,negative,ambient,sessao_001.wav,502.360,503.360,-38.12
