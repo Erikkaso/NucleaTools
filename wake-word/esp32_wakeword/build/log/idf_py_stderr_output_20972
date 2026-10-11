@@ -1,0 +1,45 @@
+Command: D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe D:\Espressif\frameworks\esp-idf-v5.5.5\tools/idf_monitor.py -p COM9 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\esp32_wakeword.elf E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\bootloader\bootloader.elf --force-color -m 'D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe' 'D:\Espressif\frameworks\esp-idf-v5.5.5\tools\idf.py' '-p' 'COM9'
+--- WARNING: GDB cannot open serial ports accessed as COMx
+--- NOTE: Using \\.\COM9 instead...
+--- esp-idf-monitor 1.10.0 on \\.\COM9 115200
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+--- 0x42008d25: s_test_psram at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_psram/system_layer/esp_psram.c:707
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+--- 0x4037faad: panic_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/panic.c:477
+--- 0x4037fa75: esp_system_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/esp_system_chip.c:87
+--- 0x40380c56: vApplicationStackOverflowHook at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:573
+--- 0x403820c7: vTaskSwitchContext at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/tasks.c:3698
+--- 0x40380d1c: _frxt_dispatch at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:451
+--- 0x40380d12: _frxt_int_exit at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:246
+--- 0x4037fc4d: esp_restart_noos at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/soc/esp32s3/system_internal.c:164
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+--- 0x4037faad: panic_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/panic.c:477
+--- 0x4037fa75: esp_system_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/esp_system_chip.c:87
+--- 0x40380c56: vApplicationStackOverflowHook at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:573
+--- 0x403820c7: vTaskSwitchContext at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/tasks.c:3698
+--- 0x40380d1c: _frxt_dispatch at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:451
+--- 0x40380d12: _frxt_int_exit at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:246
+--- 0x4037fc4d: esp_restart_noos at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/soc/esp32s3/system_internal.c:164
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+--- 0x4037faad: panic_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/panic.c:477
+--- 0x4037fa75: esp_system_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/esp_system_chip.c:87
+--- 0x40380c56: vApplicationStackOverflowHook at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:573
+--- 0x403820c7: vTaskSwitchContext at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/tasks.c:3698
+--- 0x40380d1c: _frxt_dispatch at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:451
+--- 0x40380d12: _frxt_int_exit at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:246
+--- 0x4037fc4d: esp_restart_noos at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/soc/esp32s3/system_internal.c:164
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+--- 0x4037faad: panic_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/panic.c:477
+--- 0x4037fa75: esp_system_abort at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/esp_system_chip.c:87
+--- 0x40380c56: vApplicationStackOverflowHook at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:573
+--- 0x403820c7: vTaskSwitchContext at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/tasks.c:3698
+--- 0x40380d1c: _frxt_dispatch at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:451
+--- 0x40380d12: _frxt_int_exit at D:/Espressif/frameworks/esp-idf-v5.5.5/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:246
+--- 0x4037fc4d: esp_restart_noos at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_system/port/soc/esp32s3/system_internal.c:164
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+

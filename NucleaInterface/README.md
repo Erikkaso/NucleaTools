@@ -115,6 +115,34 @@ Configure a resposta do HTTP Request como arquivo e armazene o resultado numa
 propriedade binária, por exemplo `audio`. No `Respond to Webhook`, responda com
 `Binary File` usando essa propriedade.
 
+## Audio do ESP32
+
+O firmware envia `multipart/form-data` para `POST /api/device-audio` com
+`audio` (arquivo WAV) e `deviceId` (identificador da conversa). O Flask usa esse
+identificador como `sessionId` no n8n e retorna `{"status":"ready"}` ao ESP32
+quando recebe a resposta de audio.
+
+O navegador consulta `GET /api/device-response` uma vez por segundo. A rota
+retorna `204` quando nao existe resposta ou o audio mais recente quando existe.
+Esse audio fica na RAM e e removido da fila ao ser consultado. Uma nova resposta
+substitui a anterior se ainda nao foi consumida. Use um processo Flask e uma aba
+para este teste; a primeira aba que consultar a rota recebe o audio.
+
+Mantenha a pagina aberta no computador. Se o navegador bloquear reproducao
+automatica, use o controle de reproducao exibido na mensagem.
+
+Configure Wi-Fi e URL pelo portal do ESP32: conecte a rede `Nuclea-Config`
+usando a senha `Nuclea-Dell2026` e abra exatamente `http://192.168.4.1`,
+sem VPN ou proxy. Se uma senha antiga estiver salva no computador, esqueça
+a rede e reconecte. Essa rede não fornece Internet.
+Informe a URL base da interface, por exemplo `http://192.168.1.100:5000`,
+sem `/api/device-audio`. O ESP32 precisa alcancar esse endereco; `localhost`
+no ESP32 nao aponta para o computador. Libere a porta no firewall da rede local.
+Depois de salvar, volte a rede normal. O portal fecha e a configuracao fica
+salva na flash do ESP32. O detector só inicia após conectar ao Wi-Fi.
+Consulte [o guia do firmware](../wake-word/README.md) para pinagem, teste sem
+tela, gravação do firmware e diagnóstico do microfone.
+
 ## Wake word no navegador
 
 A página solicita acesso contínuo ao microfone e carrega localmente:

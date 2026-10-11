@@ -2,10 +2,17 @@ idf_component_register(
     SRCS 
         "app_main.cc"
         "audio_capture.cc"
+        "audio_recorder.cc"
+        "audio_uploader.cc"
+        "audio_upload_worker.cc"
+        "gif_animation.cc"
+        "robot_display.cc"
+        "../tools/visual_state_tests.cc"
         "detection_gate.cc"
         "mfcc.cc"
         "status_led.cc"
         "wakeword_detector.cc"
+        "wifi_station.cc"
         "generated/mfcc_tables.cc"
         "model/nuclea_model.cc"
     INCLUDE_DIRS 
@@ -13,10 +20,29 @@ idf_component_register(
         "generated"
     REQUIRES 
         esp_timer
+        esp_event
+        esp_http_client
+        esp_http_server
+        esp_netif
+        esp_psram
+        esp_lcd
+        animated_gif
+        joltwallet__littlefs
+        esp_wifi
         led_strip
+        mbedtls
+        nvs_flash
+        json
+        http_parser
         esp-tflite-micro
     PRIV_REQUIRES 
         esp_driver_gpio 
         esp_driver_i2s
 )
+
+if(CONFIG_NUCLEA_DISPLAY_ENABLED)
+    littlefs_create_partition_image(spiffs
+        "${CMAKE_CURRENT_LIST_DIR}/../../nuclea_gif_player_fixed/data"
+        FLASH_IN_PROJECT)
+endif()
 

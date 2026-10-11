@@ -8,6 +8,10 @@ public:
     esp_err_t Init();
     esp_err_t RunSelfTest();
     esp_err_t SetOff();
+    esp_err_t SetRecording();
+    esp_err_t SetUploading();
+    esp_err_t SetSuccess();
+    esp_err_t SetError();
     esp_err_t ToggleDetected();
     bool IsGreen() const { return green_; }
 

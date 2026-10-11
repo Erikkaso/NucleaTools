@@ -7,6 +7,9 @@ class DetectionGate:
         self._history: list[bool] = []
         self._last_detection_ms = -self.cooldown_ms
 
+    def reset_confirmation(self) -> None:
+        self._history.clear()
+
     def accept(self, score: float, now_ms: int) -> bool:
         self._history.append(score >= self.threshold)
         self._history = self._history[-3:]

@@ -1,0 +1,68 @@
+menu "Nuclea device audio"
+
+    config NUCLEA_DEVICE_ID
+        string "Device session ID"
+        default "nuclea-esp32"
+
+    config NUCLEA_SILENCE_DBFS
+        int "Silence threshold in dBFS"
+        range -90 0
+        default -32
+
+    config NUCLEA_SILENCE_MS
+        int "Silence duration before upload (ms)"
+        range 500 10000
+        default 2000
+
+    config NUCLEA_MAX_RECORDING_MS
+        int "Maximum recording duration (ms)"
+        range 3000 30000
+        default 15000
+
+endmenu
+
+menu "Nuclea robot display"
+    config NUCLEA_DISPLAY_ENABLED
+        bool "Enable ST7789 robot animations (rewire microphone first)"
+        default y
+
+    config NUCLEA_DISPLAY_IDLE_MS
+        int "Awake time after request completes (ms)"
+        range 1000 300000
+        default 30000
+
+    config NUCLEA_DISPLAY_SPI_MHZ
+        int "Display SPI clock (MHz)"
+        range 10 40
+        default 40
+
+    config NUCLEA_DISPLAY_X_GAP
+        int "Panel horizontal offset in landscape orientation"
+        range 0 40
+        default 20
+
+    config NUCLEA_DISPLAY_Y_GAP
+        int "Panel vertical offset in landscape orientation"
+        range 0 80
+        default 0
+endmenu
+
+menu "Nuclea microphone pins"
+    config NUCLEA_MIC_BCLK_GPIO
+        int "INMP441 SCK/BCLK GPIO"
+        range 0 48
+        default 4 if NUCLEA_DISPLAY_ENABLED
+        default 11
+
+    config NUCLEA_MIC_WS_GPIO
+        int "INMP441 WS GPIO"
+        range 0 48
+        default 5 if NUCLEA_DISPLAY_ENABLED
+        default 10
+
+    config NUCLEA_MIC_SD_GPIO
+        int "INMP441 SD GPIO"
+        range 0 48
+        default 6 if NUCLEA_DISPLAY_ENABLED
+        default 12
+endmenu

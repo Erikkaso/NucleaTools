@@ -2,6 +2,11 @@
 
 #include <algorithm>
 
+void DetectionGate::ResetConfirmation() {
+    std::fill_n(history_, 3, false);
+    count_ = cursor_ = 0;
+}
+
 bool DetectionGate::Accept(float score, int64_t now_ms) {
     history_[cursor_] = score >= kThreshold;
     cursor_ = (cursor_ + 1) % 3;

@@ -56,6 +56,26 @@ esp_err_t StatusLed::RunSelfTest() {
     return SetOff();
 }
 
+esp_err_t StatusLed::SetRecording() {
+    green_ = false;
+    return SetColor(0, 0, 48);
+}
+
+esp_err_t StatusLed::SetUploading() {
+    green_ = false;
+    return SetColor(48, 20, 0);
+}
+
+esp_err_t StatusLed::SetSuccess() {
+    green_ = true;
+    return SetColor(0, 48, 0);
+}
+
+esp_err_t StatusLed::SetError() {
+    green_ = false;
+    return SetColor(48, 0, 0);
+}
+
 esp_err_t StatusLed::ToggleDetected() {
     green_ = !green_;
     return green_ ? SetColor(0, 48, 0) : SetOff();

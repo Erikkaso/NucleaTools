@@ -5,6 +5,7 @@
 class DetectionGate {
 public:
     bool Accept(float score, int64_t now_ms);
+    void ResetConfirmation();
     uint8_t PositiveCount() const;
     int64_t CooldownRemainingMs(int64_t now_ms) const;
 

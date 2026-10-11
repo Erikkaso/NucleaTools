@@ -114,17 +114,20 @@ NucleaInterface, a propriedade binaria de entrada no n8n e `audio`.
 
 ## Kubernetes
 
+Execute a partir da raiz do repositorio:
+
 ```bash
-cd voice_runtime
-docker build -t nuclic/voice_runtime:2.3 .
+docker build -t nuclic/voice_runtime:2.3 voice_runtime
 docker push nuclic/voice_runtime:2.3
-kubectl -n ollama-system apply -f k8s/voice-runtime.yaml
+kubectl -n ollama-system apply -f voice_runtime/k8s/voice-runtime.yaml
 ```
 
 O manifesto atual cria os PVCs de modelos, condicionamentos e referencias de
 voz, alem do Deployment e do Service `voice-runtime` na porta `8080`.
 
-Para adicionar uma referencia ao PVC e seleciona-la:
+Ainda na raiz, para adicionar uma referencia ao PVC e seleciona-la, use os
+comandos abaixo. O arquivo `./eric.wav` deve existir nesse diretorio;
+ajuste o caminho se estiver em outro local.
 
 ```bash
 kubectl -n ollama-system apply -f voice_runtime/k8s/voice-assets-loader.yaml

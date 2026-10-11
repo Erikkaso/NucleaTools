@@ -381,6 +381,26 @@
     pendingBubble.appendChild(player);
   }
 
+  let devicePollTimer = null;
+
+  async function pollDeviceResponse() {
+    try {
+      const response = await fetch('/api/device-response', { cache: 'no-store' });
+      if (response.status === 204) return;
+      if (!response.ok) throw new Error(`Resposta HTTP ${response.status}`);
+
+      const audioBlob = await response.blob();
+      if (!audioBlob.size || !audioBlob.type.startsWith('audio/')) {
+        throw new Error('A resposta do dispositivo nao contem audio reproduzivel.');
+      }
+      replacePendingWithAudio(addMessage('', 'bot'), audioBlob);
+    } catch (error) {
+      console.error('Falha ao buscar resposta do ESP32:', error);
+    } finally {
+      devicePollTimer = window.setTimeout(pollDeviceResponse, 1000);
+    }
+  }
+
   async function handleAssistantAudio(res, pendingBubble) {
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
@@ -713,6 +733,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
+    pollDeviceResponse();
     startWakewordListener().catch((error) => {
       console.error('Nao foi possivel iniciar o detector de palavra-chave:', error);
       setWakeStatus('escuta indisponivel', 'error');
@@ -724,6 +745,7 @@
   }, { once: true });
 
   window.addEventListener('beforeunload', () => {
+    window.clearTimeout(devicePollTimer);
     wakewordListener?.stop();
   });
 </script>

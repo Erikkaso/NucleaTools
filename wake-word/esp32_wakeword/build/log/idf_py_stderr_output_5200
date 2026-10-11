@@ -1,0 +1,15 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=1 E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword
+CMake Warning in managed_components/espressif__esp-tflite-micro/CMakeLists.txt:
+  The object file directory
+
+    E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/esp-idf/espressif__esp-tflite-micro/CMakeFiles/__idf_espressif__esp-tflite-micro.dir/./
+
+  has 179 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    36f25a72f50c3fce56892aa1dd1a30f4/persistent_arena_buffer_allocator.cc.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+

@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/CMakeFiles/bootloader
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/CMakeFiles/bootloader.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/CMakeFiles/bootloader-complete.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+E:/Sistema/Downloads/Geral/CODINGZONE/Nuclic/NucleaInterface/wake-word/esp32_wakeword/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

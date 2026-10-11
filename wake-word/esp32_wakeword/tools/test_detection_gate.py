@@ -7,6 +7,18 @@ from detection_gate_reference import DetectionGate
 
 
 class DetectionGateTests(unittest.TestCase):
+    def test_reset_confirmation_drops_old_scores_but_preserves_cooldown(self) -> None:
+        gate = DetectionGate()
+        self.assertTrue(hasattr(gate, "reset_confirmation"))
+        self.assertFalse(gate.accept(0.86, 0))
+        self.assertTrue(gate.accept(0.86, 320))
+        gate.reset_confirmation()
+        self.assertFalse(gate.accept(0.98, 500))
+        gate.reset_confirmation()
+        self.assertFalse(gate.accept(0.10, 3000))
+        self.assertFalse(gate.accept(0.86, 3160))
+        self.assertTrue(gate.accept(0.86, 3320))
+
     def test_uses_the_calibrated_thresholds(self) -> None:
         self.assertEqual(DetectionGate.threshold, 0.85)
         self.assertEqual(DetectionGate.high_threshold, 0.98)

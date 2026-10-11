@@ -1,4 +1,5 @@
 import os
+import threading
 import uuid
 
 import requests
@@ -14,6 +15,29 @@ N8N_WEBHOOK_URL = os.environ.get(
     "https://n8n.200-129-37-25.sslip.io/webhook/8cf7d87c-4184-460b-8b0e-95affded7054",
 )
 REQUEST_TIMEOUT = int(os.environ.get("N8N_TIMEOUT_SECONDS", "60"))
+
+
+class DeviceResponseMailbox:
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._response: tuple[bytes, str] | None = None
+
+    def put(self, content: bytes, content_type: str) -> None:
+        with self._lock:
+            self._response = (content, content_type)
+
+    def take(self) -> tuple[bytes, str] | None:
+        with self._lock:
+            response = self._response
+            self._response = None
+            return response
+
+    def clear(self) -> None:
+        with self._lock:
+            self._response = None
+
+
+device_response_mailbox = DeviceResponseMailbox()
 
 
 @app.route("/")
@@ -83,11 +107,63 @@ def chat_audio():
     return proxy_audio_response(n8n_response)
 
 
+@app.route("/api/device-audio", methods=["POST"])
+def device_audio():
+    audio_file = request.files.get("audio")
+    if audio_file is None or audio_file.filename == "":
+        return jsonify({"error": "Nenhum áudio recebido."}), 400
+
+    device_id = (request.form.get("deviceId") or "nuclea-esp32").strip()[:128]
+    files = {
+        "audio": (
+            audio_file.filename or "command.wav",
+            audio_file.stream,
+            audio_file.mimetype or "audio/wav",
+        ),
+    }
+
+    try:
+        n8n_response = requests.post(
+            N8N_WEBHOOK_URL,
+            data={"sessionId": device_id or "nuclea-esp32"},
+            files=files,
+            timeout=REQUEST_TIMEOUT,
+        )
+        n8n_response.raise_for_status()
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "O n8n demorou demais para responder (timeout)."}), 504
+    except requests.exceptions.RequestException as exc:
+        return jsonify({"error": f"Não foi possível falar com o n8n: {exc}"}), 502
+
+    content_type = response_audio_content_type(n8n_response)
+    if content_type is None:
+        return jsonify({"error": "O n8n nao retornou um arquivo de audio."}), 502
+
+    device_response_mailbox.put(n8n_response.content, content_type)
+    return jsonify({"status": "ready"})
+
+
+@app.route("/api/device-response", methods=["GET"])
+def device_response():
+    queued = device_response_mailbox.take()
+    if queued is None:
+        return Response(status=204)
+    content, content_type = queued
+    response = Response(content, content_type=content_type)
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+
 def proxy_audio_response(response: requests.Response) -> Response | tuple[Response, int]:
-    content_type = response.headers.get("Content-Type", "").split(";", maxsplit=1)[0].lower()
-    if not content_type.startswith("audio/"):
+    content_type = response_audio_content_type(response)
+    if content_type is None:
         return jsonify({"error": "O n8n nao retornou um arquivo de audio."}), 502
     return Response(response.content, content_type=content_type)
+
+
+def response_audio_content_type(response: requests.Response) -> str | None:
+    content_type = response.headers.get("Content-Type", "").split(";", maxsplit=1)[0].lower()
+    return content_type if content_type.startswith("audio/") else None
 
 
 if __name__ == "__main__":
