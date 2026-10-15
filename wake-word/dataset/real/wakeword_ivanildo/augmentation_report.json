@@ -1,0 +1,97 @@
+{
+  "review_confirmation": "User validated the remaining files in review/",
+  "seed": 42,
+  "clean_count": 12,
+  "augmented_count": 53,
+  "denoised_count": 5,
+  "recording_groups": 1,
+  "grouping": "Original recording; never split its variants between train and validation",
+  "noise_assessment": "Low-energy proxy, not measured SNR; filtering cannot remove other speakers or repair clipping",
+  "training": "No training run; new speakers are not automatically registered in REAL_SPEAKERS",
+  "clips": [
+    {
+      "source_clip": "review/candidate_0002.wav",
+      "low_energy_proxy_dbfs": -48.81430334874815,
+      "energy_range_db": 23.2559422491991,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0005.wav",
+      "low_energy_proxy_dbfs": -43.37150552826408,
+      "energy_range_db": 21.341861419040157,
+      "near_clip_fraction": 6.25e-05,
+      "filter_recommended": true
+    },
+    {
+      "source_clip": "review/candidate_0008.wav",
+      "low_energy_proxy_dbfs": -41.655315896748306,
+      "energy_range_db": 27.13485425834429,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": true
+    },
+    {
+      "source_clip": "review/candidate_0009.wav",
+      "low_energy_proxy_dbfs": -46.17695779307761,
+      "energy_range_db": 25.401674815251454,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0010.wav",
+      "low_energy_proxy_dbfs": -39.520860497002786,
+      "energy_range_db": 24.19508467652181,
+      "near_clip_fraction": 6.25e-05,
+      "filter_recommended": true
+    },
+    {
+      "source_clip": "review/candidate_0011.wav",
+      "low_energy_proxy_dbfs": -45.939473902588674,
+      "energy_range_db": 23.788515674931332,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0012.wav",
+      "low_energy_proxy_dbfs": -47.79284144730415,
+      "energy_range_db": 32.60671383973859,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0013.wav",
+      "low_energy_proxy_dbfs": -47.525255856422824,
+      "energy_range_db": 25.733836223036654,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0014.wav",
+      "low_energy_proxy_dbfs": -38.22419817859993,
+      "energy_range_db": 22.2620164407495,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": true
+    },
+    {
+      "source_clip": "review/candidate_0015.wav",
+      "low_energy_proxy_dbfs": -46.220286897769974,
+      "energy_range_db": 26.606327832415968,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0016.wav",
+      "low_energy_proxy_dbfs": -47.12724279190314,
+      "energy_range_db": 24.11629065287453,
+      "near_clip_fraction": 6.25e-05,
+      "filter_recommended": false
+    },
+    {
+      "source_clip": "review/candidate_0017.wav",
+      "low_energy_proxy_dbfs": -43.86921297962568,
+      "energy_range_db": 23.709264755592027,
+      "near_clip_fraction": 0.0,
+      "filter_recommended": true
+    }
+  ]
+}

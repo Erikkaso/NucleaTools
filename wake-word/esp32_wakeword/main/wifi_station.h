@@ -10,6 +10,7 @@
 #include "freertos/event_groups.h"
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
+#include "portal_button.h"
 
 struct WifiSettings {
     uint32_t version = 1;
@@ -33,6 +34,7 @@ private:
     static esp_err_t HandleConfigure(httpd_req_t* request);
     static bool AllowRequest(httpd_req_t* request);
     void Run();
+    void PollPortalButton();
     bool TryConnect(const WifiSettings& settings, uint32_t timeout_ms);
     esp_err_t StartPortal();
     void StopPortal();
@@ -44,6 +46,8 @@ private:
     SemaphoreHandle_t mutex_ = nullptr;
     httpd_handle_t server_ = nullptr;
     WifiSettings settings_;
+    PortalButtonHold portal_button_;
+    bool manual_portal_ = false;
     const char* message_ = "Configure sua rede Wi-Fi.";
     bool busy_ = false;
     bool connecting_ = false;

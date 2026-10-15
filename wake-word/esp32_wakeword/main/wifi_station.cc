@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "cJSON.h"
+#include "driver/gpio.h"
 #include "esp_check.h"
 #include "esp_log.h"
 #include "esp_netif.h"
@@ -109,6 +110,15 @@ esp_err_t WifiStation::Connect() {
         size != sizeof(settings_) || !ValidSettings(settings_)) settings_ = WifiSettings{};
     nvs_close(nvs);
 
+    gpio_config_t button = {};
+    button.pin_bit_mask = 1ULL << GPIO_NUM_0;
+    button.mode = GPIO_MODE_INPUT;
+    button.pull_up_en = GPIO_PULLUP_ENABLE;
+    button.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    button.intr_type = GPIO_INTR_DISABLE;
+    ESP_RETURN_ON_ERROR(gpio_config(&button), kTag, "BOOT button GPIO");
+    ESP_LOGI(kTag, "Segure BOOT por 3 segundos para reabrir o portal Wi-Fi.");
+
     ESP_RETURN_ON_ERROR(esp_netif_init(), kTag, "netif init");
     ESP_RETURN_ON_ERROR(esp_event_loop_create_default(), kTag, "event loop");
     if (esp_netif_create_default_wifi_sta() == nullptr ||
@@ -175,6 +185,7 @@ bool WifiStation::TryConnect(const WifiSettings& settings, uint32_t timeout_ms) 
     const int64_t deadline = NowMs() + timeout_ms;
     bool connected = false;
     while (result == ESP_OK && NowMs() < deadline) {
+        PollPortalButton();
         const EventBits_t bits = xEventGroupWaitBits(events_, kGotIpBit | kDisconnectedBit,
                                                    pdFALSE, pdFALSE, pdMS_TO_TICKS(250));
         if (bits & kGotIpBit) { connected = true; break; }
@@ -195,6 +206,21 @@ void WifiStation::WorkerEntry(void* context) {
     static_cast<WifiStation*>(context)->Run();
 }
 
+void WifiStation::PollPortalButton() {
+    if (!portal_button_.Update(gpio_get_level(GPIO_NUM_0) == 0, NowMs())) return;
+    const esp_err_t result = StartPortal();
+    if (result != ESP_OK) {
+        ESP_LOGE(kTag, "BOOT: falha ao abrir portal: %s", esp_err_to_name(result));
+        return;
+    }
+    manual_portal_ = true;
+    xSemaphoreTake(mutex_, portMAX_DELAY);
+    if (!busy_ && !connecting_)
+        message_ = "Portal aberto pelo BOOT. Altere a configuracao e clique em Conectar e salvar.";
+    xSemaphoreGive(mutex_);
+    ESP_LOGI(kTag, "Portal reaberto por BOOT; configuracao salva preservada.");
+}
+
 void WifiStation::Run() {
     if (ValidSettings(settings_) && TryConnect(settings_, kConnectionTimeoutMs)) {
         xEventGroupSetBits(events_, kReadyBit);
@@ -208,11 +234,14 @@ void WifiStation::Run() {
     int64_t retry_at = NowMs() + 10000;
     WifiSettings candidate;
     while (true) {
+        PollPortalButton();
+        if (manual_portal_) close_portal_at = 0;
         if (xQueueReceive(pending_, &candidate, pdMS_TO_TICKS(250)) == pdTRUE) {
             close_portal_at = 0;
             const bool connected = TryConnect(candidate, kConnectionTimeoutMs);
             const esp_err_t saved = connected ? SaveSettings(candidate) : ESP_FAIL;
             if (saved == ESP_OK) {
+                manual_portal_ = false;
                 xSemaphoreTake(mutex_, portMAX_DELAY);
                 settings_ = candidate;
                 xSemaphoreGive(mutex_);
@@ -233,7 +262,7 @@ void WifiStation::Run() {
         const int64_t now = NowMs();
         if (IsConnected()) {
             disconnected_at = now;
-            if (server_ != nullptr && close_portal_at != 0 && now >= close_portal_at) {
+            if (!manual_portal_ && server_ != nullptr && close_portal_at != 0 && now >= close_portal_at) {
                 StopPortal();
                 close_portal_at = 0;
             }
@@ -247,7 +276,7 @@ void WifiStation::Run() {
         if (ValidSettings(settings_) && now >= retry_at) {
             if (TryConnect(settings_, 5000)) {
                 xEventGroupSetBits(events_, kReadyBit);
-                if (server_ != nullptr) close_portal_at = NowMs() + kPortalCloseDelayMs;
+                if (server_ != nullptr && !manual_portal_) close_portal_at = NowMs() + kPortalCloseDelayMs;
                 xSemaphoreTake(mutex_, portMAX_DELAY);
                 if (!busy_) message_ = "Reconectado a rede salva.";
                 xSemaphoreGive(mutex_);
@@ -258,6 +287,7 @@ void WifiStation::Run() {
 }
 
 esp_err_t WifiStation::StartPortal() {
+    if (server_ != nullptr) return ESP_OK;
     wifi_config_t ap = {};
     std::memcpy(ap.ap.ssid, kApSsid, std::strlen(kApSsid));
     ap.ap.ssid_len = std::strlen(kApSsid);

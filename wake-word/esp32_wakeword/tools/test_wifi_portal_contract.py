@@ -6,6 +6,17 @@ MAIN = Path(__file__).resolve().parents[1] / "main"
 
 
 class WifiPortalContractTests(unittest.TestCase):
+    def test_boot_button_reopens_portal_without_erasing_saved_settings(self):
+        wifi = (MAIN / "wifi_station.cc").read_text(encoding="utf-8")
+        self.assertIn("gpio_get_level(GPIO_NUM_0)", wifi)
+        self.assertGreaterEqual(wifi.count("PollPortalButton();"), 2)
+        self.assertIn("manual_portal_ = true", wifi)
+        self.assertIn("manual_portal_ = false", wifi)
+        self.assertIn("!manual_portal_", wifi)
+        self.assertNotIn("nvs_erase", wifi)
+        cmake = (MAIN / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("portal_button_tests.cc", cmake)
+
     def test_configuration_is_runtime_persisted_and_portal_is_protected(self):
         wifi = (MAIN / "wifi_station.cc").read_text(encoding="utf-8")
         for contract in (

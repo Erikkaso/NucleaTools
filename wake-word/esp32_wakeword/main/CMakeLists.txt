@@ -8,6 +8,7 @@ idf_component_register(
         "gif_animation.cc"
         "robot_display.cc"
         "../tools/visual_state_tests.cc"
+        "../tools/portal_button_tests.cc"
         "detection_gate.cc"
         "mfcc.cc"
         "status_led.cc"

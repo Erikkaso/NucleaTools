@@ -1,0 +1,11 @@
+Command: D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe D:\Espressif\frameworks\esp-idf-v5.5.5\tools/idf_monitor.py -p COM9 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\esp32_wakeword.elf E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\bootloader\bootloader.elf --force-color -m 'D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe' 'D:\Espressif\frameworks\esp-idf-v5.5.5\tools\idf.py' '-p' 'COM9'
+--- WARNING: GDB cannot open serial ports accessed as COMx
+--- NOTE: Using \\.\COM9 instead...
+--- esp-idf-monitor 1.10.0 on \\.\COM9 115200
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+--- 0x42008cff: s_test_psram at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_psram/system_layer/esp_psram.c:700
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+--- WARNING: Writing to serial is timing out. Please make sure that your application supports an interactive console and that you have picked the correct console for serial communication.
+--- Multiple stop commands received, forcing quit monitor
+

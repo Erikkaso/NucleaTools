@@ -1,0 +1,268 @@
+Command: D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe D:\Espressif\frameworks\esp-idf-v5.5.5\tools/idf_monitor.py -p COM9 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\esp32_wakeword.elf E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\bootloader\bootloader.elf --force-color -m 'D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe' 'D:\Espressif\frameworks\esp-idf-v5.5.5\tools\idf.py' '-p' 'COM9'
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x2b (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42008d40
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2eec
+entry 0x403c8924
+[0;32mI (24) boot: ESP-IDF v5.5.5 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Oct 10 2026 23:12:06[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (28) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 16MB[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (63) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00300000[0m
+[0;32mI (76) boot:  3 spiffs           Unknown data     01 82 00310000 00cf0000[0m
+[0;32mI (82) boot: End of partition table[0m
+[0;32mI (85) esp_image: segment 0: paddr=00010020 vaddr=3c0f0020 size=5902ch (364588) map[0m
+[0;32mI (159) esp_image: segment 1: paddr=00069054 vaddr=3fc9f900 size=058dch ( 22748) load[0m
+[0;32mI (165) esp_image: segment 2: paddr=0006e938 vaddr=40374000 size=016e0h (  5856) load[0m
+[0;32mI (166) esp_image: segment 3: paddr=00070020 vaddr=42000020 size=e1924h (923940) map[0m
+[0;32mI (339) esp_image: segment 4: paddr=0015194c vaddr=403756e0 size=1a180h (106880) load[0m
+[0;32mI (364) esp_image: segment 5: paddr=0016bad4 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (375) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (375) boot: Disabling RNG early entropy source...[0m
+[0;32mI (386) octal_psram: vendor id    : 0x0d (AP)[0m
+[0;32mI (386) octal_psram: dev id       : 0x02 (generation 3)[0m
+[0;32mI (386) octal_psram: density      : 0x03 (64 Mbit)[0m
+[0;32mI (388) octal_psram: good-die     : 0x01 (Pass)[0m
+[0;32mI (392) octal_psram: Latency      : 0x01 (Fixed)[0m
+[0;32mI (397) octal_psram: VCC          : 0x01 (3V)[0m
+[0;32mI (401) octal_psram: SRF          : 0x01 (Fast Refresh)[0m
+[0;32mI (406) octal_psram: BurstType    : 0x01 (Hybrid Wrap)[0m
+[0;32mI (411) octal_psram: BurstLen     : 0x01 (32 Byte)[0m
+[0;32mI (415) octal_psram: Readlatency  : 0x02 (10 cycles@Fixed)[0m
+[0;32mI (420) octal_psram: DriveStrength: 0x00 (1/1)[0m
+[0;32mI (424) MSPI Timing: Enter psram timing tuning[0m
+[0;32mI (429) esp_psram: Found 8MB PSRAM device[0m
+[0;32mI (432) esp_psram: Speed: 80MHz[0m
+[0;32mI (435) cpu_start: Multicore app[0m
+[0;32mI (871) esp_psram: SPI SRAM memory test OK[0m
+[0;32mI (879) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+[0;32mI (880) cpu_start: Pro cpu start user code[0m
+[0;32mI (880) cpu_start: cpu freq: 240000000 Hz[0m
+[0;32mI (881) app_init: Application information:[0m
+[0;32mI (885) app_init: Project name:     esp32_wakeword[0m
+[0;32mI (890) app_init: App version:      3616077-dirty[0m
+[0;32mI (894) app_init: Compile time:     Oct 12 2026 12:27:21[0m
+[0;32mI (899) app_init: ELF file SHA256:  681f69bf8...[0m
+[0;32mI (904) app_init: ESP-IDF:          v5.5.5[0m
+[0;32mI (907) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (911) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (915) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (919) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (925) heap_init: At 3FCC27E0 len 00026F30 (155 KiB): RAM[0m
+[0;32mI (930) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (936) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (941) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (946) esp_psram: Adding pool of 8192K of PSRAM memory to heap allocator[0m
+[0;32mI (953) spi_flash: detected chip: boya[0m
+[0;32mI (956) spi_flash: flash io: dio[0m
+[0;32mI (959) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (965) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (972) main_task: Started on CPU0[0m
+[0;32mI (972) main_task: Calling app_main()[0m
+[0;32mI (982) NUCLEA_WAKEWORD: Iniciando wakeword Nuclea no ESP32-S3[0m
+[0;32mI (1522) AUDIO_RECORDER: Buffer PSRAM pronto: 480000 bytes[0m
+[0;32mI (1522) WAKEWORD_MODEL: Modelo pronto: 28624 bytes input(scale=3.20948482 zp=69 bytes=637) output(scale=0.00390625 zp=-128 bytes=2)[0m
+[0;32mI (1712) MFCC: PARIDADE DSP APROVADA: 637 coeficientes dentro de +/-1 INT8.[0m
+[0;32mI (3282) ROBOT_DISPLAY: Cache wake: 30 frames, 4032000 bytes PSRAM[0m
+[0;32mI (3412) WIFI_STATION: Segure BOOT por 3 segundos para reabrir o portal Wi-Fi.[0m
+[0;32mI (3412) pp: pp rom version: e7ae62f[0m
+[0;32mI (3412) net80211: net80211 rom version: e7ae62f[0m
+[0;32mI (3422) wifi:wifi driver task: 3fcd0e50, prio:23, stack:6656, core=0[0m
+[0;32mI (3422) wifi:wifi firmware version: b9f67df[0m
+[0;32mI (3422) wifi:wifi certification version: v7.0[0m
+[0;32mI (3422) wifi:config NVS flash: enabled[0m
+[0;32mI (3432) wifi:config nano formatting: disabled[0m
+[0;32mI (3432) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (3442) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (3442) wifi:Init management short buffer num: 32[0m
+[0;32mI (3452) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (3452) wifi:Init static tx FG buffer num: 2[0m
+[0;32mI (3452) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (3462) wifi:Init static rx buffer num: 10[0m
+[0;32mI (3462) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (3472) wifi_init: rx ba win: 6[0m
+[0;32mI (3472) wifi_init: accept mbox: 6[0m
+[0;32mI (3472) wifi_init: tcpip mbox: 32[0m
+[0;32mI (3482) wifi_init: udp mbox: 6[0m
+[0;32mI (3482) wifi_init: tcp mbox: 6[0m
+[0;32mI (3482) wifi_init: tcp tx win: 5760[0m
+[0;32mI (3482) wifi_init: tcp rx win: 5760[0m
+[0;32mI (3492) wifi_init: tcp mss: 1440[0m
+[0;32mI (3492) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (3492) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (3502) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (3502) phy_init: phy_version 712,87e8c20e,Apr 13 2026,18:51:10[0m
+[0;32mI (3552) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (3572) wifi:mode : sta (1c:db:d4:99:34:dc)[0m
+[0;32mI (3572) wifi:enable tsf[0m
+[0;32mI (4582) wifi:new:<8,2>, old:<1,0>, ap:<255,255>, sta:<8,2>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (4582) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (4592) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (4602) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (4712) wifi:connected with SOBRALNET_CECILIA, aid = 21, channel 8, 40D, bssid = 6c:4c:bc:c4:56:30[0m
+[0;32mI (4712) wifi:security: WPA2-PSK, phy: bgn, rssi: -59, cipher(pairwise:0x3, group:0x3), pmf:0[0m
+[0;32mI (4722) wifi:pm start, type: 0[0m
+
+[0;32mI (4722) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (4732) wifi:set rx beacon pti, rx_bcn_pti: 0, bcn_timeout: 25000, mt_pti: 0, mt_time: 10000[0m
+[0;32mI (4742) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (4772) wifi:<ba-add>idx:0 (ifx:0, 6c:4c:bc:c4:56:30), tid:0, ssn:26, winSize:64[0m
+[0;32mI (6272) wifi:<ba-add>idx:1 (ifx:0, 6c:4c:bc:c4:56:30), tid:5, ssn:14, winSize:64[0m
+[0;32mI (7252) esp_netif_handlers: sta ip: 192.168.11.7, mask: 255.255.255.0, gw: 192.168.11.1[0m
+[0;32mI (7252) AUDIO_CAPTURE: INMP441: BCLK=4 WS=5 SD=6 shift=16[0m
+[0;32mI (8512) NUCLEA_WAKEWORD: audio=-29.0 dBFS peak=1419 score=0.129 max_score=0.129 q_in=[-46,93] q_out=[95,-95] inferencias=1 duracao=254ms positivos=0 cooldown=0ms led=apagado stack_livre=12468B captura_stack_livre=5216B[0m
+[0;32mI (9612) NUCLEA_WAKEWORD: audio=-41.8 dBFS peak=523 score=0.641 max_score=0.684 q_in=[-33,94] q_out=[-36,36] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12468B captura_stack_livre=5216B[0m
+[0;32mI (10702) NUCLEA_WAKEWORD: audio=-32.3 dBFS peak=1119 score=0.758 max_score=0.758 q_in=[-37,94] q_out=[-66,66] inferencias=4 duracao=248ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=5216B[0m
+[0;33mW (11152) AUDIO_CAPTURE: Fila de audio atrasada: 1 blocos descartados[0m
+[0;32mI (11792) NUCLEA_WAKEWORD: audio=-16.3 dBFS peak=10739 score=0.500 max_score=0.809 q_in=[-40,109] q_out=[0,0] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (12892) NUCLEA_WAKEWORD: audio=-13.7 dBFS peak=9771 score=0.027 max_score=0.223 q_in=[-36,116] q_out=[121,-121] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (13982) NUCLEA_WAKEWORD: audio=-16.6 dBFS peak=10323 score=0.004 max_score=0.023 q_in=[-33,119] q_out=[127,-127] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (15082) NUCLEA_WAKEWORD: audio=-24.6 dBFS peak=3189 score=0.000 max_score=0.004 q_in=[-30,122] q_out=[127,-128] inferencias=4 duracao=260ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (16172) NUCLEA_WAKEWORD: audio=-19.7 dBFS peak=5882 score=0.004 max_score=0.004 q_in=[-32,116] q_out=[127,-127] inferencias=4 duracao=255ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (17262) NUCLEA_WAKEWORD: audio=-34.8 dBFS peak=992 score=0.453 max_score=0.453 q_in=[-37,116] q_out=[12,-12] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (18342) NUCLEA_WAKEWORD: audio=-47.7 dBFS peak=273 score=0.570 max_score=0.758 q_in=[-39,95] q_out=[-18,18] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (19442) NUCLEA_WAKEWORD: audio=-39.0 dBFS peak=728 score=0.297 max_score=0.430 q_in=[-40,94] q_out=[52,-52] inferencias=4 duracao=262ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (20542) NUCLEA_WAKEWORD: Wakeword detectada: score=0.871[0m
+[0;32mI (20542) NUCLEA_WAKEWORD: audio=-46.6 dBFS peak=448 score=0.871 max_score=0.883 q_in=[-38,103] q_out=[-95,95] inferencias=4 duracao=256ms positivos=0 cooldown=2000ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (20562) ROBOT_DISPLAY: Estado visual: 1[0m
+[0;32mI (21812) ROBOT_DISPLAY: Estado visual: 2[0m
+[0;32mI (34462) NUCLEA_WAKEWORD: Gravacao encerrada: 240000 amostras, motivo=3[0m
+[0;32mI (58442) AUDIO_UPLOADER: Audio enviado: 240000 amostras, HTTP=200[0m
+[0;32mI (59702) NUCLEA_WAKEWORD: audio=-31.3 dBFS peak=1176 score=0.684 max_score=0.684 q_in=[-38,95] q_out=[-47,47] inferencias=1 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (60802) NUCLEA_WAKEWORD: audio=-28.6 dBFS peak=1668 score=0.758 max_score=0.793 q_in=[-38,96] q_out=[-66,66] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (61902) NUCLEA_WAKEWORD: audio=-22.7 dBFS peak=4317 score=0.477 max_score=0.809 q_in=[-37,103] q_out=[6,-6] inferencias=4 duracao=254ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (63002) NUCLEA_WAKEWORD: audio=-17.7 dBFS peak=8981 score=0.000 max_score=0.098 q_in=[-17,111] q_out=[127,-128] inferencias=4 duracao=261ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (64102) NUCLEA_WAKEWORD: audio=-9.1 dBFS peak=17166 score=0.004 max_score=0.004 q_in=[-21,111] q_out=[127,-127] inferencias=4 duracao=254ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (65202) NUCLEA_WAKEWORD: audio=-23.1 dBFS peak=4723 score=0.012 max_score=0.012 q_in=[-26,108] q_out=[125,-125] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (66312) NUCLEA_WAKEWORD: audio=-26.0 dBFS peak=3611 score=0.000 max_score=0.004 q_in=[-32,110] q_out=[127,-128] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (67412) NUCLEA_WAKEWORD: audio=-33.6 dBFS peak=1719 score=0.055 max_score=0.340 q_in=[-34,106] q_out=[114,-114] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (68522) NUCLEA_WAKEWORD: audio=-31.1 dBFS peak=2371 score=0.004 max_score=0.043 q_in=[-31,111] q_out=[127,-127] inferencias=4 duracao=263ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (69602) NUCLEA_WAKEWORD: audio=-38.4 dBFS peak=956 score=0.129 max_score=0.129 q_in=[-31,104] q_out=[95,-95] inferencias=4 duracao=262ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (70702) NUCLEA_WAKEWORD: audio=-30.8 dBFS peak=3389 score=0.004 max_score=0.090 q_in=[-31,103] q_out=[127,-127] inferencias=4 duracao=259ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (71802) NUCLEA_WAKEWORD: audio=-37.7 dBFS peak=1046 score=0.004 max_score=0.035 q_in=[-35,94] q_out=[127,-127] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (72912) NUCLEA_WAKEWORD: audio=-37.0 dBFS peak=1095 score=0.000 max_score=0.004 q_in=[-33,95] q_out=[127,-128] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (74012) NUCLEA_WAKEWORD: audio=-37.4 dBFS peak=732 score=0.035 max_score=0.090 q_in=[-36,96] q_out=[119,-119] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (75102) NUCLEA_WAKEWORD: audio=-50.5 dBFS peak=229 score=0.020 max_score=0.098 q_in=[-36,94] q_out=[123,-123] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (75912) NUCLEA_WAKEWORD: Wakeword detectada: score=0.859[0m
+[0;32mI (83782) NUCLEA_WAKEWORD: Gravacao encerrada: 142720 amostras, motivo=1[0m
+[0;32mI (92972) AUDIO_UPLOADER: Audio enviado: 142720 amostras, HTTP=200[0m
+[0;32mI (94252) NUCLEA_WAKEWORD: audio=-18.5 dBFS peak=7271 score=0.000 max_score=0.883 q_in=[-27,113] q_out=[127,-128] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (95352) NUCLEA_WAKEWORD: audio=-19.1 dBFS peak=9347 score=0.000 max_score=0.000 q_in=[-23,112] q_out=[127,-128] inferencias=4 duracao=254ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (96462) NUCLEA_WAKEWORD: audio=-23.3 dBFS peak=4043 score=0.000 max_score=0.000 q_in=[-23,113] q_out=[127,-128] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (97562) NUCLEA_WAKEWORD: audio=-22.0 dBFS peak=3857 score=0.000 max_score=0.004 q_in=[-32,114] q_out=[127,-128] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (98672) NUCLEA_WAKEWORD: audio=-21.1 dBFS peak=7951 score=0.027 max_score=0.082 q_in=[-35,113] q_out=[121,-121] inferencias=4 duracao=263ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (99762) NUCLEA_WAKEWORD: audio=-43.1 dBFS peak=447 score=0.430 max_score=0.570 q_in=[-39,95] q_out=[18,-18] inferencias=4 duracao=259ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (100872) NUCLEA_WAKEWORD: audio=-42.6 dBFS peak=438 score=0.660 max_score=0.660 q_in=[-38,94] q_out=[-41,41] inferencias=4 duracao=258ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (101132) AUDIO_CAPTURE: Fila de audio atrasada: 51 blocos descartados[0m
+[0;32mI (101962) NUCLEA_WAKEWORD: audio=-49.5 dBFS peak=255 score=0.723 max_score=0.723 q_in=[-37,94] q_out=[-57,57] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (103062) NUCLEA_WAKEWORD: audio=-45.5 dBFS peak=357 score=0.477 max_score=0.617 q_in=[-38,94] q_out=[6,-6] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (104162) NUCLEA_WAKEWORD: audio=-46.3 dBFS peak=392 score=0.617 max_score=0.617 q_in=[-37,95] q_out=[-30,30] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (105272) NUCLEA_WAKEWORD: audio=-39.1 dBFS peak=509 score=0.477 max_score=0.477 q_in=[-38,94] q_out=[6,-6] inferencias=4 duracao=260ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (106362) NUCLEA_WAKEWORD: audio=-47.3 dBFS peak=314 score=0.793 max_score=0.793 q_in=[-39,95] q_out=[-75,75] inferencias=4 duracao=257ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (107472) NUCLEA_WAKEWORD: audio=-47.4 dBFS peak=324 score=0.793 max_score=0.793 q_in=[-39,95] q_out=[-75,75] inferencias=4 duracao=257ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (108552) NUCLEA_WAKEWORD: audio=-23.7 dBFS peak=6235 score=0.809 max_score=0.809 q_in=[-37,106] q_out=[-79,79] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (109652) NUCLEA_WAKEWORD: audio=-22.6 dBFS peak=4462 score=0.164 max_score=0.500 q_in=[-36,108] q_out=[86,-86] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (110742) NUCLEA_WAKEWORD: audio=-19.4 dBFS peak=6937 score=0.004 max_score=0.258 q_in=[-32,115] q_out=[127,-127] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (111842) NUCLEA_WAKEWORD: audio=-18.3 dBFS peak=6671 score=0.004 max_score=0.008 q_in=[-33,116] q_out=[127,-127] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (112932) NUCLEA_WAKEWORD: audio=-15.0 dBFS peak=12746 score=0.020 max_score=0.020 q_in=[-31,113] q_out=[123,-123] inferencias=4 duracao=255ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (114042) NUCLEA_WAKEWORD: audio=-20.1 dBFS peak=3962 score=0.164 max_score=0.164 q_in=[-31,111] q_out=[86,-86] inferencias=4 duracao=257ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (115132) NUCLEA_WAKEWORD: audio=-46.5 dBFS peak=375 score=0.793 max_score=0.824 q_in=[-38,95] q_out=[-75,75] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (116232) NUCLEA_WAKEWORD: audio=-38.5 dBFS peak=771 score=0.016 max_score=0.742 q_in=[-37,96] q_out=[124,-124] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (117322) NUCLEA_WAKEWORD: audio=-48.4 dBFS peak=315 score=0.547 max_score=0.547 q_in=[-38,94] q_out=[-12,12] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (118422) NUCLEA_WAKEWORD: audio=-49.4 dBFS peak=323 score=0.617 max_score=0.723 q_in=[-37,94] q_out=[-30,30] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (119522) NUCLEA_WAKEWORD: audio=-35.8 dBFS peak=1036 score=0.152 max_score=0.641 q_in=[-38,107] q_out=[89,-89] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (120352) NUCLEA_WAKEWORD: Wakeword detectada: score=0.965[0m
+[0;32mI (133832) NUCLEA_WAKEWORD: Gravacao encerrada: 240000 amostras, motivo=3[0m
+[0;32mI (154032) AUDIO_UPLOADER: Audio enviado: 240000 amostras, HTTP=200[0m
+[0;32mI (155282) NUCLEA_WAKEWORD: audio=-26.4 dBFS peak=4444 score=0.641 max_score=0.965 q_in=[-38,103] q_out=[-36,36] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (156392) NUCLEA_WAKEWORD: audio=-27.7 dBFS peak=2320 score=0.207 max_score=0.859 q_in=[-38,111] q_out=[75,-75] inferencias=4 duracao=261ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (157492) NUCLEA_WAKEWORD: audio=-24.3 dBFS peak=5780 score=0.000 max_score=0.012 q_in=[-20,112] q_out=[127,-128] inferencias=4 duracao=261ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (158582) NUCLEA_WAKEWORD: audio=-23.9 dBFS peak=6207 score=0.000 max_score=0.000 q_in=[-20,117] q_out=[127,-128] inferencias=4 duracao=259ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (159682) NUCLEA_WAKEWORD: audio=-20.6 dBFS peak=7013 score=0.000 max_score=0.000 q_in=[-25,117] q_out=[127,-128] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (160772) NUCLEA_WAKEWORD: audio=-28.2 dBFS peak=3396 score=0.000 max_score=0.000 q_in=[-28,114] q_out=[127,-128] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (161872) NUCLEA_WAKEWORD: audio=-19.9 dBFS peak=6636 score=0.004 max_score=0.004 q_in=[-35,109] q_out=[127,-127] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (162962) NUCLEA_WAKEWORD: audio=-47.6 dBFS peak=338 score=0.570 max_score=0.594 q_in=[-39,94] q_out=[-18,18] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (164062) NUCLEA_WAKEWORD: audio=-43.8 dBFS peak=516 score=0.430 max_score=0.523 q_in=[-38,94] q_out=[18,-18] inferencias=4 duracao=248ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (165152) NUCLEA_WAKEWORD: audio=-42.3 dBFS peak=517 score=0.223 max_score=0.406 q_in=[-40,94] q_out=[71,-71] inferencias=4 duracao=257ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (166262) NUCLEA_WAKEWORD: audio=-44.2 dBFS peak=345 score=0.223 max_score=0.242 q_in=[-38,94] q_out=[71,-71] inferencias=4 duracao=257ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (167352) NUCLEA_WAKEWORD: audio=-49.2 dBFS peak=231 score=0.617 max_score=0.617 q_in=[-39,94] q_out=[-30,30] inferencias=4 duracao=258ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (168452) NUCLEA_WAKEWORD: audio=-46.1 dBFS peak=317 score=0.824 max_score=0.824 q_in=[-38,94] q_out=[-83,83] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (169542) NUCLEA_WAKEWORD: audio=-48.9 dBFS peak=303 score=0.594 max_score=0.793 q_in=[-38,95] q_out=[-24,24] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (170642) NUCLEA_WAKEWORD: audio=-41.8 dBFS peak=499 score=0.703 max_score=0.703 q_in=[-39,95] q_out=[-52,52] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (170852) AUDIO_CAPTURE: Fila de audio atrasada: 101 blocos descartados[0m
+[0;32mI (171732) NUCLEA_WAKEWORD: audio=-22.7 dBFS peak=3980 score=0.340 max_score=0.684 q_in=[-37,104] q_out=[41,-41] inferencias=4 duracao=248ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (172832) NUCLEA_WAKEWORD: audio=-16.9 dBFS peak=8368 score=0.547 max_score=0.547 q_in=[-38,104] q_out=[-12,12] inferencias=4 duracao=255ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (173932) NUCLEA_WAKEWORD: audio=-17.8 dBFS peak=8787 score=0.008 max_score=0.660 q_in=[-32,113] q_out=[126,-126] inferencias=4 duracao=262ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (175032) NUCLEA_WAKEWORD: audio=-23.2 dBFS peak=4133 score=0.000 max_score=0.016 q_in=[-28,118] q_out=[127,-128] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (176122) NUCLEA_WAKEWORD: audio=-16.8 dBFS peak=9327 score=0.000 max_score=0.000 q_in=[-28,120] q_out=[127,-128] inferencias=4 duracao=255ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (177232) NUCLEA_WAKEWORD: audio=-23.3 dBFS peak=3654 score=0.004 max_score=0.008 q_in=[-32,116] q_out=[127,-127] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (178322) NUCLEA_WAKEWORD: audio=-48.2 dBFS peak=294 score=0.723 max_score=0.723 q_in=[-38,95] q_out=[-57,57] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (179422) NUCLEA_WAKEWORD: audio=-49.4 dBFS peak=247 score=0.383 max_score=0.684 q_in=[-39,94] q_out=[30,-30] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (180502) NUCLEA_WAKEWORD: audio=-43.6 dBFS peak=435 score=0.383 max_score=0.547 q_in=[-39,94] q_out=[30,-30] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (181612) NUCLEA_WAKEWORD: audio=-33.2 dBFS peak=936 score=0.453 max_score=0.453 q_in=[-39,94] q_out=[12,-12] inferencias=4 duracao=260ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (182702) NUCLEA_WAKEWORD: audio=-43.4 dBFS peak=418 score=0.641 max_score=0.641 q_in=[-39,94] q_out=[-36,36] inferencias=4 duracao=258ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (183812) NUCLEA_WAKEWORD: audio=-43.2 dBFS peak=409 score=0.547 max_score=0.684 q_in=[-39,93] q_out=[-12,12] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (184102) ROBOT_DISPLAY: Estado visual: 3[0m
+[0;32mI (185042) NUCLEA_WAKEWORD: audio=-44.6 dBFS peak=442 score=0.617 max_score=0.617 q_in=[-39,95] q_out=[-30,30] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (185542) ROBOT_DISPLAY: Estado visual: 0[0m
+[0;32mI (186092) NUCLEA_WAKEWORD: audio=-43.9 dBFS peak=369 score=0.570 max_score=0.617 q_in=[-39,95] q_out=[-18,18] inferencias=4 duracao=251ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (187182) NUCLEA_WAKEWORD: audio=-39.5 dBFS peak=602 score=0.316 max_score=0.570 q_in=[-39,94] q_out=[47,-47] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (188282) NUCLEA_WAKEWORD: audio=-29.7 dBFS peak=1336 score=0.684 max_score=0.684 q_in=[-36,102] q_out=[-47,47] inferencias=4 duracao=248ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (189372) NUCLEA_WAKEWORD: audio=-7.6 dBFS peak=23143 score=0.008 max_score=0.809 q_in=[-34,114] q_out=[126,-126] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (190472) NUCLEA_WAKEWORD: audio=-15.8 dBFS peak=6320 score=0.000 max_score=0.000 q_in=[-29,118] q_out=[127,-128] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (191542) NUCLEA_WAKEWORD: audio=-11.4 dBFS peak=15486 score=0.000 max_score=0.004 q_in=[-24,117] q_out=[127,-128] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (192652) NUCLEA_WAKEWORD: audio=-10.8 dBFS peak=14111 score=0.000 max_score=0.000 q_in=[-24,119] q_out=[127,-128] inferencias=4 duracao=262ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (193732) NUCLEA_WAKEWORD: audio=-37.0 dBFS peak=917 score=0.547 max_score=0.594 q_in=[-36,103] q_out=[-12,12] inferencias=4 duracao=259ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (194832) NUCLEA_WAKEWORD: audio=-43.8 dBFS peak=481 score=0.430 max_score=0.477 q_in=[-39,95] q_out=[18,-18] inferencias=4 duracao=260ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (195912) NUCLEA_WAKEWORD: audio=-40.0 dBFS peak=594 score=0.594 max_score=0.594 q_in=[-38,95] q_out=[-24,24] inferencias=4 duracao=261ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (197002) NUCLEA_WAKEWORD: audio=-35.4 dBFS peak=902 score=0.703 max_score=0.723 q_in=[-38,95] q_out=[-52,52] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (198082) NUCLEA_WAKEWORD: audio=-46.6 dBFS peak=391 score=0.430 max_score=0.723 q_in=[-37,95] q_out=[18,-18] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (199182) NUCLEA_WAKEWORD: audio=-44.0 dBFS peak=450 score=0.723 max_score=0.723 q_in=[-37,95] q_out=[-57,57] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (199732) AUDIO_CAPTURE: Fila de audio atrasada: 151 blocos descartados[0m
+[0;32mI (200262) NUCLEA_WAKEWORD: audio=-50.6 dBFS peak=227 score=0.430 max_score=0.758 q_in=[-38,95] q_out=[18,-18] inferencias=4 duracao=254ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (201352) NUCLEA_WAKEWORD: audio=-44.6 dBFS peak=381 score=0.258 max_score=0.340 q_in=[-38,94] q_out=[62,-62] inferencias=4 duracao=248ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (202452) NUCLEA_WAKEWORD: audio=-44.8 dBFS peak=386 score=0.340 max_score=0.383 q_in=[-38,93] q_out=[41,-41] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (203552) NUCLEA_WAKEWORD: audio=-27.2 dBFS peak=1820 score=0.723 max_score=0.859 q_in=[-37,105] q_out=[-57,57] inferencias=4 duracao=249ms positivos=1 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (204642) NUCLEA_WAKEWORD: audio=-18.6 dBFS peak=4673 score=0.020 max_score=0.523 q_in=[-33,100] q_out=[123,-123] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (205742) NUCLEA_WAKEWORD: audio=-18.4 dBFS peak=8439 score=0.031 max_score=0.098 q_in=[-33,108] q_out=[120,-120] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (206832) NUCLEA_WAKEWORD: audio=-11.5 dBFS peak=17037 score=0.000 max_score=0.031 q_in=[-21,115] q_out=[127,-128] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (207932) NUCLEA_WAKEWORD: audio=-16.1 dBFS peak=11435 score=0.000 max_score=0.000 q_in=[-20,116] q_out=[127,-128] inferencias=4 duracao=260ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (209002) NUCLEA_WAKEWORD: audio=-32.2 dBFS peak=1494 score=0.406 max_score=0.406 q_in=[-36,115] q_out=[24,-24] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (210092) NUCLEA_WAKEWORD: audio=-46.4 dBFS peak=362 score=0.500 max_score=0.641 q_in=[-34,100] q_out=[0,0] inferencias=4 duracao=252ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (211172) NUCLEA_WAKEWORD: audio=-42.7 dBFS peak=787 score=0.020 max_score=0.594 q_in=[-35,96] q_out=[123,-123] inferencias=4 duracao=255ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (212272) NUCLEA_WAKEWORD: audio=-47.5 dBFS peak=391 score=0.027 max_score=0.055 q_in=[-34,96] q_out=[121,-121] inferencias=4 duracao=258ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (213352) NUCLEA_WAKEWORD: audio=-35.7 dBFS peak=950 score=0.297 max_score=0.297 q_in=[-33,98] q_out=[52,-52] inferencias=4 duracao=261ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (214452) NUCLEA_WAKEWORD: audio=-28.3 dBFS peak=1937 score=0.078 max_score=0.176 q_in=[-33,98] q_out=[108,-108] inferencias=4 duracao=256ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (215542) NUCLEA_WAKEWORD: audio=-41.0 dBFS peak=1029 score=0.004 max_score=0.078 q_in=[-32,94] q_out=[127,-127] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (216632) NUCLEA_WAKEWORD: audio=-41.4 dBFS peak=719 score=0.008 max_score=0.016 q_in=[-32,93] q_out=[126,-126] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (217722) NUCLEA_WAKEWORD: audio=-33.7 dBFS peak=887 score=0.277 max_score=0.277 q_in=[-35,95] q_out=[57,-57] inferencias=4 duracao=255ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (218822) NUCLEA_WAKEWORD: audio=-33.6 dBFS peak=892 score=0.809 max_score=0.836 q_in=[-35,95] q_out=[-79,79] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (219912) NUCLEA_WAKEWORD: audio=-24.4 dBFS peak=3545 score=0.758 max_score=0.758 q_in=[-35,103] q_out=[-66,66] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (221012) NUCLEA_WAKEWORD: audio=-15.9 dBFS peak=8586 score=0.023 max_score=0.570 q_in=[-32,113] q_out=[122,-122] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (222102) NUCLEA_WAKEWORD: audio=-17.6 dBFS peak=11445 score=0.004 max_score=0.016 q_in=[-26,117] q_out=[127,-127] inferencias=4 duracao=249ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (223212) NUCLEA_WAKEWORD: audio=-19.9 dBFS peak=7058 score=0.004 max_score=0.004 q_in=[-23,118] q_out=[127,-127] inferencias=4 duracao=260ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (224292) NUCLEA_WAKEWORD: audio=-13.2 dBFS peak=12656 score=0.008 max_score=0.008 q_in=[-28,115] q_out=[126,-126] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (225392) NUCLEA_WAKEWORD: audio=-24.1 dBFS peak=4208 score=0.012 max_score=0.012 q_in=[-28,111] q_out=[125,-125] inferencias=4 duracao=258ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (226472) NUCLEA_WAKEWORD: audio=-38.9 dBFS peak=714 score=0.684 max_score=0.684 q_in=[-37,99] q_out=[-47,47] inferencias=4 duracao=259ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (227572) NUCLEA_WAKEWORD: audio=-47.8 dBFS peak=343 score=0.742 max_score=0.758 q_in=[-37,94] q_out=[-62,62] inferencias=4 duracao=257ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (228662) NUCLEA_WAKEWORD: audio=-31.8 dBFS peak=1135 score=0.547 max_score=0.703 q_in=[-37,95] q_out=[-12,12] inferencias=4 duracao=253ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;32mI (229762) NUCLEA_WAKEWORD: audio=-45.6 dBFS peak=412 score=0.594 max_score=0.723 q_in=[-37,94] q_out=[-24,24] inferencias=4 duracao=250ms positivos=0 cooldown=0ms led=apagado stack_livre=12436B captura_stack_livre=4080B[0m
+[0;33mW (230582) NUCLEA_WAKEWORD: Wakeword detectada: score=0.988[0m
+[0;32mI (230602) ROBOT_DISPLAY: Estado visual: 1[0m
+[0;32mI (231862) ROBOT_DISPLAY: Estado visual: 2[0m
+[0;32mI (232042) NUCLEA_WAKEWORD: Gravacao encerrada: 38400 amostras, motivo=1[0m

@@ -52,6 +52,49 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+## Preparar candidatos revisados e gerar augmentation
+
+Depois de ouvir os candidatos e remover os invalidos de `review/`, execute
+na pasta `wake-word`, com FFmpeg no PATH e as dependencias Python instaladas:
+
+```powershell
+python tools/augment_reviewed_candidates.py --confirmed-reviewed `
+  --speaker-dir dataset/real/wakeword_gabriel dataset/real/wakeword_ryam
+```
+
+Use as pastas que ainda nao possuem `clean/`, `augmented/` ou `metadata.csv`.
+O comando recusa sobrescrever saidas existentes. Ele preserva `review/`,
+`manifest.csv`, negativos e gravacoes-fonte. Apenas os `candidate_*.wav`
+restantes sao considerados positivos, mediante confirmacao de revisao.
+
+Cada candidato gera uma copia original em `clean/` e quatro versoes em
+`augmented/`: ganho/deslocamento seguro, velocidade de 1.04 a 1.06,
+pitch de +/-0.5 semitom e ruido sintetico leve a 22-28 dB de SNR.
+As saidas continuam PCM16 mono, 16 kHz e 1 segundo. As variacoes usam seed
+fixa e margem de pico para evitar saturacao adicional.
+
+Quando o percentil 10 dos niveis de frames de 20 ms supera -45 dBFS,
+tambem e criada uma
+versao `denoised`. Essa triagem e um indicador aproximado, nao uma medida
+real de SNR. O filtro usa passa-altas de 70 Hz e FFmpeg `afftdn` com reducao
+de 6 dB; sua latencia e compensada para preservar o final da palavra.
+O original ruidoso tambem e mantido, sem filtragem destrutiva. O filtro nao
+separa outras vozes nem recupera audio ja saturado.
+
+`metadata.csv` registra os parametros, hash do candidato e grupo da gravacao
+de origem. `augmentation_report.json` lista a triagem e as quantidades.
+Todas as versoes da mesma gravacao compartilham `group_id`: nao as divida
+entre treino e validacao. Os novos locutores nao sao adicionados
+automaticamente a `REAL_SPEAKERS`. O split atual exige pelo menos duas
+gravacoes/grupos por locutor; nao divida artificialmente uma unica sessao
+para contornar essa restricao. Este comando nao treina nem troca o TFLite.
+
+Teste essencial desta etapa:
+
+```powershell
+python -m unittest discover -s tools -p test_augment_reviewed_candidates.py
+```
+
 ## Treinar o modelo
 
 ```powershell
@@ -192,10 +235,29 @@ portal mesmo quando o socket interno e IPv6; acessos pelo IP da rede
 domestica continuam bloqueados. O `404` de `favicon.ico` nao impede a conexao.
 
 Se ficar sem conexao por aproximadamente 30 segundos, o ESP reabre o portal
-e continua tentando a rede salva. Para trocar a configuracao, desligue
-temporariamente a rede anterior ou leve a placa fora de seu alcance; nao ha
-botao de reset de configuracao nesta etapa. Os antigos valores de Wi-Fi do
+e continua tentando a rede salva. Tambem e possivel reabrir o portal pelo
+botao BOOT, sem desligar o roteador nem apagar a configuracao.
+Os antigos valores de Wi-Fi do
 `menuconfig` nao sao importados: configure o portal na primeira instalacao.
+
+### Reabrir o portal pelo botao BOOT
+
+1. Com o firmware funcionando, segure **BOOT (GPIO 0)** por pelo menos
+   **3 segundos** e solte. O monitor registra
+   `Portal reaberto por BOOT; configuracao salva preservada.`
+2. Conecte a `Nuclea-Config` com senha `Nuclea-Dell2026` e abra
+   `http://192.168.4.1`, mesmo que o ESP ja esteja conectado ao Wi-Fi.
+3. Confira a rede e a URL. Digite novamente a senha do Wi-Fi: ela nao e
+   preenchida pelo portal nem devolvida pela API.
+4. Use `Conectar e salvar`. Apos conectar e salvar com sucesso, o portal
+   fecha em 10 segundos. Se falhar, os dados anteriores sao preservados.
+
+O portal aberto pelo BOOT permanece disponivel ate salvar com sucesso ou
+reiniciar a placa, mesmo se reconectar automaticamente a rede antiga.
+Uma pressao longa gera apenas um acionamento; solte antes de acionar novamente.
+O botao tambem e consultado durante as tentativas de conexao Wi-Fi. Nao apaga
+NVS, GIFs ou modelo. **RST continua apenas reiniciando o ESP. Nao segure BOOT
+ao apertar RST ou ligar a placa**, pois isso pode entrar no modo de gravacao.
 
 A gravacao requer PSRAM habilitada. Para a placa ESP32-S3 com PSRAM de 8 MB
 Octal utilizada neste projeto, configure `Component config -> ESP PSRAM` com
@@ -281,6 +343,8 @@ idf.py -p COM9 flash monitor
 ```
 
 O build tambem verifica tres cenarios da maquina de estados por `static_assert`.
+Tambem verifica o BOOT: acionamento apos 3 segundos, acionamento unico por
+pressao e reinicio da contagem apos soltar o botao.
 O teste de pilha analisa o objeto compilado com `xtensa-esp32s3-elf-objdump`,
 disponivel no terminal ESP-IDF. Se nao estiver no PATH, defina `XTENSA_OBJDUMP`
 com o caminho do executavel. Sem compilador ou objeto, esse teste e ignorado;
