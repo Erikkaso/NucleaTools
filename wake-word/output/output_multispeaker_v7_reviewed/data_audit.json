@@ -1,0 +1,1010 @@
+{
+  "final_fit": false,
+  "include_reviewed_negatives": true,
+  "seed": 1204528219,
+  "excluded_speakers": [
+    "thayza"
+  ],
+  "reviewed_clean_only": true,
+  "eric_random_split": true,
+  "positive_input_policy": "Existing clean WAVs with surviving declared parents only; old augmented and original aliases ignored; fresh train-only WAV variants in output/augmented.",
+  "eric_split_limitation": "Random overlapping-window components, stratified by source, approximately 80/10/10; same voice and sessions in all splits, NOT unseen-session recall.",
+  "mined_negative_corpus": {
+    "directory": "E:\\Sistema\\Downloads\\Geral\\CODINGZONE\\Nuclic\\NucleaInterface\\wake-word\\dataset\\mined_hard_negative_v5",
+    "manifest_sha256": "aaad04e77ebdb1c6203368a0dc34e1333b60bd054f0dbe5f5f0af175c7c62b6a",
+    "teacher_sha256": "78ee283e163a21588e9dbda8bbbcb6bf6d4a944d081c4fbb4c02736e20bbad6f",
+    "sources": [
+      {
+        "id": "ambientenew",
+        "file": "dataset/background_test2/ambientenew.wav",
+        "sha256": "16729e343566f1f37ff55aa93f5d33a8c4bcdb4bb8fbda5edbd8102278372c4b",
+        "samples": 42418518,
+        "sample_rate": 16000,
+        "ranges": {
+          "train": [
+            0,
+            25451110
+          ],
+          "validation": [
+            25483110,
+            33934814
+          ],
+          "test": [
+            33966814,
+            42418518
+          ]
+        }
+      },
+      {
+        "id": "calmonew",
+        "file": "dataset/background_test2/calmonew.wav",
+        "sha256": "70cbc9aa0e5a7431df93588ed414622ffee7e1d5c504612d71555e0095d177f5",
+        "samples": 9724527,
+        "sample_rate": 16000,
+        "ranges": {
+          "train": [
+            0,
+            5834716
+          ],
+          "validation": [
+            5866716,
+            7779621
+          ],
+          "test": [
+            7811621,
+            9724527
+          ]
+        }
+      },
+      {
+        "id": "conversanew",
+        "file": "dataset/background_test2/conversanew.mp3",
+        "sha256": "cee8a022fb0c632c45a62f42f91ccb5de45fbded5f6392022a86dba426c5b650",
+        "samples": 21687485,
+        "sample_rate": 16000,
+        "ranges": {
+          "train": [
+            0,
+            13012491
+          ],
+          "validation": [
+            13044491,
+            17349988
+          ],
+          "test": [
+            17381988,
+            21687485
+          ]
+        }
+      },
+      {
+        "id": "musicanew",
+        "file": "dataset/background_test2/musicanew.wav",
+        "sha256": "7f8cd95fd0a99e700acfe07153fe3fb8e369f88a110fbe646a4f44d07aa26714",
+        "samples": 5615607,
+        "sample_rate": 16000,
+        "ranges": {
+          "train": [
+            0,
+            3369364
+          ],
+          "validation": [
+            3401364,
+            4492485
+          ],
+          "test": [
+            4524485,
+            5615607
+          ]
+        }
+      }
+    ],
+    "label_basis": "Existing background corpus labeled negative; no per-clip transcription or new manual review.",
+    "policy": "60/20/20 chronological blocks, 2s guards; mining scores train only; heldouts uniform."
+  },
+  "positive_phrase_policy": "Greetings such as oi Nuclea remain positive; no phrase-text exclusion or conversion to negative.",
+  "negative_review_confirmation": "User explicitly approved negative_silence on 2026-10-15",
+  "rejected": [
+    {
+      "file": "dataset\\real\\wakeword_eric\\clean\\nuclea_inmp441_sessao_001_0005.wav",
+      "reason": "not_one_second",
+      "samples": 21559
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@848.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@850.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@852.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@854.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@856.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@858.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@860.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@862.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_test/ambiente.wav@864.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_000.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_001.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_002.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_003.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_004.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_005.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_006.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_007.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_008.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_009.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_010.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_011.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_012.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_013.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_014.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_015.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_016.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_017.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_018.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_019.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\ambiente\\ambiente_seg00_002_844.000s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@844.000"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\musica\\musica_seg01_008_361.000s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\silencio\\silencio_seg00_009_1127.750s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\silencio\\silencio_seg00_010_1128.000s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1130.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1135.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1140.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1145.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1150.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1155.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1160.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1165.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1170.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1175.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1180.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1185.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1190.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1195.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1200.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1205.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1210.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1215.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1220.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1225.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1230.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1235.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1240.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1245.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1250.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1255.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1260.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1265.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1270.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1275.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1280.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1285.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1290.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1295.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1300.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1305.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1310.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1315.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1320.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1325.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1330.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1335.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1340.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1345.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1350.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1355.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1360.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1365.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1370.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1375.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1380.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1385.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1390.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1395.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1400.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1405.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1410.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1415.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1420.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1425.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1430.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1435.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1440.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1445.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1450.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1455.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1460.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1465.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1470.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1475.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1480.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1485.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1490.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1495.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1500.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1505.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1510.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1515.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1520.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1525.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1530.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1535.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1540.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1545.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1550.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1555.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1560.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1565.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1570.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1575.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1580.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1585.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1590.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1595.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1600.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1605.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1610.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1615.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1620.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1625.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1630.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1635.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1640.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1645.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1650.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1655.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1660.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1665.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1670.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1675.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1680.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1685.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1690.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1695.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1700.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1705.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1710.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1715.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1720.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1725.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1730.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1735.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1740.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1745.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1750.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1755.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1760.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1765.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1770.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1775.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1780.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1785.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1790.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1795.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1800.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset/background_test/ambiente.wav@846.000"
+    }
+  ],
+  "counts": {
+    "train": {
+      "alexesm": 76,
+      "matched_silence": 196,
+      "amo": 88,
+      "biladadeiro": 168,
+      "derik": 52,
+      "eric": 660,
+      "ivanildo": 36,
+      "raisa": 24,
+      "sarah": 44,
+      "talles": 84,
+      "valentina": 96,
+      "vinicius": 108,
+      "speech": 389,
+      "dialogue": 669,
+      "scene": 726,
+      "noise": 500,
+      "silence": 390,
+      "hard_negative": 43,
+      "inmp_ambiente": 783,
+      "inmp_negative": 34,
+      "room_tone": 226,
+      "synthetic": 160,
+      "mined_hard_negative": 612,
+      "quiet_synthetic": 180
+    },
+    "validation": {
+      "eric": 19,
+      "lara": 14,
+      "matched_silence": 2,
+      "ryam": 8,
+      "speech": 52,
+      "inmp_ambiente": 165,
+      "inmp_negative": 5,
+      "mined_scene": 192,
+      "mined_quiet": 64,
+      "quiet_synthetic": 60
+    },
+    "test": {
+      "eric": 15,
+      "gabriel": 10,
+      "matched_silence": 17,
+      "speech": 59,
+      "inmp_ambiente": 165,
+      "inmp_negative": 5,
+      "mined_scene": 192,
+      "mined_quiet": 64,
+      "quiet_synthetic": 60
+    }
+  },
+  "test_only_speakers": [],
+  "split_policy": "Eric overlap components randomized within source; other voices use recording/speaker holdouts; excluded speakers absent.",
+  "negative_limitations": "INMP441 temporal holdout is the same recording; legacy noise, silence and mined false wakes train-only.",
+  "positive_quality": "Reject AC RMS < -60 dBFS or fewer than 6 x 20 ms frames above -50 dBFS; no relabeling.",
+  "augmentation": "Stored train-only variants plus 3 safe shifts/gain/noise per clean train clip, SNR 8-25 dB; 25% of mixed variants use training dialogue."
+}

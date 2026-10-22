@@ -1,0 +1,198 @@
+Command: D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe D:\Espressif\frameworks\esp-idf-v5.5.5\tools/idf_monitor.py -p COM9 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\esp32_wakeword.elf E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\bootloader\bootloader.elf --force-color -m 'D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe' 'D:\Espressif\frameworks\esp-idf-v5.5.5\tools\idf.py' '-p' 'COM9'
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x2b (SPI_FAST_FLASH_BOOT)
+Saved PC:0x4037c6e2
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2eec
+entry 0x403c8924
+[0;32mI (24) boot: ESP-IDF v5.5.5 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Oct 10 2026 23:12:06[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (28) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 16MB[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (63) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00300000[0m
+[0;32mI (76) boot:  3 spiffs           Unknown data     01 82 00310000 00cf0000[0m
+[0;32mI (82) boot: End of partition table[0m
+[0;32mI (85) esp_image: segment 0: paddr=00010020 vaddr=3c0f0020 size=5527ch (348796) map[0m
+[0;32mI (156) esp_image: segment 1: paddr=000652a4 vaddr=3fc9f900 size=058dch ( 22748) load[0m
+[0;32mI (162) esp_image: segment 2: paddr=0006ab88 vaddr=40374000 size=05490h ( 21648) load[0m
+[0;32mI (167) esp_image: segment 3: paddr=00070020 vaddr=42000020 size=e1924h (923940) map[0m
+[0;32mI (336) esp_image: segment 4: paddr=0015194c vaddr=40379490 size=163d0h ( 91088) load[0m
+[0;32mI (357) esp_image: segment 5: paddr=00167d24 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (369) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (369) boot: Disabling RNG early entropy source...[0m
+[0;32mI (379) octal_psram: vendor id    : 0x0d (AP)[0m
+[0;32mI (379) octal_psram: dev id       : 0x02 (generation 3)[0m
+[0;32mI (380) octal_psram: density      : 0x03 (64 Mbit)[0m
+[0;32mI (382) octal_psram: good-die     : 0x01 (Pass)[0m
+[0;32mI (386) octal_psram: Latency      : 0x01 (Fixed)[0m
+[0;32mI (390) octal_psram: VCC          : 0x01 (3V)[0m
+[0;32mI (394) octal_psram: SRF          : 0x01 (Fast Refresh)[0m
+[0;32mI (399) octal_psram: BurstType    : 0x01 (Hybrid Wrap)[0m
+[0;32mI (404) octal_psram: BurstLen     : 0x01 (32 Byte)[0m
+[0;32mI (409) octal_psram: Readlatency  : 0x02 (10 cycles@Fixed)[0m
+[0;32mI (414) octal_psram: DriveStrength: 0x00 (1/1)[0m
+[0;32mI (418) MSPI Timing: Enter psram timing tuning[0m
+[0;32mI (423) esp_psram: Found 8MB PSRAM device[0m
+[0;32mI (426) esp_psram: Speed: 80MHz[0m
+[0;32mI (429) cpu_start: Multicore app[0m
+[0;32mI (864) esp_psram: SPI SRAM memory test OK[0m
+[0;32mI (873) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+[0;32mI (874) cpu_start: Pro cpu start user code[0m
+[0;32mI (874) cpu_start: cpu freq: 240000000 Hz[0m
+[0;32mI (875) app_init: Application information:[0m
+[0;32mI (879) app_init: Project name:     esp32_wakeword[0m
+[0;32mI (883) app_init: App version:      d750bb8-dirty[0m
+[0;32mI (888) app_init: Compile time:     Oct 19 2026 13:10:23[0m
+[0;32mI (893) app_init: ELF file SHA256:  d8399baf5...[0m
+[0;32mI (897) app_init: ESP-IDF:          v5.5.5[0m
+[0;32mI (901) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (905) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (909) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (913) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (919) heap_init: At 3FCC27E0 len 00026F30 (155 KiB): RAM[0m
+[0;32mI (924) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (929) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (934) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (940) esp_psram: Adding pool of 8192K of PSRAM memory to heap allocator[0m
+[0;32mI (947) spi_flash: detected chip: boya[0m
+[0;32mI (950) spi_flash: flash io: dio[0m
+[0;32mI (953) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (959) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (966) main_task: Started on CPU0[0m
+[0;32mI (966) main_task: Calling app_main()[0m
+[0;32mI (976) NUCLEA_WAKEWORD: Iniciando wakeword Nuclea no ESP32-S3[0m
+[0;32mI (1516) AUDIO_RECORDER: Buffer PSRAM pronto: 480000 bytes[0m
+[0;32mI (1516) WAKEWORD_MODEL: Modelo pronto: 12840 bytes input(scale=3.17477703 zp=71 bytes=637) output(scale=0.00390625 zp=-128 bytes=2)[0m
+[0;32mI (1706) MFCC: PARIDADE DSP APROVADA: 637 coeficientes dentro de +/-1 INT8.[0m
+[0;32mI (3276) ROBOT_DISPLAY: Cache wake: 30 frames, 4032000 bytes PSRAM[0m
+[0;32mI (3406) WIFI_STATION: Segure BOOT por 3 segundos para reabrir o portal Wi-Fi.[0m
+[0;32mI (3406) pp: pp rom version: e7ae62f[0m
+[0;32mI (3406) net80211: net80211 rom version: e7ae62f[0m
+[0;32mI (3416) wifi:wifi driver task: 3fcd0ee0, prio:23, stack:6656, core=0[0m
+[0;32mI (3416) wifi:wifi firmware version: b9f67df[0m
+[0;32mI (3416) wifi:wifi certification version: v7.0[0m
+[0;32mI (3416) wifi:config NVS flash: enabled[0m
+[0;32mI (3426) wifi:config nano formatting: disabled[0m
+[0;32mI (3426) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (3436) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (3436) wifi:Init management short buffer num: 32[0m
+[0;32mI (3446) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (3446) wifi:Init static tx FG buffer num: 2[0m
+[0;32mI (3446) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (3456) wifi:Init static rx buffer num: 10[0m
+[0;32mI (3456) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (3466) wifi_init: rx ba win: 6[0m
+[0;32mI (3466) wifi_init: accept mbox: 6[0m
+[0;32mI (3466) wifi_init: tcpip mbox: 32[0m
+[0;32mI (3476) wifi_init: udp mbox: 6[0m
+[0;32mI (3476) wifi_init: tcp mbox: 6[0m
+[0;32mI (3476) wifi_init: tcp tx win: 5760[0m
+[0;32mI (3476) wifi_init: tcp rx win: 5760[0m
+[0;32mI (3486) wifi_init: tcp mss: 1440[0m
+[0;32mI (3486) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (3486) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (3496) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (3496) phy_init: phy_version 712,87e8c20e,Apr 13 2026,18:51:10[0m
+[0;32mI (3546) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (3566) wifi:mode : sta (1c:db:d4:99:34:dc)[0m
+[0;32mI (3566) wifi:enable tsf[0m
+[0;32mI (4566) wifi:new:<8,2>, old:<1,0>, ap:<255,255>, sta:<8,2>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (4566) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (4576) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (4576) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (4586) wifi:[ADDBA]RX DELBA, reason:39, delete tid:5, initiator:1(originator)[0m
+[0;32mI (4696) wifi:connected with SOBRALNET_CECILIA, aid = 19, channel 8, 40D, bssid = 6c:4c:bc:c4:56:30[0m
+[0;32mI (4696) wifi:security: WPA2-PSK, phy: bgn, rssi: -54, cipher(pairwise:0x3, group:0x3), pmf:0[0m
+[0;32mI (4706) wifi:pm start, type: 0[0m
+
+[0;32mI (4706) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (4716) wifi:set rx beacon pti, rx_bcn_pti: 0, bcn_timeout: 25000, mt_pti: 0, mt_time: 10000[0m
+[0;32mI (4746) wifi:<ba-add>idx:0 (ifx:0, 6c:4c:bc:c4:56:30), tid:0, ssn:0, winSize:64[0m
+[0;32mI (8236) wifi:<ba-add>idx:1 (ifx:0, 6c:4c:bc:c4:56:30), tid:5, ssn:14, winSize:64[0m
+[0;32mI (9226) esp_netif_handlers: sta ip: 192.168.11.4, mask: 255.255.255.0, gw: 192.168.11.1[0m
+[0;32mI (9226) AUDIO_CAPTURE: INMP441: BCLK=4 WS=5 SD=6 shift=16[0m
+[0;32mI (10056) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (10456) NUCLEA_WAKEWORD: audio=-20.7 dBFS peak=3203 score=0.000 max_score=0.000 q_in=[-42,92] q_out=[127,-128] inferencias=1 duracao=229ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=5216B[0m
+[0;32mI (11676) NUCLEA_WAKEWORD: audio=-22.8 dBFS peak=2842 score=0.004 max_score=0.004 q_in=[-50,96] q_out=[127,-127] inferencias=5 duracao=224ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=5216B[0m
+[0;32mI (12886) NUCLEA_WAKEWORD: audio=-42.1 dBFS peak=403 score=0.000 max_score=0.004 q_in=[-50,95] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=5216B[0m
+[0;33mW (13606) AUDIO_CAPTURE: Fila de audio atrasada: 1 blocos descartados[0m
+[0;32mI (14086) NUCLEA_WAKEWORD: audio=-23.9 dBFS peak=2466 score=0.004 max_score=0.004 q_in=[-49,96] q_out=[127,-127] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (15296) NUCLEA_WAKEWORD: audio=-23.5 dBFS peak=2520 score=0.004 max_score=0.008 q_in=[-46,92] q_out=[127,-127] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (16496) NUCLEA_WAKEWORD: audio=-42.6 dBFS peak=510 score=0.004 max_score=0.004 q_in=[-45,94] q_out=[127,-127] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (17706) NUCLEA_WAKEWORD: audio=-33.6 dBFS peak=959 score=0.004 max_score=0.004 q_in=[-46,94] q_out=[127,-127] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (18916) NUCLEA_WAKEWORD: audio=-29.6 dBFS peak=1268 score=0.004 max_score=0.008 q_in=[-46,95] q_out=[127,-127] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (20126) NUCLEA_WAKEWORD: audio=-26.8 dBFS peak=1836 score=0.020 max_score=0.020 q_in=[-50,95] q_out=[123,-123] inferencias=5 duracao=219ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (21336) NUCLEA_WAKEWORD: audio=-32.1 dBFS peak=1027 score=0.004 max_score=0.016 q_in=[-50,95] q_out=[127,-127] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (22556) NUCLEA_WAKEWORD: audio=-36.9 dBFS peak=580 score=0.004 max_score=0.004 q_in=[-50,96] q_out=[127,-127] inferencias=5 duracao=226ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (23426) wifi:bcn_timeout,ap_probe_send_start[0m
+[0;32mI (23796) NUCLEA_WAKEWORD: audio=-41.1 dBFS peak=494 score=0.000 max_score=0.000 q_in=[-50,95] q_out=[127,-128] inferencias=5 duracao=230ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (25016) NUCLEA_WAKEWORD: audio=-26.8 dBFS peak=1712 score=0.000 max_score=0.012 q_in=[-49,96] q_out=[127,-128] inferencias=5 duracao=225ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (26226) NUCLEA_WAKEWORD: audio=-32.8 dBFS peak=1069 score=0.004 max_score=0.008 q_in=[-48,96] q_out=[127,-127] inferencias=5 duracao=219ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (27436) NUCLEA_WAKEWORD: audio=-39.8 dBFS peak=548 score=0.004 max_score=0.004 q_in=[-51,95] q_out=[127,-127] inferencias=5 duracao=227ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (28646) NUCLEA_WAKEWORD: audio=-32.9 dBFS peak=1069 score=0.000 max_score=0.000 q_in=[-54,97] q_out=[127,-128] inferencias=5 duracao=219ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (29846) NUCLEA_WAKEWORD: audio=-33.2 dBFS peak=908 score=0.004 max_score=0.004 q_in=[-51,95] q_out=[127,-127] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (31056) NUCLEA_WAKEWORD: audio=-38.6 dBFS peak=579 score=0.000 max_score=0.008 q_in=[-53,95] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (32256) NUCLEA_WAKEWORD: audio=-48.6 dBFS peak=399 score=0.004 max_score=0.004 q_in=[-42,93] q_out=[127,-127] inferencias=5 duracao=224ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (32576) wifi:bcn_timeout,ap_probe_send_start[0m
+[0;32mI (33476) NUCLEA_WAKEWORD: audio=-33.6 dBFS peak=1677 score=0.000 max_score=0.000 q_in=[-41,91] q_out=[127,-128] inferencias=5 duracao=224ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (34486) NUCLEA_WAKEWORD: audio=-25.4 dBFS peak=1990 score=0.004 max_score=0.004 q_in=[-39,92] q_out=[127,-127] inferencias=4 duracao=228ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (35716) NUCLEA_WAKEWORD: audio=-29.9 dBFS peak=1236 score=0.012 max_score=0.012 q_in=[-45,96] q_out=[125,-125] inferencias=5 duracao=229ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (36926) NUCLEA_WAKEWORD: audio=-35.8 dBFS peak=906 score=0.000 max_score=0.008 q_in=[-50,93] q_out=[127,-128] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (38126) NUCLEA_WAKEWORD: audio=-31.6 dBFS peak=2012 score=0.000 max_score=0.004 q_in=[-50,105] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;33mW (38616) NUCLEA_WAKEWORD: Wakeword detectada: score=0.988[0m
+[0;32mI (38676) ROBOT_DISPLAY: Estado visual: 1[0m
+[0;32mI (39936) ROBOT_DISPLAY: Estado visual: 2[0m
+[0;32mI (52286) NUCLEA_WAKEWORD: Gravacao encerrada: 240000 amostras, motivo=3[0m
+[1;31mE (70546) esp-tls: [sock=54] delayed connect error: Software caused connection abort[0m
+[1;31mE (70546) transport_base: Failed to open a new connection: 32772[0m
+[1;31mE (70546) HTTP_CLIENT: Connection failed, sock < 0[0m
+[1;31mE (70546) AUDIO_UPLOADER: Upload falhou: err=ESP_ERR_HTTP_CONNECT HTTP=0[0m
+[0;32mI (71796) NUCLEA_WAKEWORD: audio=-34.5 dBFS peak=994 score=0.000 max_score=0.988 q_in=[-38,92] q_out=[127,-128] inferencias=3 duracao=230ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (72806) NUCLEA_WAKEWORD: audio=-29.9 dBFS peak=1639 score=0.000 max_score=0.000 q_in=[-51,94] q_out=[127,-128] inferencias=4 duracao=230ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (74016) NUCLEA_WAKEWORD: audio=-28.9 dBFS peak=1506 score=0.000 max_score=0.000 q_in=[-35,91] q_out=[127,-128] inferencias=5 duracao=222ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (75216) NUCLEA_WAKEWORD: audio=-39.1 dBFS peak=585 score=0.000 max_score=0.000 q_in=[-40,89] q_out=[127,-128] inferencias=5 duracao=224ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (76426) NUCLEA_WAKEWORD: audio=-30.0 dBFS peak=1396 score=0.000 max_score=0.000 q_in=[-41,91] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (77636) NUCLEA_WAKEWORD: audio=-30.2 dBFS peak=1517 score=0.000 max_score=0.000 q_in=[-38,92] q_out=[127,-128] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (78836) NUCLEA_WAKEWORD: audio=-23.7 dBFS peak=2881 score=0.000 max_score=0.000 q_in=[-37,91] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (80086) NUCLEA_WAKEWORD: audio=-36.7 dBFS peak=796 score=0.000 max_score=0.000 q_in=[-34,89] q_out=[127,-128] inferencias=5 duracao=229ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (81326) NUCLEA_WAKEWORD: audio=-26.1 dBFS peak=2099 score=0.000 max_score=0.000 q_in=[-40,94] q_out=[127,-128] inferencias=5 duracao=226ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (82536) NUCLEA_WAKEWORD: audio=-35.2 dBFS peak=1074 score=0.000 max_score=0.000 q_in=[-40,92] q_out=[127,-128] inferencias=5 duracao=222ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (83736) NUCLEA_WAKEWORD: audio=-27.8 dBFS peak=1613 score=0.016 max_score=0.027 q_in=[-47,94] q_out=[124,-124] inferencias=5 duracao=222ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (84946) NUCLEA_WAKEWORD: audio=-36.2 dBFS peak=855 score=0.004 max_score=0.016 q_in=[-44,93] q_out=[127,-127] inferencias=5 duracao=222ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (86146) NUCLEA_WAKEWORD: audio=-29.9 dBFS peak=1821 score=0.000 max_score=0.008 q_in=[-51,95] q_out=[127,-128] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (87356) NUCLEA_WAKEWORD: audio=-31.9 dBFS peak=1426 score=0.004 max_score=0.004 q_in=[-48,96] q_out=[127,-127] inferencias=5 duracao=224ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (88606) NUCLEA_WAKEWORD: audio=-30.6 dBFS peak=1350 score=0.004 max_score=0.008 q_in=[-41,92] q_out=[127,-127] inferencias=5 duracao=230ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (89606) NUCLEA_WAKEWORD: audio=-27.1 dBFS peak=1772 score=0.004 max_score=0.008 q_in=[-41,92] q_out=[127,-127] inferencias=4 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (90806) NUCLEA_WAKEWORD: audio=-26.0 dBFS peak=2516 score=0.000 max_score=0.004 q_in=[-37,92] q_out=[127,-128] inferencias=5 duracao=225ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (92016) NUCLEA_WAKEWORD: audio=-31.4 dBFS peak=1738 score=0.000 max_score=0.004 q_in=[-40,93] q_out=[127,-128] inferencias=5 duracao=222ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (93216) NUCLEA_WAKEWORD: audio=-28.2 dBFS peak=5399 score=0.000 max_score=0.000 q_in=[-47,95] q_out=[127,-128] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (94426) NUCLEA_WAKEWORD: audio=-35.8 dBFS peak=764 score=0.000 max_score=0.000 q_in=[-40,94] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (95656) NUCLEA_WAKEWORD: audio=-32.6 dBFS peak=1331 score=0.000 max_score=0.000 q_in=[-41,92] q_out=[127,-128] inferencias=5 duracao=230ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (96906) NUCLEA_WAKEWORD: audio=-38.3 dBFS peak=806 score=0.000 max_score=0.000 q_in=[-34,89] q_out=[127,-128] inferencias=5 duracao=232ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (98116) NUCLEA_WAKEWORD: audio=-37.4 dBFS peak=911 score=0.000 max_score=0.000 q_in=[-38,93] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (99316) NUCLEA_WAKEWORD: audio=-46.7 dBFS peak=529 score=0.000 max_score=0.000 q_in=[-36,90] q_out=[127,-128] inferencias=5 duracao=221ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (100526) NUCLEA_WAKEWORD: audio=-34.5 dBFS peak=840 score=0.000 max_score=0.000 q_in=[-43,92] q_out=[127,-128] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (100636) ROBOT_DISPLAY: Estado visual: 3[0m
+[0;32mI (101626) NUCLEA_WAKEWORD: audio=-28.1 dBFS peak=1887 score=0.000 max_score=0.000 q_in=[-37,90] q_out=[127,-128] inferencias=5 duracao=199ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (102086) ROBOT_DISPLAY: Estado visual: 0[0m
+[0;32mI (102806) NUCLEA_WAKEWORD: audio=-29.9 dBFS peak=2139 score=0.000 max_score=0.000 q_in=[-36,92] q_out=[127,-128] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (104006) NUCLEA_WAKEWORD: audio=-28.8 dBFS peak=1685 score=0.000 max_score=0.000 q_in=[-40,92] q_out=[127,-128] inferencias=5 duracao=224ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (105216) NUCLEA_WAKEWORD: audio=-25.7 dBFS peak=2055 score=0.000 max_score=0.000 q_in=[-38,92] q_out=[127,-128] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;33mW (106166) AUDIO_CAPTURE: Fila de audio atrasada: 51 blocos descartados[0m
+[0;32mI (106416) NUCLEA_WAKEWORD: audio=-35.9 dBFS peak=1046 score=0.000 max_score=0.000 q_in=[-48,93] q_out=[127,-128] inferencias=5 duracao=223ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (107626) NUCLEA_WAKEWORD: audio=-39.8 dBFS peak=561 score=0.012 max_score=0.012 q_in=[-48,94] q_out=[125,-125] inferencias=5 duracao=218ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m
+[0;32mI (108836) NUCLEA_WAKEWORD: audio=-24.2 dBFS peak=2507 score=0.004 max_score=0.004 q_in=[-48,95] q_out=[127,-127] inferencias=5 duracao=220ms positivos=0 cooldown=0ms led=apagado stack_livre=13028B captura_stack_livre=4080B[0m

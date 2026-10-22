@@ -7,9 +7,7 @@ services:
       - "8080:8000"
     gpus: all
     environment:
-      WHISPER_MODEL: small
-      WHISPER_DEVICE: cpu
-      WHISPER_COMPUTE_TYPE: int8
+      TTS_WARMUP_TEXT: ${TTS_WARMUP_TEXT-Ola.}
       TTS_VOICE: ${TTS_VOICE:-default}
       TTS_VOICES_DIR: /voices
       TTS_VOICE_CACHE_DIR: /voice-cache

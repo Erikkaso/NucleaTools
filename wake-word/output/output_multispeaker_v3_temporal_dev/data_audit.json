@@ -1,0 +1,839 @@
+{
+  "final_fit": false,
+  "rejected": [
+    {
+      "file": "dataset\\real\\wakeword_eric\\clean\\nuclea_inmp441_sessao_001_0005.wav",
+      "reason": "not_one_second",
+      "samples": 21559
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_001.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_002.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_003.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_004.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_005.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_006.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_007.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_008.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_009.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_010.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_011.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_012.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_013.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_014.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_015.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_016.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_017.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_018.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_silence\\generated\\zero\\zero_019.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\musica\\musica_seg01_008_361.000s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\silencio\\silencio_seg00_009_1127.750s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset\\background_hard_negative\\generated\\silencio\\silencio_seg00_010_1128.000s.wav",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1130.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1135.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1140.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1145.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1150.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1155.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1160.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1165.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1170.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1175.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1180.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1185.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1190.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1195.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1200.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1205.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1210.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1215.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1220.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1225.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1230.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1235.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1240.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1245.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1250.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1255.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1260.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1265.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1270.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1275.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1280.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1285.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1290.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1295.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1300.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1305.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1310.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1315.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1320.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1325.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1330.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1335.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1340.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1345.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1350.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1355.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1360.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1365.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1370.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1375.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1380.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1385.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1390.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1395.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1400.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1405.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1410.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1415.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1420.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1425.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1430.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1435.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1440.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1445.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1450.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1455.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1460.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1465.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1470.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1475.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1480.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1485.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1490.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1495.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1500.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1505.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1510.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1515.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1520.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1525.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1530.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1535.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1540.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1545.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1550.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1555.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1560.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1565.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1570.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1575.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1580.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1585.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1590.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1595.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1600.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1605.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1610.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1615.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1620.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1625.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1630.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1635.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1640.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1645.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1650.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1655.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1660.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1665.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1670.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1675.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1680.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1685.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1690.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1695.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1700.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1705.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1710.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1715.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1720.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1725.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1730.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1735.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1740.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1745.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1750.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1755.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1760.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1765.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1770.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1775.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1780.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1785.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1790.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1795.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    },
+    {
+      "file": "dataset/background_silence/silencio.wav@1800.000",
+      "reason": "duplicate_pcm",
+      "kept": "dataset\\background_silence\\generated\\zero\\zero_000.wav"
+    }
+  ],
+  "counts": {
+    "train": {
+      "alexesm": 192,
+      "amo": 184,
+      "biladadeiro": 384,
+      "derik": 104,
+      "eric": 852,
+      "ivanildo": 101,
+      "sarah": 127,
+      "talles": 340,
+      "valentina": 262,
+      "vinicius": 248,
+      "speech": 389,
+      "noise": 500,
+      "silence": 391,
+      "hard_negative": 44,
+      "inmp_ambiente": 783,
+      "inmp_negative": 34,
+      "room_tone": 226,
+      "synthetic": 160,
+      "quiet_synthetic": 180
+    },
+    "validation": {
+      "lara": 20,
+      "ryam": 14,
+      "speech": 52,
+      "inmp_ambiente": 165,
+      "inmp_negative": 5,
+      "quiet_synthetic": 60
+    },
+    "test": {
+      "eric": 150,
+      "gabriel": 15,
+      "thayza": 19,
+      "speech": 59,
+      "inmp_ambiente": 165,
+      "inmp_negative": 5,
+      "quiet_synthetic": 60
+    }
+  },
+  "split_policy": "Unseen speakers lara/ryam validation; gabriel/thayza test; eric session 002 test.",
+  "negative_limitations": "INMP441 temporal holdout is the same recording; legacy noise, silence and mined false wakes train-only.",
+  "positive_quality": "Reject AC RMS < -60 dBFS or fewer than 6 x 20 ms frames above -50 dBFS; no relabeling.",
+  "augmentation": "Stored train-only variants plus 3 safe shifts/gain/noise per clean train clip, SNR 8-25 dB."
+}

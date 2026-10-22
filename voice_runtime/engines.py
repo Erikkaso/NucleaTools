@@ -1,4 +1,4 @@
-"""Engines locais de Whisper e Chatterbox usados pelo runtime unificado."""
+"""Resident Chatterbox engine and in-memory MP3 encoding."""
 
 from __future__ import annotations
 
@@ -6,36 +6,12 @@ import gc
 import logging
 import os
 from pathlib import Path
+from time import perf_counter
 
 from voice_runtime.config import VoiceSelection, select_voice
 from voice_runtime.voice_cache import cache_path_for_voice, load_or_prepare
 
 logger = logging.getLogger(__name__)
-
-
-class LocalWhisperEngine:
-    def __init__(self) -> None:
-        self.model = None
-
-    def load(self) -> None:
-        if self.model is None:
-            from faster_whisper import WhisperModel
-
-            self.model = WhisperModel(
-                os.getenv("WHISPER_MODEL", "large-v3-turbo"),
-                device=os.getenv("WHISPER_DEVICE", "cuda"),
-                compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "int8_float16"),
-            )
-
-    def unload(self) -> None:
-        self.model = None
-        _release_cuda()
-
-    def transcribe(self, path: Path, language: str) -> str:
-        if self.model is None:
-            raise RuntimeError("Whisper nao foi carregado")
-        segments, _ = self.model.transcribe(str(path), language=language, vad_filter=True)
-        return " ".join(segment.text.strip() for segment in segments).strip() or "Nenhuma fala foi detectada no audio."
 
 
 class LocalChatterboxEngine:
@@ -68,16 +44,33 @@ class LocalChatterboxEngine:
         self.voice = None
         _release_cuda()
 
+    def warmup(self) -> None:
+        text = os.getenv("TTS_WARMUP_TEXT", "Ola.").strip()
+        if text:
+            self.synthesize(text)
+
     def synthesize(self, text: str) -> bytes:
         if self.model is None:
             raise RuntimeError("Chatterbox nao foi carregado")
+        started = perf_counter()
         waveform = self.model.generate(
             text,
             language_id=os.getenv("TTS_LANGUAGE_ID", "pt"),
             exaggeration=float(os.getenv("TTS_EXAGGERATION", "0.5")),
             cfg_weight=float(os.getenv("TTS_CFG_WEIGHT", "0.5")),
         )
-        return encode_mp3(waveform.squeeze(0).cpu().numpy(), self.model.sr)
+        samples = waveform.squeeze(0).cpu().numpy()
+        generated = perf_counter()
+        audio = encode_mp3(samples, self.model.sr)
+        encoded = perf_counter()
+        logger.info(
+            "tts_synthesis generation_ms=%.1f encoding_ms=%.1f audio_seconds=%.2f chars=%d",
+            (generated - started) * 1000,
+            (encoded - generated) * 1000,
+            len(samples) / self.model.sr,
+            len(text),
+        )
+        return audio
 
 
 def encode_mp3(waveform, sample_rate: int) -> bytes:

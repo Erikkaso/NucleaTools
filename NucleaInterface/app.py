@@ -11,10 +11,9 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-troque-em-producao")
 # URL do webhook do n8n. Pode ser sobrescrita pela variável de ambiente N8N_WEBHOOK_URL.
 N8N_WEBHOOK_URL = os.environ.get(
     "N8N_WEBHOOK_URL",
-    #"https://n8n.200-129-37-25.sslip.io/webhook-test/8cf7d87c-4184-460b-8b0e-95affded7054",
-    "https://n8n.200-129-37-25.sslip.io/webhook/8cf7d87c-4184-460b-8b0e-95affded7054",
+    "https://n8n.200-129-37-25.sslip.io/webhook-test/8cf7d87c-4184-460b-8b0e-95affded7054",
 )
-REQUEST_TIMEOUT = int(os.environ.get("N8N_TIMEOUT_SECONDS", "60"))
+REQUEST_TIMEOUT = int(os.environ.get("N8N_TIMEOUT_SECONDS", "220"))
 
 
 class DeviceResponseMailbox:

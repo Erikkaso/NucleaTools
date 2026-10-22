@@ -1,70 +1,87 @@
-"""Orquestracao serial de Whisper e Chatterbox sobre uma unica GPU."""
+"""Keep one warmed TTS engine resident and serialize GPU work."""
 
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
+import logging
+from time import perf_counter
 from typing import Protocol
 
-
-class WhisperEngine(Protocol):
-    def load(self) -> None: ...
-
-    def unload(self) -> None: ...
-
-    def transcribe(self, path: Path, language: str) -> str: ...
+logger = logging.getLogger(__name__)
 
 
 class TtsEngine(Protocol):
     def load(self) -> None: ...
-
+    def warmup(self) -> None: ...
     def unload(self) -> None: ...
-
     def synthesize(self, text: str) -> bytes: ...
 
 
 class VoiceRuntime:
-    """Garante que apenas um dos modelos permaneça residente na GPU."""
-
-    def __init__(self, whisper: WhisperEngine, tts: TtsEngine) -> None:
-        self.whisper = whisper
+    def __init__(self, tts: TtsEngine) -> None:
         self.tts = tts
-        self._lease = asyncio.Lock()
-        self._active: str | None = None
-        self._warm_task: asyncio.Task[None] | None = None
+        self._lock = asyncio.Lock()
+        self._ready = False
 
-    async def transcribe(self, path: Path, language: str) -> str:
-        async with self._lease:
-            await self._activate_whisper()
-            text = await asyncio.to_thread(self.whisper.transcribe, path, language)
-        self._warm_task = asyncio.create_task(self.warm_tts())
-        return text
+    @property
+    def is_ready(self) -> bool:
+        return self._ready
+
+    async def _call(self, function, *args):
+        task = asyncio.create_task(asyncio.to_thread(function, *args))
+        cancelled = False
+        # Cancelling an HTTP request cannot stop a running CUDA worker.
+        # Retain the GPU lock until that worker actually finishes.
+        while True:
+            try:
+                result = await asyncio.shield(task)
+                break
+            except asyncio.CancelledError:
+                if task.cancelled():
+                    raise
+                cancelled = True
+            except Exception:
+                if cancelled:
+                    raise asyncio.CancelledError from None
+                raise
+        if cancelled:
+            raise asyncio.CancelledError
+        return result
+
+    async def _ensure_ready(self) -> None:
+        if self._ready:
+            return
+        started = perf_counter()
+        try:
+            await self._call(self.tts.load)
+            await self._call(self.tts.warmup)
+        except BaseException:
+            await self._call(self.tts.unload)
+            raise
+        self._ready = True
+        logger.info("tts_ready startup_ms=%.1f", (perf_counter() - started) * 1000)
 
     async def warm_tts(self) -> None:
-        async with self._lease:
-            await self._activate_tts()
+        async with self._lock:
+            await self._ensure_ready()
 
     async def synthesize(self, text: str) -> bytes:
-        async with self._lease:
-            await self._activate_tts()
-            return await asyncio.to_thread(self.tts.synthesize, text)
+        queued = perf_counter()
+        async with self._lock:
+            started = perf_counter()
+            await self._ensure_ready()
+            try:
+                return await self._call(self.tts.synthesize, text)
+            finally:
+                logger.info(
+                    "tts_request queue_ms=%.1f work_ms=%.1f chars=%d",
+                    (started - queued) * 1000,
+                    (perf_counter() - started) * 1000,
+                    len(text),
+                )
 
-    async def join(self) -> None:
-        if self._warm_task is not None:
-            await self._warm_task
-
-    async def _activate_whisper(self) -> None:
-        if self._active == "whisper":
-            return
-        if self._active == "tts":
-            await asyncio.to_thread(self.tts.unload)
-        await asyncio.to_thread(self.whisper.load)
-        self._active = "whisper"
-
-    async def _activate_tts(self) -> None:
-        if self._active == "tts":
-            return
-        if self._active == "whisper":
-            await asyncio.to_thread(self.whisper.unload)
-        await asyncio.to_thread(self.tts.load)
-        self._active = "tts"
+    async def close(self) -> None:
+        async with self._lock:
+            if self._ready:
+                self._ready = False
+                await self._call(self.tts.unload)

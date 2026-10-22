@@ -34,6 +34,8 @@ metadata:
   name: voice-runtime
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: voice-runtime
@@ -44,17 +46,13 @@ spec:
     spec:
       containers:
         - name: voice-runtime
-          image: nuclic/voice_runtime:2.3
+          image: nuclic/voice_runtime:2.4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           env:
-            - name: WHISPER_MODEL
-              value: small
-            - name: WHISPER_DEVICE
-              value: cpu
-            - name: WHISPER_COMPUTE_TYPE
-              value: int8
+            - name: TTS_WARMUP_TEXT
+              value: "Ola."
             - name: TTS_VOICE
               value: default
             - name: TTS_LANGUAGE_ID

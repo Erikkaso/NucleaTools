@@ -1,0 +1,308 @@
+{
+  "seed": 1204528219,
+  "training_config": {
+    "seed": 1204528219,
+    "randomized": true,
+    "learning_rate": 0.0006735104736469071,
+    "dropout": 0.3,
+    "batch_size": 32
+  },
+  "excluded_speakers": [
+    "thayza"
+  ],
+  "reviewed_clean_only": true,
+  "eric_random_split": true,
+  "epochs_run": 26,
+  "architecture": "temporal",
+  "final_fit": false,
+  "best_epoch": 14,
+  "quantization": {
+    "bytes": 12840,
+    "sha256": "6b4321b5b38a4fd793080b0a3889a0aeff7bda30dba1acd31063689266728aaf",
+    "ops": [
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "SOFTMAX"
+    ],
+    "input_scale": 3.174777030944824,
+    "input_zero_point": 71,
+    "input_shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "output_shape": [
+      1,
+      2
+    ]
+  },
+  "test_only_speakers": [],
+  "positive_recall_limitation": "Eric train/validation/test share voice and recording sessions; only utterance/overlap groups are held out. Other voices keep speaker holdouts. Not independent-session generalization.",
+  "calibration": {
+    "threshold": 0.93359375,
+    "tp": 31,
+    "fn": 10,
+    "fp": 1,
+    "tn": 539,
+    "positive_count": 41,
+    "recall": 0.7560975609756098,
+    "false_positive_rate": 0.001851851851851852,
+    "target_false_positive_rate": 0.01,
+    "quiet_max_score": 0.9296875,
+    "deployable": true
+  },
+  "validation": {
+    "float": {
+      "tp": 30,
+      "positive_count": 41,
+      "recall": 0.7317073170731707,
+      "fp": 2,
+      "negative_count": 540,
+      "fpr": 0.003703703703703704,
+      "max_negative": 0.9702571034431458
+    },
+    "int8": {
+      "tp": 31,
+      "positive_count": 41,
+      "recall": 0.7560975609756098,
+      "fp": 1,
+      "negative_count": 540,
+      "fpr": 0.001851851851851852,
+      "max_negative": 0.97265625
+    },
+    "quantization_mean_delta": 0.012592009784361912,
+    "per_source": {
+      "eric": {
+        "tp": 18,
+        "positive_count": 19,
+        "recall": 0.9473684210526315,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.9296875
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 5,
+        "fpr": 0.2,
+        "max_negative": 0.97265625
+      },
+      "lara": {
+        "tp": 10,
+        "positive_count": 14,
+        "recall": 0.7142857142857143,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "matched_silence": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 2,
+        "fpr": 0.0,
+        "max_negative": 0.140625
+      },
+      "mined_quiet": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 64,
+        "fpr": 0.0,
+        "max_negative": 0.08203125
+      },
+      "mined_scene": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 192,
+        "fpr": 0.0,
+        "max_negative": 0.91796875
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.140625
+      },
+      "ryam": {
+        "tp": 3,
+        "positive_count": 8,
+        "recall": 0.375,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 52,
+        "fpr": 0.0,
+        "max_negative": 0.3515625
+      }
+    }
+  },
+  "test": {
+    "float": {
+      "tp": 24,
+      "positive_count": 25,
+      "recall": 0.96,
+      "fp": 7,
+      "negative_count": 562,
+      "fpr": 0.012455516014234875,
+      "max_negative": 0.9949324727058411
+    },
+    "int8": {
+      "tp": 24,
+      "positive_count": 25,
+      "recall": 0.96,
+      "fp": 7,
+      "negative_count": 562,
+      "fpr": 0.012455516014234875,
+      "max_negative": 0.9921875
+    },
+    "quantization_mean_delta": 0.01155315959065241,
+    "per_source": {
+      "eric": {
+        "tp": 14,
+        "positive_count": 15,
+        "recall": 0.9333333333333333,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "gabriel": {
+        "tp": 10,
+        "positive_count": 10,
+        "recall": 1.0,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 2,
+        "negative_count": 165,
+        "fpr": 0.012121212121212121,
+        "max_negative": 0.98828125
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 4,
+        "negative_count": 5,
+        "fpr": 0.8,
+        "max_negative": 0.9921875
+      },
+      "matched_silence": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 17,
+        "fpr": 0.0,
+        "max_negative": 0.58203125
+      },
+      "mined_quiet": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 64,
+        "fpr": 0.0,
+        "max_negative": 0.04296875
+      },
+      "mined_scene": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 192,
+        "fpr": 0.0,
+        "max_negative": 0.8671875
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.03125
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 59,
+        "fpr": 0.01694915254237288,
+        "max_negative": 0.9921875
+      }
+    }
+  },
+  "silence_sanity": {
+    "zero_dc_scores": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "passed": true
+  },
+  "previous_model_same_test": {
+    "tp": 16,
+    "positive_count": 25,
+    "recall": 0.64,
+    "fp": 14,
+    "negative_count": 562,
+    "fpr": 0.02491103202846975,
+    "max_negative": 0.96875
+  },
+  "previous_model_silence": [
+    0.17578125,
+    0.0,
+    0.0
+  ],
+  "previous_model_comparison_limitation": "Diagnostic only: the previous model trained on some of these positives/negatives.",
+  "promotion": {
+    "automatic": false,
+    "approved": false,
+    "hardware_validated": false,
+    "diagnostic_false_events_160ms": 2,
+    "heldout_positive_recall": 0.96,
+    "minimum_positive_recall_screen": 0.8,
+    "offline_checks_passed": false,
+    "reason": "Rejected: diagnostic false wakes or unusable calibration; keep the active model."
+  }
+}

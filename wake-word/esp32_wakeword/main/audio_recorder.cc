@@ -1,4 +1,5 @@
 #include "audio_recorder.h"
+#include "recording_window.h"
 
 #include <algorithm>
 #include <cstring>
@@ -10,6 +11,10 @@
 
 namespace {
 constexpr const char* kTag = "AUDIO_RECORDER";
+static_assert(CONFIG_NUCLEA_MIN_RECORDING_MS <= CONFIG_NUCLEA_MAX_RECORDING_MS,
+              "Base recording duration cannot exceed maximum duration");
+static_assert(CONFIG_NUCLEA_MAX_RECORDING_MS <= 12000,
+              "Recording cannot exceed twelve seconds");
 }
 
 AudioRecorder::~AudioRecorder() {
@@ -30,39 +35,30 @@ esp_err_t AudioRecorder::Init() {
     return ESP_OK;
 }
 
-esp_err_t AudioRecorder::Start(const int16_t* pre_roll, size_t pre_roll_samples, int64_t now_ms) {
+esp_err_t AudioRecorder::Start(const int16_t* pre_roll, size_t pre_roll_samples, int64_t /*now_ms*/) {
     if (samples_ == nullptr || pre_roll == nullptr) return ESP_ERR_INVALID_STATE;
     sample_count_ = std::min(pre_roll_samples, capacity_);
     std::memcpy(samples_, pre_roll + (pre_roll_samples - sample_count_),
                 sample_count_ * sizeof(int16_t));
-    started_at_ms_ = now_ms;
-    last_speech_at_ms_ = now_ms;
+    last_activity_sample_ = sample_count_;
     recording_ = true;
     return ESP_OK;
 }
 
 RecordingResult AudioRecorder::Append(const int16_t* samples, size_t count, float rms_dbfs,
-                                      int64_t now_ms) {
+                                      int64_t /*now_ms*/) {
     if (!recording_ || samples == nullptr) return RecordingResult::kBufferFull;
-    const size_t available = capacity_ - sample_count_;
-    const size_t copied = std::min(count, available);
-    std::memcpy(samples_ + sample_count_, samples, copied * sizeof(int16_t));
-    sample_count_ += copied;
-
-    if (rms_dbfs >= static_cast<float>(CONFIG_NUCLEA_SILENCE_DBFS)) {
-        last_speech_at_ms_ = now_ms;
-    }
-    if (copied < count || sample_count_ == capacity_) {
+    if (count == 0) return RecordingResult::kContinue;
+    const auto step = AdvanceRecording(
+        sample_count_, count, rms_dbfs >= static_cast<float>(CONFIG_NUCLEA_SILENCE_DBFS),
+        last_activity_sample_, (kSampleRate * CONFIG_NUCLEA_MIN_RECORDING_MS) / 1000,
+        (kSampleRate * CONFIG_NUCLEA_SILENCE_MS) / 1000, capacity_);
+    std::memcpy(samples_ + sample_count_, samples, step.copied * sizeof(int16_t));
+    sample_count_ += step.copied;
+    last_activity_sample_ = step.last_activity;
+    if (step.finished) {
         recording_ = false;
-        return RecordingResult::kBufferFull;
-    }
-    if (now_ms - started_at_ms_ >= CONFIG_NUCLEA_MAX_RECORDING_MS) {
-        recording_ = false;
-        return RecordingResult::kMaximumDuration;
-    }
-    if (now_ms - last_speech_at_ms_ >= CONFIG_NUCLEA_SILENCE_MS) {
-        recording_ = false;
-        return RecordingResult::kSilence;
+        return step.maximum ? RecordingResult::kMaximumDuration : RecordingResult::kSilence;
     }
     return RecordingResult::kContinue;
 }
@@ -70,4 +66,5 @@ RecordingResult AudioRecorder::Append(const int16_t* samples, size_t count, floa
 void AudioRecorder::Reset() {
     recording_ = false;
     sample_count_ = 0;
+    last_activity_sample_ = 0;
 }

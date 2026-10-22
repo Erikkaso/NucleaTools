@@ -10,14 +10,19 @@ menu "Nuclea device audio"
         default -32
 
     config NUCLEA_SILENCE_MS
-        int "Silence duration before upload (ms)"
+        int "Activity extension after last loud audio (ms)"
         range 500 10000
-        default 2000
+        default 1500
+
+    config NUCLEA_MIN_RECORDING_MS
+        int "Base recording duration including pre-roll (ms)"
+        range 1000 12000
+        default 5000
 
     config NUCLEA_MAX_RECORDING_MS
         int "Maximum recording duration (ms)"
-        range 3000 30000
-        default 15000
+        range 5000 12000
+        default 12000
 
 endmenu
 

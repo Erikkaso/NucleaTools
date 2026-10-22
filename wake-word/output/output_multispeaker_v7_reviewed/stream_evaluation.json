@@ -1,0 +1,313 @@
+{
+  "threshold": 0.93359375,
+  "high_threshold": 0.98,
+  "streams": {
+    "dataset/background_test2/ambientenew.wav": {
+      "160": {
+        "seconds": 180.0,
+        "windows": 1107,
+        "events": 0,
+        "max_score": 0.43359375,
+        "events_per_hour": 0.0
+      },
+      "320": {
+        "seconds": 180.0,
+        "windows": 555,
+        "events": 0,
+        "max_score": 0.25390625,
+        "events_per_hour": 0.0
+      },
+      "evaluated_source_range_s": [
+        2122.925875,
+        2651.157375
+      ],
+      "evaluated_sections_s": [
+        [
+          2122.925875,
+          2182.925875
+        ],
+        [
+          2357.041625,
+          2417.041625
+        ],
+        [
+          2591.157375,
+          2651.157375
+        ]
+      ]
+    },
+    "dataset/background_test2/calmonew.wav": {
+      "160": {
+        "seconds": 119.55675,
+        "windows": 729,
+        "events": 0,
+        "max_score": 0.1015625,
+        "events_per_hour": 0.0
+      },
+      "320": {
+        "seconds": 119.55675,
+        "windows": 366,
+        "events": 0,
+        "max_score": 0.1015625,
+        "events_per_hour": 0.0
+      },
+      "evaluated_source_range_s": [
+        488.2263125,
+        607.7829375
+      ],
+      "evaluated_sections_s": [
+        [
+          488.2263125,
+          528.0785208333333
+        ],
+        [
+          528.0785208333333,
+          567.9307291666667
+        ],
+        [
+          567.9307291666667,
+          607.7829375
+        ]
+      ]
+    },
+    "dataset/background_test2/conversanew.mp3": {
+      "160": {
+        "seconds": 179.9999375,
+        "windows": 1107,
+        "events": 1,
+        "max_score": 0.98046875,
+        "events_per_hour": 20.000006944446856
+      },
+      "320": {
+        "seconds": 179.9999375,
+        "windows": 555,
+        "events": 0,
+        "max_score": 0.94921875,
+        "events_per_hour": 0.0
+      },
+      "evaluated_source_range_s": [
+        1086.37425,
+        1355.4678125
+      ],
+      "evaluated_sections_s": [
+        [
+          1086.37425,
+          1146.37425
+        ],
+        [
+          1190.92103125,
+          1250.92103125
+        ],
+        [
+          1295.4678125,
+          1355.4678125
+        ]
+      ]
+    },
+    "dataset/background_test2/musicanew.wav": {
+      "160": {
+        "seconds": 68.1951875,
+        "windows": 408,
+        "events": 1,
+        "max_score": 0.9609375,
+        "events_per_hour": 52.78964882969198
+      },
+      "320": {
+        "seconds": 68.1951875,
+        "windows": 204,
+        "events": 0,
+        "max_score": 0.953125,
+        "events_per_hour": 0.0
+      },
+      "evaluated_source_range_s": [
+        282.7803125,
+        350.9754375
+      ],
+      "evaluated_sections_s": [
+        [
+          282.7803125,
+          305.51202083333334
+        ],
+        [
+          305.51202083333334,
+          328.2437291666667
+        ],
+        [
+          328.24372916666664,
+          350.9754375
+        ]
+      ]
+    },
+    "dataset/background_test/silencioabsoluto.wav": {
+      "160": {
+        "seconds": 180.0,
+        "windows": 1107,
+        "events": 0,
+        "max_score": 0.0,
+        "events_per_hour": 0.0
+      },
+      "320": {
+        "seconds": 180.0,
+        "windows": 555,
+        "events": 0,
+        "max_score": 0.0,
+        "events_per_hour": 0.0
+      },
+      "evaluated_source_range_s": [
+        0.0,
+        604.3289583333334
+      ],
+      "evaluated_sections_s": [
+        [
+          0.0,
+          60.0
+        ],
+        [
+          272.1644791666667,
+          332.1644791666667
+        ],
+        [
+          544.3289583333334,
+          604.3289583333334
+        ]
+      ]
+    }
+  },
+  "limitations": [
+    "Diagnostic recordings may have been inspected in earlier model development.",
+    "Only sampled sections are evaluated, not the entire file.",
+    "No on-device timing, acoustics or final microphone false-wake guarantee."
+  ],
+  "heldout_noise_stress": {
+    "20.0": {
+      "overall": {
+        "tp": 21,
+        "positive_count": 25,
+        "recall": 0.84,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "per_speaker": {
+        "eric": {
+          "tp": 14,
+          "positive_count": 15,
+          "recall": 0.9333333333333333,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "gabriel": {
+          "tp": 7,
+          "positive_count": 10,
+          "recall": 0.7,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        }
+      }
+    },
+    "10.0": {
+      "overall": {
+        "tp": 17,
+        "positive_count": 25,
+        "recall": 0.68,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "per_speaker": {
+        "eric": {
+          "tp": 14,
+          "positive_count": 15,
+          "recall": 0.9333333333333333,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "gabriel": {
+          "tp": 3,
+          "positive_count": 10,
+          "recall": 0.3,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        }
+      }
+    }
+  },
+  "annotated_phrase_diagnostic": {
+    "limitation": "Known training clips; greetings remain positive; not independent recall or automatic word-boundary verification.",
+    "samples": [
+      {
+        "phrase": "Oi N\u00faclea",
+        "file": "dataset\\real\\wakeword_raisa\\positive\\clean\\nuclea_01_clean.wav",
+        "score": 0.99609375,
+        "detected": true
+      },
+      {
+        "phrase": "N\u00faclea",
+        "file": "dataset\\real\\wakeword_raisa\\positive\\clean\\nuclea_02_clean.wav",
+        "score": 0.99609375,
+        "detected": true
+      },
+      {
+        "phrase": "Oi N\u00faclea",
+        "file": "dataset\\real\\wakeword_raisa\\positive\\clean\\nuclea_05_clean.wav",
+        "score": 0.99609375,
+        "detected": true
+      },
+      {
+        "phrase": "N\u00faclea",
+        "file": "dataset\\real\\wakeword_raisa\\positive\\clean\\nuclea_07_clean.wav",
+        "score": 0.99609375,
+        "detected": true
+      },
+      {
+        "phrase": "N\u00faclea",
+        "file": "dataset\\real\\wakeword_raisa\\positive\\clean\\nuclea_10_clean.wav",
+        "score": 0.99609375,
+        "detected": true
+      },
+      {
+        "phrase": "Oi N\u00faclea",
+        "file": "dataset\\real\\wakeword_raisa\\positive\\clean\\nuclea_11_clean.wav",
+        "score": 0.99609375,
+        "detected": true
+      }
+    ]
+  },
+  "temporal_positive_diagnostic": {
+    "160": {
+      "eric": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "gabriel": {
+        "trials": 16,
+        "detected": 15,
+        "recall": 0.9375
+      }
+    },
+    "320": {
+      "eric": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "gabriel": {
+        "trials": 16,
+        "detected": 12,
+        "recall": 0.75
+      }
+    }
+  },
+  "temporal_positive_limitation": "At most 8 known clips per speaker balanced across source recordings, padded with silence, two window phases; not independent hardware recall."
+}

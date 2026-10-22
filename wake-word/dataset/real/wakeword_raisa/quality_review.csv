@@ -1,0 +1,12 @@
+source_id,phrase,keyword_start_s,keyword_end_s,keyword_duration_s,original_rms_dbfs,clean_rms_dbfs,margin_before_word_s,margin_after_word_s,keyword_coverage,status,note
+nuclea_01,Oi Núclea,1.090,1.720,0.630,-16.92,-18.04,0.115,0.255,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_02,Núclea,4.650,5.260,0.610,-20.49,-21.67,0.115,0.275,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_03,Bom dia Núclea,8.800,9.530,0.730,-20.59,-21.77,0.115,0.155,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_04,Boa tarde Núclea,12.850,13.560,0.710,-20.60,-21.72,0.115,0.175,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_05,Oi Núclea,16.300,16.880,0.580,-19.45,-20.50,0.115,0.305,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_06,Boa noite Núclea,21.080,21.660,0.580,-22.63,-23.58,0.115,0.305,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_07,Núclea,24.280,25.020,0.740,-15.69,-16.41,0.115,0.145,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_08,Tudo bem Núclea,28.770,29.370,0.600,-22.46,-23.71,0.115,0.285,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_09,Oi Núclea,32.680,33.240,0.560,-19.32,-20.54,0.115,0.325,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_10,Núclea,38.960,39.580,0.620,-15.64,-16.40,0.115,0.265,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada
+nuclea_11,Oi Núclea,43.590,44.230,0.640,-18.39,-19.56,0.115,0.245,included,pre_aprovado_transcricao_e_energia,revisao_auditiva_recomendada

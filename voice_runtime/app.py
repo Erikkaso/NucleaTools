@@ -1,89 +1,57 @@
-"""Aplicacao unica de transcricao e sintese de voz."""
+"""HTTP API for the resident Chatterbox TTS engine."""
 
-from __future__ import annotations
-
-import tempfile
-from collections.abc import AsyncIterator
+import logging
 from contextlib import asynccontextmanager
-from pathlib import Path
 
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
-from fastapi.responses import Response
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 
-from voice_runtime.engines import LocalChatterboxEngine, LocalWhisperEngine
+from voice_runtime.engines import LocalChatterboxEngine
 from voice_runtime.runtime import VoiceRuntime
 
-ALLOWED_EXTENSIONS = {".mp3", ".wav", ".m4a", ".mp4", ".webm", ".ogg", ".flac", ".aac", ".opus"}
-MEDIA_TYPE_EXTENSIONS = {
-    "audio/aac": ".aac",
-    "audio/flac": ".flac",
-    "audio/mpeg": ".mp3",
-    "audio/mp4": ".m4a",
-    "audio/ogg": ".ogg",
-    "audio/opus": ".opus",
-    "audio/wav": ".wav",
-    "audio/webm": ".webm",
-}
-OPTIONAL_FILE = File(default=None)
+logger = logging.getLogger(__name__)
 
 
 class SpeechRequest(BaseModel):
     text: str
 
 
-def create_app(voice_runtime: VoiceRuntime) -> FastAPI:
-    @asynccontextmanager
-    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-        await voice_runtime.warm_tts()
-        yield
+def create_app(runtime: VoiceRuntime | None = None) -> FastAPI:
+    voice_runtime = runtime if runtime is not None else VoiceRuntime(LocalChatterboxEngine())
 
-    app = FastAPI(title="Voice Runtime", version="1.0.0", lifespan=lifespan)
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        logging.basicConfig(level=logging.INFO)
+        await voice_runtime.warm_tts()
+        try:
+            yield
+        finally:
+            await voice_runtime.close()
+
+    app = FastAPI(title="Voice Runtime TTS", version="2.0.0", lifespan=lifespan)
 
     @app.get("/health")
-    async def health() -> dict[str, str]:
-        return {"status": "ready"}
-
-    @app.post("/v1/audio/transcriptions")
-    async def transcriptions(
-        request: Request, file: UploadFile | None = OPTIONAL_FILE, language: str = "pt"
-    ) -> dict[str, str]:
-        if file is not None and file.filename:
-            suffix = Path(file.filename).suffix.lower()
-            content = await file.read()
-        else:
-            media_type = request.headers.get("content-type", "").split(";", maxsplit=1)[0].lower()
-            suffix = MEDIA_TYPE_EXTENSIONS.get(media_type, "")
-            content = await request.body()
-        if not content:
-            raise HTTPException(status_code=400, detail="O campo file e obrigatorio")
-        if suffix not in ALLOWED_EXTENSIONS:
-            raise HTTPException(status_code=400, detail="Formato nao suportado")
-        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temporary:
-            temporary.write(content)
-            path = Path(temporary.name)
-        try:
-            return {"text": await voice_runtime.transcribe(path, language.strip() or "pt")}
-        except RuntimeError as error:
-            raise HTTPException(status_code=503, detail="Servico de transcricao indisponivel") from error
-        finally:
-            if file is not None:
-                await file.close()
-            path.unlink(missing_ok=True)
+    async def health():
+        ready = voice_runtime.is_ready
+        return JSONResponse(
+            {"status": "ready" if ready else "starting", "service": "tts"},
+            status_code=200 if ready else 503,
+        )
 
     @app.post("/v1/audio/speech")
-    async def speech(payload: SpeechRequest) -> Response:
-        text = payload.text.strip()
+    async def speech(body: SpeechRequest):
+        text = body.text.strip()
         if not text:
-            raise HTTPException(status_code=422, detail="texto e obrigatorio")
+            raise HTTPException(status_code=422, detail="Texto nao pode ser vazio")
         try:
             audio = await voice_runtime.synthesize(text)
         except RuntimeError as error:
+            logger.exception("tts_request_failed")
             raise HTTPException(status_code=503, detail="Servico de sintese indisponivel") from error
         return Response(content=audio, media_type="audio/mpeg")
 
     return app
 
 
-runtime = VoiceRuntime(LocalWhisperEngine(), LocalChatterboxEngine())
-app = create_app(runtime)
+app = create_app()

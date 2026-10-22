@@ -29,7 +29,6 @@ private:
     int16_t* samples_ = nullptr;
     size_t capacity_ = 0;
     size_t sample_count_ = 0;
-    int64_t started_at_ms_ = 0;
-    int64_t last_speech_at_ms_ = 0;
+    size_t last_activity_sample_ = 0;
     bool recording_ = false;
 };

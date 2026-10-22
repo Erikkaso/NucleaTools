@@ -6876,7 +6876,20 @@
                     500,
                     10000
                 ],
-                "title": "Silence duration before upload (ms)",
+                "title": "Activity extension after last loud audio (ms)",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": null,
+                "id": "NUCLEA_MIN_RECORDING_MS",
+                "name": "NUCLEA_MIN_RECORDING_MS",
+                "range": [
+                    1000,
+                    12000
+                ],
+                "title": "Base recording duration including pre-roll (ms)",
                 "type": "int"
             },
             {
@@ -6886,8 +6899,8 @@
                 "id": "NUCLEA_MAX_RECORDING_MS",
                 "name": "NUCLEA_MAX_RECORDING_MS",
                 "range": [
-                    3000,
-                    30000
+                    5000,
+                    12000
                 ],
                 "title": "Maximum recording duration (ms)",
                 "type": "int"

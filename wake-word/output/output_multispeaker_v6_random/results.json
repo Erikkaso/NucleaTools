@@ -1,0 +1,296 @@
+{
+  "seed": 1204528219,
+  "training_config": {
+    "seed": 1204528219,
+    "randomized": true,
+    "learning_rate": 0.0006735104736469071,
+    "dropout": 0.3,
+    "batch_size": 32
+  },
+  "excluded_speakers": [
+    "thayza"
+  ],
+  "epochs_run": 17,
+  "architecture": "temporal",
+  "final_fit": false,
+  "best_epoch": 5,
+  "quantization": {
+    "bytes": 12840,
+    "sha256": "ae2f31285ba6e0f3762529a9a06d4399344de91c77f100051a581350d4fc70f2",
+    "ops": [
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "SOFTMAX"
+    ],
+    "input_scale": 3.139904022216797,
+    "input_zero_point": 73,
+    "input_shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "output_shape": [
+      1,
+      2
+    ]
+  },
+  "test_only_speakers": [],
+  "calibration": {
+    "threshold": 0.81640625,
+    "tp": 24,
+    "fn": 10,
+    "fp": 2,
+    "tn": 538,
+    "positive_count": 34,
+    "recall": 0.7058823529411765,
+    "false_positive_rate": 0.003703703703703704,
+    "target_false_positive_rate": 0.01,
+    "quiet_max_score": 0.8125,
+    "deployable": true
+  },
+  "validation": {
+    "float": {
+      "tp": 25,
+      "positive_count": 34,
+      "recall": 0.7352941176470589,
+      "fp": 3,
+      "negative_count": 540,
+      "fpr": 0.005555555555555556,
+      "max_negative": 0.9554703235626221
+    },
+    "int8": {
+      "tp": 24,
+      "positive_count": 34,
+      "recall": 0.7058823529411765,
+      "fp": 2,
+      "negative_count": 540,
+      "fpr": 0.003703703703703704,
+      "max_negative": 0.9453125
+    },
+    "quantization_mean_delta": 0.008845396191482502,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.8125
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 5,
+        "fpr": 0.0,
+        "max_negative": 0.70703125
+      },
+      "lara": {
+        "tp": 13,
+        "positive_count": 20,
+        "recall": 0.65,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "matched_silence": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 2,
+        "fpr": 0.0,
+        "max_negative": 0.02734375
+      },
+      "mined_quiet": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 64,
+        "fpr": 0.0,
+        "max_negative": 0.12890625
+      },
+      "mined_scene": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 192,
+        "fpr": 0.0,
+        "max_negative": 0.6484375
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.01171875
+      },
+      "ryam": {
+        "tp": 11,
+        "positive_count": 14,
+        "recall": 0.7857142857142857,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 2,
+        "negative_count": 52,
+        "fpr": 0.038461538461538464,
+        "max_negative": 0.9453125
+      }
+    }
+  },
+  "test": {
+    "float": {
+      "tp": 77,
+      "positive_count": 165,
+      "recall": 0.4666666666666667,
+      "fp": 8,
+      "negative_count": 562,
+      "fpr": 0.014234875444839857,
+      "max_negative": 0.9234424829483032
+    },
+    "int8": {
+      "tp": 77,
+      "positive_count": 165,
+      "recall": 0.4666666666666667,
+      "fp": 8,
+      "negative_count": 562,
+      "fpr": 0.014234875444839857,
+      "max_negative": 0.9140625
+    },
+    "quantization_mean_delta": 0.00978406973183125,
+    "per_source": {
+      "eric": {
+        "tp": 62,
+        "positive_count": 150,
+        "recall": 0.41333333333333333,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "gabriel": {
+        "tp": 15,
+        "positive_count": 15,
+        "recall": 1.0,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.796875
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 5,
+        "fpr": 0.2,
+        "max_negative": 0.84765625
+      },
+      "matched_silence": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 17,
+        "fpr": 0.0,
+        "max_negative": 0.046875
+      },
+      "mined_quiet": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 64,
+        "fpr": 0.0,
+        "max_negative": 0.109375
+      },
+      "mined_scene": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 2,
+        "negative_count": 192,
+        "fpr": 0.010416666666666666,
+        "max_negative": 0.9140625
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.0078125
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 5,
+        "negative_count": 59,
+        "fpr": 0.0847457627118644,
+        "max_negative": 0.8828125
+      }
+    }
+  },
+  "silence_sanity": {
+    "zero_dc_scores": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "passed": true
+  },
+  "previous_model_same_test": {
+    "tp": 99,
+    "positive_count": 165,
+    "recall": 0.6,
+    "fp": 14,
+    "negative_count": 562,
+    "fpr": 0.02491103202846975,
+    "max_negative": 0.96875
+  },
+  "previous_model_silence": [
+    0.17578125,
+    0.0,
+    0.0
+  ],
+  "previous_model_comparison_limitation": "Diagnostic only: the previous model trained on some of these positives/negatives.",
+  "promotion": {
+    "automatic": false,
+    "approved": false,
+    "hardware_validated": false,
+    "diagnostic_false_events_160ms": 8,
+    "heldout_positive_recall": 0.4666666666666667,
+    "minimum_positive_recall_screen": 0.8,
+    "offline_checks_passed": false,
+    "reason": "Rejected: diagnostic false wakes or unusable calibration; keep the active model."
+  }
+}

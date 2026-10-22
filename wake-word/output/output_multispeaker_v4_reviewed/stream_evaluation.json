@@ -1,0 +1,547 @@
+{
+  "threshold": 0.84765625,
+  "high_threshold": 0.98,
+  "streams": {
+    "dataset/background_test2/ambientenew.wav": {
+      "160": {
+        "seconds": 180.0,
+        "windows": 1107,
+        "events": 8,
+        "max_score": 0.98046875,
+        "events_per_hour": 160.0
+      },
+      "320": {
+        "seconds": 180.0,
+        "windows": 555,
+        "events": 4,
+        "max_score": 0.98046875,
+        "events_per_hour": 80.0
+      }
+    },
+    "dataset/background_test2/calmonew.wav": {
+      "160": {
+        "seconds": 180.0,
+        "windows": 1107,
+        "events": 0,
+        "max_score": 0.1953125,
+        "events_per_hour": 0.0
+      },
+      "320": {
+        "seconds": 180.0,
+        "windows": 555,
+        "events": 0,
+        "max_score": 0.1953125,
+        "events_per_hour": 0.0
+      }
+    },
+    "dataset/background_test2/conversanew.mp3": {
+      "160": {
+        "seconds": 178.83418749999998,
+        "windows": 1100,
+        "events": 10,
+        "max_score": 0.99609375,
+        "events_per_hour": 201.30379153594444
+      },
+      "320": {
+        "seconds": 178.83418749999998,
+        "windows": 551,
+        "events": 8,
+        "max_score": 0.99609375,
+        "events_per_hour": 161.04303322875558
+      }
+    },
+    "dataset/background_test2/musicanew.wav": {
+      "160": {
+        "seconds": 180.0,
+        "windows": 1107,
+        "events": 3,
+        "max_score": 0.99609375,
+        "events_per_hour": 60.0
+      },
+      "320": {
+        "seconds": 180.0,
+        "windows": 555,
+        "events": 2,
+        "max_score": 0.99609375,
+        "events_per_hour": 40.0
+      }
+    },
+    "dataset/background_test/silencioabsoluto.wav": {
+      "160": {
+        "seconds": 180.0,
+        "windows": 1107,
+        "events": 0,
+        "max_score": 0.0,
+        "events_per_hour": 0.0
+      },
+      "320": {
+        "seconds": 180.0,
+        "windows": 555,
+        "events": 0,
+        "max_score": 0.0,
+        "events_per_hour": 0.0
+      }
+    }
+  },
+  "limitations": [
+    "Diagnostic recordings may have been inspected in earlier model development.",
+    "Only sampled sections are evaluated, not the entire file.",
+    "No on-device timing, acoustics or final microphone false-wake guarantee."
+  ],
+  "noise_stress_limitation": "Final refit: positives are training recordings. Stress is diagnostic, NOT unseen-voice recall.",
+  "heldout_noise_stress": {
+    "20.0": {
+      "overall": {
+        "tp": 500,
+        "positive_count": 587,
+        "recall": 0.8517887563884157,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "per_speaker": {
+        "alexesm": {
+          "tp": 23,
+          "positive_count": 23,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "amo": {
+          "tp": 23,
+          "positive_count": 23,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "biladadeiro": {
+          "tp": 45,
+          "positive_count": 48,
+          "recall": 0.9375,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "derik": {
+          "tp": 13,
+          "positive_count": 13,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "eric": {
+          "tp": 198,
+          "positive_count": 273,
+          "recall": 0.7252747252747253,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "gabriel": {
+          "tp": 15,
+          "positive_count": 15,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "ivanildo": {
+          "tp": 12,
+          "positive_count": 12,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "lara": {
+          "tp": 20,
+          "positive_count": 20,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "raisa": {
+          "tp": 10,
+          "positive_count": 11,
+          "recall": 0.9090909090909091,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "ryam": {
+          "tp": 14,
+          "positive_count": 14,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "sarah": {
+          "tp": 15,
+          "positive_count": 15,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "talles": {
+          "tp": 35,
+          "positive_count": 39,
+          "recall": 0.8974358974358975,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "thayza": {
+          "tp": 17,
+          "positive_count": 19,
+          "recall": 0.8947368421052632,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "valentina": {
+          "tp": 30,
+          "positive_count": 31,
+          "recall": 0.967741935483871,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "vinicius": {
+          "tp": 30,
+          "positive_count": 31,
+          "recall": 0.967741935483871,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        }
+      }
+    },
+    "10.0": {
+      "overall": {
+        "tp": 443,
+        "positive_count": 587,
+        "recall": 0.7546848381601363,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "per_speaker": {
+        "alexesm": {
+          "tp": 19,
+          "positive_count": 23,
+          "recall": 0.8260869565217391,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "amo": {
+          "tp": 21,
+          "positive_count": 23,
+          "recall": 0.9130434782608695,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "biladadeiro": {
+          "tp": 42,
+          "positive_count": 48,
+          "recall": 0.875,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "derik": {
+          "tp": 12,
+          "positive_count": 13,
+          "recall": 0.9230769230769231,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "eric": {
+          "tp": 172,
+          "positive_count": 273,
+          "recall": 0.63003663003663,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "gabriel": {
+          "tp": 14,
+          "positive_count": 15,
+          "recall": 0.9333333333333333,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "ivanildo": {
+          "tp": 12,
+          "positive_count": 12,
+          "recall": 1.0,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "lara": {
+          "tp": 18,
+          "positive_count": 20,
+          "recall": 0.9,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "raisa": {
+          "tp": 10,
+          "positive_count": 11,
+          "recall": 0.9090909090909091,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "ryam": {
+          "tp": 12,
+          "positive_count": 14,
+          "recall": 0.8571428571428571,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "sarah": {
+          "tp": 12,
+          "positive_count": 15,
+          "recall": 0.8,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "talles": {
+          "tp": 32,
+          "positive_count": 39,
+          "recall": 0.8205128205128205,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "thayza": {
+          "tp": 14,
+          "positive_count": 19,
+          "recall": 0.7368421052631579,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "valentina": {
+          "tp": 23,
+          "positive_count": 31,
+          "recall": 0.7419354838709677,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        },
+        "vinicius": {
+          "tp": 30,
+          "positive_count": 31,
+          "recall": 0.967741935483871,
+          "fp": 0,
+          "negative_count": 0,
+          "fpr": null,
+          "max_negative": null
+        }
+      }
+    }
+  },
+  "temporal_positive_diagnostic": {
+    "160": {
+      "alexesm": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "amo": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "biladadeiro": {
+        "trials": 16,
+        "detected": 14,
+        "recall": 0.875
+      },
+      "derik": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "eric": {
+        "trials": 16,
+        "detected": 14,
+        "recall": 0.875
+      },
+      "gabriel": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "ivanildo": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "lara": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "raisa": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "ryam": {
+        "trials": 16,
+        "detected": 15,
+        "recall": 0.9375
+      },
+      "sarah": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "talles": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "thayza": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "valentina": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "vinicius": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      }
+    },
+    "320": {
+      "alexesm": {
+        "trials": 16,
+        "detected": 14,
+        "recall": 0.875
+      },
+      "amo": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "biladadeiro": {
+        "trials": 16,
+        "detected": 12,
+        "recall": 0.75
+      },
+      "derik": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "eric": {
+        "trials": 16,
+        "detected": 9,
+        "recall": 0.5625
+      },
+      "gabriel": {
+        "trials": 16,
+        "detected": 14,
+        "recall": 0.875
+      },
+      "ivanildo": {
+        "trials": 16,
+        "detected": 15,
+        "recall": 0.9375
+      },
+      "lara": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "raisa": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "ryam": {
+        "trials": 16,
+        "detected": 14,
+        "recall": 0.875
+      },
+      "sarah": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "talles": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      },
+      "thayza": {
+        "trials": 16,
+        "detected": 15,
+        "recall": 0.9375
+      },
+      "valentina": {
+        "trials": 16,
+        "detected": 15,
+        "recall": 0.9375
+      },
+      "vinicius": {
+        "trials": 16,
+        "detected": 16,
+        "recall": 1.0
+      }
+    }
+  },
+  "temporal_positive_limitation": "At most 8 known clips per speaker balanced across source recordings, padded with silence, two window phases; not independent hardware recall."
+}

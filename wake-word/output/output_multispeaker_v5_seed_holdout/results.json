@@ -1,0 +1,317 @@
+{
+  "seed": 20261015,
+  "epochs_run": 55,
+  "architecture": "temporal",
+  "final_fit": true,
+  "best_epoch": 47,
+  "quantization": {
+    "bytes": 12840,
+    "sha256": "78ee283e163a21588e9dbda8bbbcb6bf6d4a944d081c4fbb4c02736e20bbad6f",
+    "ops": [
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "SOFTMAX"
+    ],
+    "input_scale": 3.0948283672332764,
+    "input_zero_point": 76,
+    "input_shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "output_shape": [
+      1,
+      2
+    ]
+  },
+  "development_report": "output\\output_multispeaker_v3_temporal_dev\\results.json",
+  "final_stopping_rule": "Training loss convergence, patience 8, min_delta .001, at most requested epochs; test scores never select weights.",
+  "positive_recall_limitation": "All non-test-only voices were refit. Thayza is test-only; previous rounds used this voice, so it is not historically blind.",
+  "test_only_speakers": [
+    "thayza"
+  ],
+  "calibration": {
+    "threshold": 0.953125,
+    "tp": 0,
+    "fn": 0,
+    "fp": 2,
+    "tn": 280,
+    "positive_count": 0,
+    "recall": null,
+    "false_positive_rate": 0.0070921985815602835,
+    "target_false_positive_rate": 0.01,
+    "quiet_max_score": 0.94921875,
+    "deployable": true
+  },
+  "validation": {
+    "float": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 3,
+      "negative_count": 282,
+      "fpr": 0.010638297872340425,
+      "max_negative": 0.9987843632698059
+    },
+    "int8": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 2,
+      "negative_count": 282,
+      "fpr": 0.0070921985815602835,
+      "max_negative": 0.99609375
+    },
+    "quantization_mean_delta": 0.014696534593637641,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.94921875
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 2,
+        "negative_count": 5,
+        "fpr": 0.4,
+        "max_negative": 0.99609375
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.0
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 52,
+        "fpr": 0.0,
+        "max_negative": 0.7734375
+      }
+    }
+  },
+  "test": {
+    "float": {
+      "tp": 16,
+      "positive_count": 19,
+      "recall": 0.8421052631578947,
+      "fp": 6,
+      "negative_count": 289,
+      "fpr": 0.020761245674740483,
+      "max_negative": 0.9998546838760376
+    },
+    "int8": {
+      "tp": 16,
+      "positive_count": 19,
+      "recall": 0.8421052631578947,
+      "fp": 5,
+      "negative_count": 289,
+      "fpr": 0.01730103806228374,
+      "max_negative": 0.99609375
+    },
+    "quantization_mean_delta": 0.011321144687441817,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 165,
+        "fpr": 0.006060606060606061,
+        "max_negative": 0.99609375
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 5,
+        "fpr": 0.0,
+        "max_negative": 0.94921875
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.0
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 4,
+        "negative_count": 59,
+        "fpr": 0.06779661016949153,
+        "max_negative": 0.99609375
+      },
+      "thayza": {
+        "tp": 16,
+        "positive_count": 19,
+        "recall": 0.8421052631578947,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      }
+    }
+  },
+  "silence_sanity": {
+    "zero_dc_scores": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "passed": true
+  },
+  "training_positive_diagnostic_NOT_generalization": {
+    "alexesm": {
+      "tp": 23,
+      "positive_count": 23,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "amo": {
+      "tp": 23,
+      "positive_count": 23,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "biladadeiro": {
+      "tp": 48,
+      "positive_count": 48,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "derik": {
+      "tp": 13,
+      "positive_count": 13,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "eric": {
+      "tp": 184,
+      "positive_count": 273,
+      "recall": 0.673992673992674,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "gabriel": {
+      "tp": 15,
+      "positive_count": 15,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "ivanildo": {
+      "tp": 12,
+      "positive_count": 12,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "lara": {
+      "tp": 20,
+      "positive_count": 20,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "raisa": {
+      "tp": 11,
+      "positive_count": 11,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "ryam": {
+      "tp": 14,
+      "positive_count": 14,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "sarah": {
+      "tp": 15,
+      "positive_count": 15,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "talles": {
+      "tp": 39,
+      "positive_count": 39,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "valentina": {
+      "tp": 31,
+      "positive_count": 31,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "vinicius": {
+      "tp": 31,
+      "positive_count": 31,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    }
+  },
+  "promotion": {
+    "automatic": false,
+    "reason": "ESP32 latency, tensor arena, live recall and false wakes require hardware validation."
+  }
+}

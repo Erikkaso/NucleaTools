@@ -1,0 +1,7 @@
+{
+  "seed": 1204528219,
+  "randomized": true,
+  "learning_rate": 0.0006735104736469071,
+  "dropout": 0.3,
+  "batch_size": 32
+}

@@ -1,0 +1,23 @@
+Command: D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe D:\Espressif\frameworks\esp-idf-v5.5.5\tools/idf_monitor.py -p COM9 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\esp32_wakeword.elf E:\Sistema\Downloads\Geral\CODINGZONE\Nuclic\NucleaInterface\wake-word\esp32_wakeword\build\bootloader\bootloader.elf --force-color -m 'D:\Espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe' 'D:\Espressif\frameworks\esp-idf-v5.5.5\tools\idf.py' '-p' 'COM9'
+--- WARNING: GDB cannot open serial ports accessed as COMx
+--- NOTE: Using \\.\COM9 instead...
+--- esp-idf-monitor 1.10.0 on \\.\COM9 115200
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+--- 0x4037c6e2: esp_cpu_wait_for_intr at D:/Espressif/frameworks/esp-idf-v5.5.5/components/esp_hw_support/cpu.c:64
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/frameworks/esp-idf-v5.5.5/components/bootloader/subproject/main/bootloader_start.c:27
+--- NOTE: To exit from IDF monitor please use "Ctrl+]". Alternatively, you can use Ctrl+T Ctrl+X to exit.
+--- WARNING: Writing to serial is timing out. Please make sure that your application supports an interactive console and that you have picked the correct console for serial communication.
+
+Traceback (most recent call last):
+  File "D:\Espressif\frameworks\esp-idf-v5.5.5\tools\idf_monitor.py", line 11, in <module>
+    sys.exit(subprocess.run([sys.executable, '-m', 'esp_idf_monitor'] + sys.argv[1:]).returncode)
+  File "C:\Users\Erikasso\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 503, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "C:\Users\Erikasso\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1144, in communicate
+    self.wait()
+  File "C:\Users\Erikasso\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1207, in wait
+    return self._wait(timeout=timeout)
+  File "C:\Users\Erikasso\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1488, in _wait
+    result = _winapi.WaitForSingleObject(self._handle,
+KeyboardInterrupt

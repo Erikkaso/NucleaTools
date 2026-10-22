@@ -1,0 +1,45 @@
+{
+  "Date": "2026-10-19",
+  "Reason": "User requested removal of obsolete experiments and reproducible feature caches",
+  "ActiveModelSHA256": "AF197A126D607AEF903068A665BCF766281A739E514F377A106A44AAC17EEC3E",
+  "Deleted": [
+    {
+      "Path": "output\\output_multispeaker_v3",
+      "Bytes": 16901970
+    },
+    {
+      "Path": "output\\output_multispeaker_v3_final",
+      "Bytes": 18479770
+    },
+    {
+      "Path": "output\\output_multispeaker_v3_release",
+      "Bytes": 20489973
+    },
+    {
+      "Path": "output\\output_multispeaker_v3_source_controls",
+      "Bytes": 22260537
+    },
+    {
+      "Path": "output\\output_multispeaker_v5_seed",
+      "Bytes": 23247212
+    },
+    {
+      "Path": "output\\output_multispeaker_v3_temporal_dev\\features.npz",
+      "Bytes": 13581691
+    },
+    {
+      "Path": "output\\output_multispeaker_v4_reviewed\\features.npz",
+      "Bytes": 19939564
+    },
+    {
+      "Path": "output\\output_multispeaker_v5_hardneg\\features.npz",
+      "Bytes": 22341459
+    },
+    {
+      "Path": "output\\output_multispeaker_v5_seed_holdout\\features.npz",
+      "Bytes": 19667999
+    }
+  ],
+  "Bytes": 176910175.0,
+  "Preserved": "dataset, source code, active firmware, historical reports, v4/v5 comparison models and valid mining teacher"
+}

@@ -1,0 +1,359 @@
+{
+  "seed": 20261015,
+  "epochs_run": 63,
+  "architecture": "temporal",
+  "final_fit": true,
+  "best_epoch": 55,
+  "quantization": {
+    "bytes": 12840,
+    "sha256": "59b705265df4eb114d56c9086c9823d8e05798b06492a8429229557e77838ff0",
+    "ops": [
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "SOFTMAX"
+    ],
+    "input_scale": 3.1069743633270264,
+    "input_zero_point": 76,
+    "input_shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "output_shape": [
+      1,
+      2
+    ]
+  },
+  "development_report": "output\\output_multispeaker_v5_seed_holdout\\results.json",
+  "final_stopping_rule": "Training loss convergence, patience 8, min_delta .001, at most requested epochs; test scores never select weights.",
+  "positive_recall_limitation": "All non-test-only voices were refit. Thayza is test-only; previous rounds used this voice, so it is not historically blind.",
+  "test_only_speakers": [
+    "thayza"
+  ],
+  "calibration": {
+    "threshold": 0.87109375,
+    "tp": 0,
+    "fn": 0,
+    "fp": 5,
+    "tn": 533,
+    "positive_count": 0,
+    "recall": null,
+    "false_positive_rate": 0.00929368029739777,
+    "target_false_positive_rate": 0.01,
+    "quiet_max_score": 0.8671875,
+    "deployable": true
+  },
+  "validation": {
+    "float": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 6,
+      "negative_count": 538,
+      "fpr": 0.011152416356877323,
+      "max_negative": 0.995770275592804
+    },
+    "int8": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 5,
+      "negative_count": 538,
+      "fpr": 0.00929368029739777,
+      "max_negative": 0.99609375
+    },
+    "quantization_mean_delta": 0.0063893024106974105,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.8671875
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 3,
+        "negative_count": 5,
+        "fpr": 0.6,
+        "max_negative": 0.99609375
+      },
+      "mined_quiet": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 64,
+        "fpr": 0.0,
+        "max_negative": 0.0078125
+      },
+      "mined_scene": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 192,
+        "fpr": 0.005208333333333333,
+        "max_negative": 0.95703125
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.03125
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 52,
+        "fpr": 0.019230769230769232,
+        "max_negative": 0.99609375
+      }
+    }
+  },
+  "test": {
+    "float": {
+      "tp": 10,
+      "positive_count": 19,
+      "recall": 0.5263157894736842,
+      "fp": 6,
+      "negative_count": 545,
+      "fpr": 0.011009174311926606,
+      "max_negative": 0.9966642260551453
+    },
+    "int8": {
+      "tp": 11,
+      "positive_count": 19,
+      "recall": 0.5789473684210527,
+      "fp": 8,
+      "negative_count": 545,
+      "fpr": 0.014678899082568808,
+      "max_negative": 0.99609375
+    },
+    "quantization_mean_delta": 0.008210074544843429,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 165,
+        "fpr": 0.006060606060606061,
+        "max_negative": 0.9609375
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 3,
+        "negative_count": 5,
+        "fpr": 0.6,
+        "max_negative": 0.99609375
+      },
+      "mined_quiet": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 64,
+        "fpr": 0.0,
+        "max_negative": 0.0078125
+      },
+      "mined_scene": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 192,
+        "fpr": 0.005208333333333333,
+        "max_negative": 0.98046875
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.0234375
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 3,
+        "negative_count": 59,
+        "fpr": 0.05084745762711865,
+        "max_negative": 0.95703125
+      },
+      "thayza": {
+        "tp": 11,
+        "positive_count": 19,
+        "recall": 0.5789473684210527,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      }
+    }
+  },
+  "silence_sanity": {
+    "zero_dc_scores": [
+      0.01953125,
+      0.0,
+      0.0
+    ],
+    "passed": true
+  },
+  "training_positive_diagnostic_NOT_generalization": {
+    "alexesm": {
+      "tp": 23,
+      "positive_count": 23,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "amo": {
+      "tp": 23,
+      "positive_count": 23,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "biladadeiro": {
+      "tp": 48,
+      "positive_count": 48,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "derik": {
+      "tp": 13,
+      "positive_count": 13,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "eric": {
+      "tp": 208,
+      "positive_count": 273,
+      "recall": 0.7619047619047619,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "gabriel": {
+      "tp": 15,
+      "positive_count": 15,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "ivanildo": {
+      "tp": 12,
+      "positive_count": 12,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "lara": {
+      "tp": 20,
+      "positive_count": 20,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "raisa": {
+      "tp": 11,
+      "positive_count": 11,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "ryam": {
+      "tp": 14,
+      "positive_count": 14,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "sarah": {
+      "tp": 15,
+      "positive_count": 15,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "talles": {
+      "tp": 38,
+      "positive_count": 39,
+      "recall": 0.9743589743589743,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "valentina": {
+      "tp": 30,
+      "positive_count": 31,
+      "recall": 0.967741935483871,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "vinicius": {
+      "tp": 31,
+      "positive_count": 31,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    }
+  },
+  "promotion": {
+    "automatic": false,
+    "approved": false,
+    "hardware_validated": false,
+    "diagnostic_false_events_160ms": 3,
+    "heldout_positive_recall": 0.5789473684210527,
+    "minimum_positive_recall_screen": 0.8,
+    "offline_checks_passed": false,
+    "reason": "Rejected: diagnostic false wakes or unusable calibration; keep the active model."
+  }
+}

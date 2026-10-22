@@ -1,0 +1,318 @@
+{
+  "seed": 20261015,
+  "epochs_run": 40,
+  "architecture": "temporal",
+  "final_fit": true,
+  "best_epoch": 32,
+  "quantization": {
+    "bytes": 12840,
+    "sha256": "eb36cfe1fcd27a457d9925018d953789113f892f6ec5c670119cd4446a619915",
+    "ops": [
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "SOFTMAX"
+    ],
+    "input_scale": 3.1094281673431396,
+    "input_zero_point": 75,
+    "input_shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "output_shape": [
+      1,
+      2
+    ]
+  },
+  "development_report": "output\\output_multispeaker_v3_temporal_dev\\results.json",
+  "final_stopping_rule": "Training loss convergence, patience 8, min_delta .001, at most requested epochs; test scores never select weights.",
+  "positive_recall_limitation": "All voices were refit; development holdout recall does not certify the final refit.",
+  "calibration": {
+    "threshold": 0.84765625,
+    "tp": 0,
+    "fn": 0,
+    "fp": 2,
+    "tn": 280,
+    "positive_count": 0,
+    "recall": null,
+    "false_positive_rate": 0.0070921985815602835,
+    "target_false_positive_rate": 0.01,
+    "quiet_max_score": 0.83203125,
+    "deployable": true
+  },
+  "validation": {
+    "float": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 2,
+      "negative_count": 282,
+      "fpr": 0.0070921985815602835,
+      "max_negative": 0.9837136268615723
+    },
+    "int8": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 2,
+      "negative_count": 282,
+      "fpr": 0.0070921985815602835,
+      "max_negative": 0.9765625
+    },
+    "quantization_mean_delta": 0.015023817979630495,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.83203125
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 2,
+        "negative_count": 5,
+        "fpr": 0.4,
+        "max_negative": 0.9765625
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.015625
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 52,
+        "fpr": 0.0,
+        "max_negative": 0.5234375
+      }
+    }
+  },
+  "test": {
+    "float": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 4,
+      "negative_count": 289,
+      "fpr": 0.01384083044982699,
+      "max_negative": 0.9797892570495605
+    },
+    "int8": {
+      "tp": 0,
+      "positive_count": 0,
+      "recall": null,
+      "fp": 4,
+      "negative_count": 289,
+      "fpr": 0.01384083044982699,
+      "max_negative": 0.98046875
+    },
+    "quantization_mean_delta": 0.013844685488910491,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 165,
+        "fpr": 0.006060606060606061,
+        "max_negative": 0.90625
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 5,
+        "fpr": 0.0,
+        "max_negative": 0.8046875
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.015625
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 3,
+        "negative_count": 59,
+        "fpr": 0.05084745762711865,
+        "max_negative": 0.98046875
+      }
+    }
+  },
+  "silence_sanity": {
+    "zero_dc_scores": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "passed": true
+  },
+  "training_positive_diagnostic_NOT_generalization": {
+    "alexesm": {
+      "tp": 23,
+      "positive_count": 23,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "amo": {
+      "tp": 23,
+      "positive_count": 23,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "biladadeiro": {
+      "tp": 46,
+      "positive_count": 48,
+      "recall": 0.9583333333333334,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "derik": {
+      "tp": 13,
+      "positive_count": 13,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "eric": {
+      "tp": 202,
+      "positive_count": 273,
+      "recall": 0.73992673992674,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "gabriel": {
+      "tp": 15,
+      "positive_count": 15,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "ivanildo": {
+      "tp": 12,
+      "positive_count": 12,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "lara": {
+      "tp": 20,
+      "positive_count": 20,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "raisa": {
+      "tp": 11,
+      "positive_count": 11,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "ryam": {
+      "tp": 14,
+      "positive_count": 14,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "sarah": {
+      "tp": 15,
+      "positive_count": 15,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "talles": {
+      "tp": 38,
+      "positive_count": 39,
+      "recall": 0.9743589743589743,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "thayza": {
+      "tp": 19,
+      "positive_count": 19,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "valentina": {
+      "tp": 30,
+      "positive_count": 31,
+      "recall": 0.967741935483871,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    },
+    "vinicius": {
+      "tp": 31,
+      "positive_count": 31,
+      "recall": 1.0,
+      "fp": 0,
+      "negative_count": 0,
+      "fpr": null,
+      "max_negative": null
+    }
+  },
+  "promotion": {
+    "automatic": false,
+    "approved": false,
+    "hardware_validated": false,
+    "diagnostic_false_events_160ms": 21,
+    "offline_checks_passed": false,
+    "reason": "Rejected: diagnostic false wakes or unusable calibration; keep the active model."
+  }
+}

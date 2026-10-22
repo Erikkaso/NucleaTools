@@ -1,0 +1,119 @@
+file,label,kind,target_word,original_phrase,source_file,source_id,augmentation,parent_file,start_s,end_s,rms_dbfs,peak_dbfs,boundary_max_dbfs,clip_fraction,prefilter_status
+positive/original/nuclea_01.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,none,,0.975,1.975,-16.92,-3.45,-14.12,0.00000,pre_aprovado
+positive/clean/nuclea_01_clean.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,light_denoise,positive/original/nuclea_01.wav,0.975,1.975,-18.04,-4.43,-14.83,0.00000,pre_aprovado
+positive/augmented/nuclea_01_speed_0p94.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,speed_0p94,positive/clean/nuclea_01_clean.wav,0.975,1.975,-18.23,-4.43,-18.76,0.00000,pre_aprovado
+positive/augmented/nuclea_01_speed_1p06.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,speed_1p06,positive/clean/nuclea_01_clean.wav,0.975,1.975,-18.29,-4.43,-15.78,0.00000,pre_aprovado
+positive/augmented/nuclea_01_gain_m3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,gain_m3db,positive/clean/nuclea_01_clean.wav,0.975,1.975,-21.04,-7.43,-17.83,0.00000,pre_aprovado
+positive/augmented/nuclea_01_gain_p3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,gain_p3db,positive/clean/nuclea_01_clean.wav,0.975,1.975,-15.04,-1.43,-11.83,0.00000,pre_aprovado
+positive/augmented/nuclea_01_room_noise_25db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,room_noise_25db,positive/clean/nuclea_01_clean.wav,0.975,1.975,-18.02,-4.48,-14.83,0.00000,pre_aprovado
+positive/augmented/nuclea_01_shift_35ms.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_01,shift_35ms,positive/clean/nuclea_01_clean.wav,0.975,1.975,-18.04,-4.43,-16.05,0.00000,pre_aprovado
+positive/original/nuclea_02.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,none,,4.535,5.535,-20.49,-6.20,-55.80,0.00000,pre_aprovado
+positive/clean/nuclea_02_clean.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,light_denoise,positive/original/nuclea_02.wav,4.535,5.535,-21.67,-5.85,-60.79,0.00000,pre_aprovado
+positive/augmented/nuclea_02_speed_0p94.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,speed_0p94,positive/clean/nuclea_02_clean.wav,4.535,5.535,-21.40,-5.87,-47.49,0.00000,pre_aprovado
+positive/augmented/nuclea_02_speed_1p06.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,speed_1p06,positive/clean/nuclea_02_clean.wav,4.535,5.535,-21.92,-6.21,-68.10,0.00000,pre_aprovado
+positive/augmented/nuclea_02_gain_m3db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,gain_m3db,positive/clean/nuclea_02_clean.wav,4.535,5.535,-24.67,-8.85,-63.79,0.00000,pre_aprovado
+positive/augmented/nuclea_02_gain_p3db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,gain_p3db,positive/clean/nuclea_02_clean.wav,4.535,5.535,-18.67,-2.85,-57.79,0.00000,pre_aprovado
+positive/augmented/nuclea_02_room_noise_25db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,room_noise_25db,positive/clean/nuclea_02_clean.wav,4.535,5.535,-21.65,-5.79,-45.36,0.00000,pre_aprovado
+positive/augmented/nuclea_02_shift_35ms.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_02,shift_35ms,positive/clean/nuclea_02_clean.wav,4.535,5.535,-21.67,-5.85,-67.40,0.00000,pre_aprovado
+positive/original/nuclea_03.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,none,,8.685,9.685,-20.59,-6.10,-20.35,0.00000,pre_aprovado
+positive/clean/nuclea_03_clean.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,light_denoise,positive/original/nuclea_03.wav,8.685,9.685,-21.77,-6.12,-22.00,0.00000,pre_aprovado
+positive/augmented/nuclea_03_speed_0p94.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,speed_0p94,positive/clean/nuclea_03_clean.wav,8.685,9.685,-21.58,-5.38,-18.87,0.00000,pre_aprovado
+positive/augmented/nuclea_03_speed_1p06.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,speed_1p06,positive/clean/nuclea_03_clean.wav,8.685,9.685,-22.03,-5.42,-25.62,0.00000,pre_aprovado
+positive/augmented/nuclea_03_gain_m3db.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,gain_m3db,positive/clean/nuclea_03_clean.wav,8.685,9.685,-24.77,-9.12,-25.00,0.00000,pre_aprovado
+positive/augmented/nuclea_03_gain_p3db.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,gain_p3db,positive/clean/nuclea_03_clean.wav,8.685,9.685,-18.77,-3.12,-19.00,0.00000,pre_aprovado
+positive/augmented/nuclea_03_room_noise_25db.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,room_noise_25db,positive/clean/nuclea_03_clean.wav,8.685,9.685,-21.77,-6.12,-21.98,0.00000,pre_aprovado
+positive/augmented/nuclea_03_shift_35ms.wav,positive,keyword,Núclea,Bom dia Núclea,raisa.ogg,nuclea_03,shift_35ms,positive/clean/nuclea_03_clean.wav,8.685,9.685,-21.77,-6.12,-26.58,0.00000,pre_aprovado
+positive/original/nuclea_04.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,none,,12.735,13.735,-20.60,-5.30,-25.19,0.00000,pre_aprovado
+positive/clean/nuclea_04_clean.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,light_denoise,positive/original/nuclea_04.wav,12.735,13.735,-21.72,-5.63,-26.71,0.00000,pre_aprovado
+positive/augmented/nuclea_04_speed_0p94.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,speed_0p94,positive/clean/nuclea_04_clean.wav,12.735,13.735,-21.48,-5.66,-25.12,0.00000,pre_aprovado
+positive/augmented/nuclea_04_speed_1p06.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,speed_1p06,positive/clean/nuclea_04_clean.wav,12.735,13.735,-21.98,-6.11,-31.49,0.00000,pre_aprovado
+positive/augmented/nuclea_04_gain_m3db.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,gain_m3db,positive/clean/nuclea_04_clean.wav,12.735,13.735,-24.72,-8.63,-29.71,0.00000,pre_aprovado
+positive/augmented/nuclea_04_gain_p3db.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,gain_p3db,positive/clean/nuclea_04_clean.wav,12.735,13.735,-18.72,-2.63,-23.71,0.00000,pre_aprovado
+positive/augmented/nuclea_04_room_noise_25db.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,room_noise_25db,positive/clean/nuclea_04_clean.wav,12.735,13.735,-21.70,-5.68,-26.71,0.00000,pre_aprovado
+positive/augmented/nuclea_04_shift_35ms.wav,positive,keyword,Núclea,Boa tarde Núclea,raisa.ogg,nuclea_04,shift_35ms,positive/clean/nuclea_04_clean.wav,12.735,13.735,-21.72,-5.63,-31.99,0.00000,pre_aprovado
+positive/original/nuclea_05.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,none,,16.185,17.185,-19.45,-5.58,-14.63,0.00000,pre_aprovado
+positive/clean/nuclea_05_clean.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,light_denoise,positive/original/nuclea_05.wav,16.185,17.185,-20.50,-6.18,-15.82,0.00000,pre_aprovado
+positive/augmented/nuclea_05_speed_0p94.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,speed_0p94,positive/clean/nuclea_05_clean.wav,16.185,17.185,-20.88,-6.53,-19.64,0.00000,pre_aprovado
+positive/augmented/nuclea_05_speed_1p06.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,speed_1p06,positive/clean/nuclea_05_clean.wav,16.185,17.185,-20.75,-6.29,-16.66,0.00000,pre_aprovado
+positive/augmented/nuclea_05_gain_m3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,gain_m3db,positive/clean/nuclea_05_clean.wav,16.185,17.185,-23.50,-9.18,-18.82,0.00000,pre_aprovado
+positive/augmented/nuclea_05_gain_p3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,gain_p3db,positive/clean/nuclea_05_clean.wav,16.185,17.185,-17.50,-3.18,-12.82,0.00000,pre_aprovado
+positive/augmented/nuclea_05_room_noise_25db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,room_noise_25db,positive/clean/nuclea_05_clean.wav,16.185,17.185,-20.48,-6.21,-15.80,0.00000,pre_aprovado
+positive/augmented/nuclea_05_shift_35ms.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_05,shift_35ms,positive/clean/nuclea_05_clean.wav,16.185,17.185,-20.50,-6.18,-16.97,0.00000,pre_aprovado
+positive/original/nuclea_06.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,none,,20.965,21.965,-22.63,-7.44,-28.60,0.00000,pre_aprovado
+positive/clean/nuclea_06_clean.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,light_denoise,positive/original/nuclea_06.wav,20.965,21.965,-23.58,-7.83,-29.36,0.00000,pre_aprovado
+positive/augmented/nuclea_06_speed_0p94.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,speed_0p94,positive/clean/nuclea_06_clean.wav,20.965,21.965,-23.38,-7.75,-28.01,0.00000,pre_aprovado
+positive/augmented/nuclea_06_speed_1p06.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,speed_1p06,positive/clean/nuclea_06_clean.wav,20.965,21.965,-23.84,-7.82,-29.96,0.00000,pre_aprovado
+positive/augmented/nuclea_06_gain_m3db.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,gain_m3db,positive/clean/nuclea_06_clean.wav,20.965,21.965,-26.58,-10.83,-32.36,0.00000,pre_aprovado
+positive/augmented/nuclea_06_gain_p3db.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,gain_p3db,positive/clean/nuclea_06_clean.wav,20.965,21.965,-20.58,-4.83,-26.36,0.00000,pre_aprovado
+positive/augmented/nuclea_06_room_noise_25db.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,room_noise_25db,positive/clean/nuclea_06_clean.wav,20.965,21.965,-23.57,-7.71,-29.29,0.00000,pre_aprovado
+positive/augmented/nuclea_06_shift_35ms.wav,positive,keyword,Núclea,Boa noite Núclea,raisa.ogg,nuclea_06,shift_35ms,positive/clean/nuclea_06_clean.wav,20.965,21.965,-23.58,-7.83,-30.23,0.00000,pre_aprovado
+positive/original/nuclea_07.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,none,,24.165,25.165,-15.69,-0.56,-45.75,0.00000,pre_aprovado
+positive/clean/nuclea_07_clean.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,light_denoise,positive/original/nuclea_07.wav,24.165,25.165,-16.41,-1.07,-50.94,0.00000,pre_aprovado
+positive/augmented/nuclea_07_speed_0p94.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,speed_0p94,positive/clean/nuclea_07_clean.wav,24.165,25.165,-16.14,-1.06,-49.37,0.00000,pre_aprovado
+positive/augmented/nuclea_07_speed_1p06.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,speed_1p06,positive/clean/nuclea_07_clean.wav,24.165,25.165,-16.66,-1.05,-55.48,0.00000,pre_aprovado
+positive/augmented/nuclea_07_gain_m3db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,gain_m3db,positive/clean/nuclea_07_clean.wav,24.165,25.165,-19.41,-4.07,-53.94,0.00000,pre_aprovado
+positive/augmented/nuclea_07_gain_p3db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,gain_p3db,positive/clean/nuclea_07_clean.wav,24.165,25.165,-16.06,-0.72,-50.59,0.00000,pre_aprovado
+positive/augmented/nuclea_07_room_noise_25db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,room_noise_25db,positive/clean/nuclea_07_clean.wav,24.165,25.165,-16.42,-1.17,-40.57,0.00000,pre_aprovado
+positive/augmented/nuclea_07_shift_35ms.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_07,shift_35ms,positive/clean/nuclea_07_clean.wav,24.165,25.165,-16.41,-1.07,-58.57,0.00000,pre_aprovado
+positive/original/nuclea_08.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,none,,28.655,29.655,-22.46,-5.88,-18.50,0.00000,pre_aprovado
+positive/clean/nuclea_08_clean.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,light_denoise,positive/original/nuclea_08.wav,28.655,29.655,-23.71,-6.53,-20.16,0.00000,pre_aprovado
+positive/augmented/nuclea_08_speed_0p94.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,speed_0p94,positive/clean/nuclea_08_clean.wav,28.655,29.655,-24.02,-6.43,-25.57,0.00000,pre_aprovado
+positive/augmented/nuclea_08_speed_1p06.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,speed_1p06,positive/clean/nuclea_08_clean.wav,28.655,29.655,-23.96,-6.74,-20.94,0.00000,pre_aprovado
+positive/augmented/nuclea_08_gain_m3db.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,gain_m3db,positive/clean/nuclea_08_clean.wav,28.655,29.655,-26.71,-9.53,-23.16,0.00000,pre_aprovado
+positive/augmented/nuclea_08_gain_p3db.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,gain_p3db,positive/clean/nuclea_08_clean.wav,28.655,29.655,-20.71,-3.53,-17.16,0.00000,pre_aprovado
+positive/augmented/nuclea_08_room_noise_25db.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,room_noise_25db,positive/clean/nuclea_08_clean.wav,28.655,29.655,-23.70,-6.49,-20.16,0.00000,pre_aprovado
+positive/augmented/nuclea_08_shift_35ms.wav,positive,keyword,Núclea,Tudo bem Núclea,raisa.ogg,nuclea_08,shift_35ms,positive/clean/nuclea_08_clean.wav,28.655,29.655,-23.71,-6.53,-20.90,0.00000,pre_aprovado
+positive/original/nuclea_09.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,none,,32.565,33.565,-19.32,-2.68,-13.21,0.00000,pre_aprovado
+positive/clean/nuclea_09_clean.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,light_denoise,positive/original/nuclea_09.wav,32.565,33.565,-20.54,-2.40,-13.99,0.00000,pre_aprovado
+positive/augmented/nuclea_09_speed_0p94.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,speed_0p94,positive/clean/nuclea_09_clean.wav,32.565,33.565,-21.45,-7.34,-18.54,0.00000,pre_aprovado
+positive/augmented/nuclea_09_speed_1p06.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,speed_1p06,positive/clean/nuclea_09_clean.wav,32.565,33.565,-20.79,-2.60,-14.68,0.00000,pre_aprovado
+positive/augmented/nuclea_09_gain_m3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,gain_m3db,positive/clean/nuclea_09_clean.wav,32.565,33.565,-23.54,-5.40,-16.99,0.00000,pre_aprovado
+positive/augmented/nuclea_09_gain_p3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,gain_p3db,positive/clean/nuclea_09_clean.wav,32.565,33.565,-18.87,-0.72,-12.31,0.00000,pre_aprovado
+positive/augmented/nuclea_09_room_noise_25db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,room_noise_25db,positive/clean/nuclea_09_clean.wav,32.565,33.565,-20.53,-2.43,-13.99,0.00000,pre_aprovado
+positive/augmented/nuclea_09_shift_35ms.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_09,shift_35ms,positive/clean/nuclea_09_clean.wav,32.565,33.565,-20.54,-2.40,-14.89,0.00000,pre_aprovado
+positive/original/nuclea_10.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,none,,38.845,39.845,-15.64,-0.07,-44.48,0.00000,pre_aprovado
+positive/clean/nuclea_10_clean.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,light_denoise,positive/original/nuclea_10.wav,38.845,39.845,-16.40,-0.72,-55.89,0.00000,pre_aprovado
+positive/augmented/nuclea_10_speed_0p94.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,speed_0p94,positive/clean/nuclea_10_clean.wav,38.845,39.845,-16.26,-0.72,-54.58,0.00000,pre_aprovado
+positive/augmented/nuclea_10_speed_1p06.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,speed_1p06,positive/clean/nuclea_10_clean.wav,38.845,39.845,-16.64,-0.72,-58.25,0.00000,pre_aprovado
+positive/augmented/nuclea_10_gain_m3db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,gain_m3db,positive/clean/nuclea_10_clean.wav,38.845,39.845,-19.22,-3.54,-58.71,0.00000,pre_aprovado
+positive/augmented/nuclea_10_gain_p3db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,gain_p3db,positive/clean/nuclea_10_clean.wav,38.845,39.845,-16.40,-0.72,-55.89,0.00000,pre_aprovado
+positive/augmented/nuclea_10_room_noise_25db.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,room_noise_25db,positive/clean/nuclea_10_clean.wav,38.845,39.845,-16.44,-0.72,-39.96,0.00000,pre_aprovado
+positive/augmented/nuclea_10_shift_35ms.wav,positive,keyword,Núclea,Núclea,raisa.ogg,nuclea_10,shift_35ms,positive/clean/nuclea_10_clean.wav,38.845,39.845,-16.40,-0.72,-58.36,0.00000,pre_aprovado
+positive/original/nuclea_11.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,none,,43.475,44.475,-18.39,-4.55,-13.95,0.00000,pre_aprovado
+positive/clean/nuclea_11_clean.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,light_denoise,positive/original/nuclea_11.wav,43.475,44.475,-19.56,-5.09,-14.98,0.00000,pre_aprovado
+positive/augmented/nuclea_11_speed_0p94.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,speed_0p94,positive/clean/nuclea_11_clean.wav,43.475,44.475,-19.73,-4.38,-16.32,0.00000,pre_aprovado
+positive/augmented/nuclea_11_speed_1p06.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,speed_1p06,positive/clean/nuclea_11_clean.wav,43.475,44.475,-19.81,-4.48,-16.76,0.00000,pre_aprovado
+positive/augmented/nuclea_11_gain_m3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,gain_m3db,positive/clean/nuclea_11_clean.wav,43.475,44.475,-22.56,-8.09,-17.98,0.00000,pre_aprovado
+positive/augmented/nuclea_11_gain_p3db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,gain_p3db,positive/clean/nuclea_11_clean.wav,43.475,44.475,-16.56,-2.09,-11.98,0.00000,pre_aprovado
+positive/augmented/nuclea_11_room_noise_25db.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,room_noise_25db,positive/clean/nuclea_11_clean.wav,43.475,44.475,-19.56,-5.13,-14.98,0.00000,pre_aprovado
+positive/augmented/nuclea_11_shift_35ms.wav,positive,keyword,Núclea,Oi Núclea,raisa.ogg,nuclea_11,shift_35ms,positive/clean/nuclea_11_clean.wav,43.475,44.475,-19.56,-5.09,-17.49,0.00000,pre_aprovado
+negative/other_speech/neg_oi_01.wav,negative,other_speech,,Oi,raisa.ogg,neg_oi_01,none,,0.045,1.045,-17.08,-0.08,-14.12,0.00000,pre_aprovado
+negative/other_speech/neg_bom_dia.wav,negative,other_speech,,Bom dia,raisa.ogg,neg_bom_dia,none,,7.800,8.800,-19.32,-2.18,-16.05,0.00000,pre_aprovado
+negative/other_speech/neg_boa_tarde.wav,negative,other_speech,,Boa tarde,raisa.ogg,neg_boa_tarde,none,,11.800,12.800,-16.88,-0.02,-25.38,0.00000,pre_aprovado
+negative/other_speech/neg_oi_05.wav,negative,other_speech,,Oi,raisa.ogg,neg_oi_05,none,,15.270,16.270,-16.60,-0.64,-16.08,0.00000,pre_aprovado
+negative/other_speech/neg_boa_noite.wav,negative,other_speech,,Boa noite,raisa.ogg,neg_boa_noite,none,,20.015,21.015,-16.02,-0.02,-27.46,0.00000,pre_aprovado
+negative/other_speech/neg_tudo_bem.wav,negative,other_speech,,Tudo bem,raisa.ogg,neg_tudo_bem,none,,27.720,28.720,-15.80,-0.44,-17.70,0.00000,pre_aprovado
+negative/other_speech/neg_oi_09.wav,negative,other_speech,,Oi,raisa.ogg,neg_oi_09,none,,31.625,32.625,-15.04,-0.10,-11.73,0.00000,pre_aprovado
+negative/other_speech/neg_oi_11.wav,negative,other_speech,,Oi,raisa.ogg,neg_oi_11,none,,42.550,43.550,-16.04,-1.12,-14.05,0.00000,pre_aprovado
+negative/silence/silence_001.wav,negative,silence,,,raisa.ogg,amb_001,none,,2.000,3.000,-58.39,-46.82,-57.38,0.00000,pre_aprovado
+negative/silence/silence_002.wav,negative,silence,,,raisa.ogg,amb_002,none,,3.000,4.000,-55.35,-22.09,-57.59,0.00000,pre_aprovado
+negative/silence/silence_003.wav,negative,silence,,,raisa.ogg,amb_003,none,,6.000,7.000,-57.60,-45.79,-54.90,0.00000,pre_aprovado
+negative/silence/silence_004.wav,negative,silence,,,raisa.ogg,amb_004,none,,7.000,8.000,-55.48,-42.83,-54.78,0.00000,pre_aprovado
+negative/silence/silence_005.wav,negative,silence,,,raisa.ogg,amb_005,none,,10.000,11.000,-51.80,-38.05,-50.20,0.00000,pre_aprovado
+negative/silence/silence_006.wav,negative,silence,,,raisa.ogg,amb_006,none,,11.000,12.000,-50.42,-39.04,-50.26,0.00000,pre_aprovado
+negative/silence/silence_007.wav,negative,silence,,,raisa.ogg,amb_007,none,,14.000,15.000,-46.66,-34.19,-47.57,0.00000,pre_aprovado
+negative/silence/silence_008.wav,negative,silence,,,raisa.ogg,amb_008,none,,18.000,19.000,-46.80,-33.17,-45.59,0.00000,pre_aprovado
+negative/silence/silence_009.wav,negative,silence,,,raisa.ogg,amb_009,none,,19.000,20.000,-45.23,-34.30,-44.28,0.00000,pre_aprovado
+negative/silence/silence_010.wav,negative,silence,,,raisa.ogg,amb_010,none,,22.000,23.000,-45.26,-30.69,-46.67,0.00000,pre_aprovado
+negative/silence/silence_011.wav,negative,silence,,,raisa.ogg,amb_011,none,,23.000,24.000,-46.95,-33.34,-45.48,0.00000,pre_aprovado
+negative/silence/silence_012.wav,negative,silence,,,raisa.ogg,amb_012,none,,26.000,27.000,-47.58,-35.45,-47.85,0.00000,pre_aprovado
+negative/silence/silence_013.wav,negative,silence,,,raisa.ogg,amb_013,none,,27.000,28.000,-48.01,-36.61,-45.95,0.00000,pre_aprovado
+negative/ambient_noise/ambient_noise_014.wav,negative,ambient_noise,,,raisa.ogg,amb_014,none,,30.000,31.000,-44.92,-30.56,-41.76,0.00000,pre_aprovado
+negative/ambient_noise/ambient_noise_015.wav,negative,ambient_noise,,,raisa.ogg,amb_015,none,,31.000,32.000,-42.84,-30.93,-42.28,0.00000,pre_aprovado
+negative/silence/silence_016.wav,negative,silence,,,raisa.ogg,amb_016,none,,34.000,35.000,-47.71,-36.14,-46.46,0.00000,pre_aprovado
+negative/silence/silence_017.wav,negative,silence,,,raisa.ogg,amb_017,none,,35.000,36.000,-46.34,-24.82,-45.89,0.00000,pre_aprovado
+negative/ambient_noise/ambient_noise_018.wav,negative,ambient_noise,,,raisa.ogg,amb_018,none,,36.000,37.000,-44.61,-33.51,-42.74,0.00000,pre_aprovado
+negative/silence/silence_019.wav,negative,silence,,,raisa.ogg,amb_019,none,,37.000,38.000,-46.75,-35.49,-44.80,0.00000,pre_aprovado
+negative/ambient_noise/ambient_noise_020.wav,negative,ambient_noise,,,raisa.ogg,amb_020,none,,40.000,41.000,-43.52,-33.67,-42.83,0.00000,pre_aprovado
+negative/silence/silence_021.wav,negative,silence,,,raisa.ogg,amb_021,none,,41.000,42.000,-45.58,-33.04,-45.79,0.00000,pre_aprovado
+negative/silence/silence_022.wav,negative,silence,,,raisa.ogg,amb_022,none,,42.000,43.000,-45.04,-34.36,-44.36,0.00000,pre_aprovado

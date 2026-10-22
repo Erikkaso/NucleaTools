@@ -1,0 +1,231 @@
+{
+  "seed": 20261015,
+  "epochs_run": 21,
+  "architecture": "temporal",
+  "final_fit": false,
+  "best_epoch": 9,
+  "quantization": {
+    "bytes": 12840,
+    "sha256": "726c82e7e64cb947a16e5d3fdef111a7741eebefe11cf3e03e402c8a6ad27b9f",
+    "ops": [
+      "CONV_2D",
+      "DEPTHWISE_CONV_2D",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "SOFTMAX"
+    ],
+    "input_scale": 3.0523712635040283,
+    "input_zero_point": 69,
+    "input_shape": [
+      1,
+      13,
+      49,
+      1
+    ],
+    "output_shape": [
+      1,
+      2
+    ]
+  },
+  "calibration": {
+    "threshold": 0.875,
+    "tp": 17,
+    "fn": 17,
+    "fp": 0,
+    "tn": 282,
+    "recall": 0.5,
+    "false_positive_rate": 0.0,
+    "deployable": true
+  },
+  "validation": {
+    "float": {
+      "tp": 17,
+      "positive_count": 34,
+      "recall": 0.5,
+      "fp": 0,
+      "negative_count": 282,
+      "fpr": 0.0,
+      "max_negative": 0.8711063861846924
+    },
+    "int8": {
+      "tp": 17,
+      "positive_count": 34,
+      "recall": 0.5,
+      "fp": 0,
+      "negative_count": 282,
+      "fpr": 0.0,
+      "max_negative": 0.87109375
+    },
+    "quantization_mean_delta": 0.008358622535953977,
+    "per_source": {
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.6875
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 5,
+        "fpr": 0.0,
+        "max_negative": 0.87109375
+      },
+      "lara": {
+        "tp": 14,
+        "positive_count": 20,
+        "recall": 0.7,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.01171875
+      },
+      "ryam": {
+        "tp": 3,
+        "positive_count": 14,
+        "recall": 0.21428571428571427,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 52,
+        "fpr": 0.0,
+        "max_negative": 0.70703125
+      }
+    }
+  },
+  "test": {
+    "float": {
+      "tp": 42,
+      "positive_count": 184,
+      "recall": 0.22826086956521738,
+      "fp": 4,
+      "negative_count": 289,
+      "fpr": 0.01384083044982699,
+      "max_negative": 0.9749730825424194
+    },
+    "int8": {
+      "tp": 44,
+      "positive_count": 184,
+      "recall": 0.2391304347826087,
+      "fp": 4,
+      "negative_count": 289,
+      "fpr": 0.01384083044982699,
+      "max_negative": 0.98046875
+    },
+    "quantization_mean_delta": 0.009844149616050688,
+    "per_source": {
+      "eric": {
+        "tp": 13,
+        "positive_count": 150,
+        "recall": 0.08666666666666667,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "gabriel": {
+        "tp": 13,
+        "positive_count": 15,
+        "recall": 0.8666666666666667,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      },
+      "inmp_ambiente": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 165,
+        "fpr": 0.0,
+        "max_negative": 0.65625
+      },
+      "inmp_negative": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 1,
+        "negative_count": 5,
+        "fpr": 0.2,
+        "max_negative": 0.921875
+      },
+      "quiet_synthetic": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 0,
+        "negative_count": 60,
+        "fpr": 0.0,
+        "max_negative": 0.015625
+      },
+      "speech": {
+        "tp": 0,
+        "positive_count": 0,
+        "recall": null,
+        "fp": 3,
+        "negative_count": 59,
+        "fpr": 0.05084745762711865,
+        "max_negative": 0.98046875
+      },
+      "thayza": {
+        "tp": 18,
+        "positive_count": 19,
+        "recall": 0.9473684210526315,
+        "fp": 0,
+        "negative_count": 0,
+        "fpr": null,
+        "max_negative": null
+      }
+    }
+  },
+  "silence_sanity": {
+    "zero_dc_scores": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "passed": true
+  },
+  "previous_model_same_test": {
+    "tp": 105,
+    "positive_count": 184,
+    "recall": 0.5706521739130435,
+    "fp": 0,
+    "negative_count": 289,
+    "fpr": 0.0,
+    "max_negative": 0.72265625
+  },
+  "previous_model_silence": [
+    0.17578125,
+    0.0,
+    0.0
+  ],
+  "previous_model_comparison_limitation": "Diagnostic only: the previous model trained on some of these positives/negatives.",
+  "promotion": {
+    "automatic": false,
+    "reason": "ESP32 latency, tensor arena, live recall and false wakes require hardware validation."
+  }
+}

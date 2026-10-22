@@ -14,6 +14,7 @@ class AudioBridgeContractTests(unittest.TestCase):
             "NUCLEA_DEVICE_ID",
             "NUCLEA_SILENCE_DBFS",
             "NUCLEA_SILENCE_MS",
+            "NUCLEA_MIN_RECORDING_MS",
             "NUCLEA_MAX_RECORDING_MS",
         ):
             self.assertIn(f"config {symbol}", config)
