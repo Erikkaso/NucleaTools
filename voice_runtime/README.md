@@ -73,6 +73,8 @@ variaveis nao expostas no Compose, adicione-as ao bloco `environment` do servico
 ```text
 GET  /health
 POST /v1/audio/speech
+POST /v1/audio/speech/streams
+GET  /v1/audio/speech/streams/{stream_id}
 ```
 
 `/health` retorna `{"status":"ready","service":"tts"}` depois do aquecimento.
@@ -98,6 +100,51 @@ Envie o texto do agente no campo `text`, em modo Expression, com
 `{{ $json.output }}`. Configure a resposta como arquivo e passe o campo binario
 para o `Respond to Webhook`.
 
+### Resposta progressiva
+
+Para a interface de voz nova, importe
+`NucleaInterface/workflows/nuclea-streaming.json` no n8n. O nodo TTS usa
+`POST /v1/audio/speech/streams` com o mesmo JSON `text`, mas recebe um
+identificador em JSON imediatamente (202), nao um arquivo. O webhook devolve
+esse JSON. A interface abre o GET correspondente diretamente por seu backend,
+evitando o buffering do nodo HTTP Request configurado como arquivo.
+
+Cada identificador e aleatorio, de uso unico, expira em 120 segundos e guarda
+somente texto em memoria. O limite e 32 identificadores pendentes e 6000
+caracteres por texto. O servico deve continuar com um worker e uma replica;
+reiniciar o pod invalida identificadores e interrompe streams em andamento.
+
+O GET devolve `application/x-ndjson`. A geracao so comeca quando o GET e
+consumido. Os eventos sao `start`, `audio`, `ping`, `end` ou `error`. Cada
+`audio` contem `seq`, `sample_rate` e `data` (PCM16 little-endian mono em
+base64), em pacotes de ate 100 ms. `ping` mantem a conexao durante a espera.
+Uma espera de frase ou fila maior que 90 segundos gera evento de erro;
+pings nao renovam esse prazo. Trabalho CUDA em andamento termina antes de
+liberar a GPU, mesmo apos erro ou cancelamento do cliente.
+Nenhum arquivo e persistido. Nao registre o identificador de acesso em logs
+publicos nem publique este servico sem protecao de acesso.
+
+O Chatterbox ainda gera uma frase inteira antes de disponibilizar seus pacotes.
+A frase seguinte e gerada enquanto o navegador reproduz o buffer anterior.
+Isso nao e streaming nativo dentro de uma frase. A divisao preserva palavras
+e limita normalmente cada frase a 160 caracteres; palavras individuais maiores
+nao sao cortadas. Entonacao entre frases pode variar.
+
+O navegador acumula audio antes de tocar. Continuidade depende de a GPU produzir
+audio suficientemente rapido: se faltar audio, a interface volta a acumular
+buffer. Nao ha garantia de ausencia de pausas com geracao mais lenta que tempo
+real. Ajuste `TTS_PREBUFFER_SECONDS` na NucleaInterface para equilibrar espera
+inicial e estabilidade.
+
+Cancelamento interrompe as proximas frases e fecha a conexao. A geracao CUDA
+ja iniciada termina antes de liberar a GPU. Os logs `tts_pcm` mostram tempo de
+geracao por frase; `tts_stream` mostra fila, primeiro audio e total do stream.
+
+Desative buffering/compressao intermediaria no proxy reverso para essa rota.
+O backend envia `X-Accel-Buffering: no` e `Cache-Control: no-store`, mas cada
+proxy deve respeitar ou ter configuracao equivalente. O navegador nao precisa
+acessar diretamente a rede interna do cluster; o servidor da interface precisa.
+
 **Migracao:** `/v1/audio/transcriptions` nao existe mais neste servico (404).
 Aponte a etapa Whisper para o servico separado, quando implantado:
 
@@ -110,14 +157,14 @@ POST http://whisper-runtime.ollama-system.svc.cluster.local:8080/v1/audio/transc
 Da raiz do repositorio:
 
 ```bash
-docker build -t nuclic/voice_runtime:2.4 voice_runtime
-docker push nuclic/voice_runtime:2.4
+docker build -t nuclic/voice_runtime:2.5 voice_runtime
+docker push nuclic/voice_runtime:2.5
 kubectl -n ollama-system apply -f voice_runtime/k8s/voice-runtime.yaml
 kubectl -n ollama-system rollout status deployment/voice-runtime
 kubectl -n ollama-system logs deployment/voice-runtime -f
 ```
 
-Ou, dentro de `voice_runtime`, use `docker build -t nuclic/voice_runtime:2.4 .`.
+Ou, dentro de `voice_runtime`, use `docker build -t nuclic/voice_runtime:2.5 .`.
 O manifesto solicita uma GPU e cria os PVCs de pesos, condicionamentos e vozes.
 O rollout usa `Recreate`: encerra o pod antigo antes de reservar a unica GPU
 para o novo. Ha indisponibilidade durante o carregamento do substituto.

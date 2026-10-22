@@ -10,3 +10,4 @@ esp32_wakeword/sdkconfig.old
 venv
 .vscode
 
+.env

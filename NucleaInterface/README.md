@@ -1,167 +1,155 @@
 # NucleaInterface
 
-Interface web Flask para conversar com um workflow do n8n por texto ou áudio.
-O navegador envia a entrada ao Flask, o Flask encaminha ao webhook e espera que
-o n8n devolva um arquivo de áudio. Esse áudio é reproduzido diretamente no
-navegador e não é persistido pela interface.
+Interface de conversa por voz: botao para gravar/parar, estado da conversa,
+visualizacao de amplitude e reproducao progressiva. Nao ha campo de escrita.
+O botao de cancelar interrompe gravacao, requisicao e reproducao. A gravacao
+tem limite de 60 segundos. O microfone nao fica ouvindo em segundo plano.
+
+## Fluxo
+
+```text
+Navegador ou ESP32 -> NucleaInterface -> n8n: Whisper -> agente -> ticket TTS
+NucleaInterface -> voice_runtime: PCM por frases -> navegador com buffer
+```
+
+Whisper, agente, ferramentas, memoria e credenciais continuam no n8n. A resposta
+textual completa do agente ainda e aguardada. O streaming novo comeca no TTS,
+nao nos tokens do agente nem na gravacao de entrada.
+
+O n8n nao transporta os pacotes: seu HTTP Request em modo arquivo aguardaria
+o audio inteiro. Ele solicita um identificador e o devolve como JSON. O servidor
+Flask abre o stream no TTS e repassa os bytes conforme chegam, sem salvar audio.
+O navegador nao precisa conhecer o endereco interno do TTS.
+
+## Preparar o runtime e workflow
+
+1. Publique o `voice_runtime` atualizado (imagem exemplo `nuclic/voice_runtime:2.5`).
+   Se ele estiver no pod do Ollama, atualize esse container no manifesto usado
+   pelo seu cluster, nao crie outro pod disputando a mesma GPU.
+2. Importe [workflows/nuclea-streaming.json](workflows/nuclea-streaming.json) no n8n.
+   E uma copia ajustada do workflow fornecido, nao uma alteracao na instancia
+   n8n nem no arquivo original de Downloads.
+3. Confira a URL do nodo `HTTP Request TTS`: o host original foi preservado,
+   alterando apenas a rota para `/v1/audio/speech/streams`. Resposta agora e
+   `JSON`, e o `Respond to Webhook` devolve `={{ $json }}` como JSON.
+4. A etapa Whisper aceita o campo binario `audio` ou `audio0`. O restante do
+   fluxo, inclusive conexoes, foi preservado.
+5. Desative o workflow antigo antes de ativar a copia se usarem o mesmo path
+   de webhook. Confirme as credenciais ao importar. Use a URL de producao com
+   `/webhook/`; `/webhook-test/` exige que o editor esteja escutando.
+
+Nao basta habilitar a opcao de streaming de texto do n8n: o contrato utilizado
+por esta interface e o identificador de audio retornado pelo runtime.
 
 ## Executar localmente
 
+Dentro de `NucleaInterface`, com um ambiente Python ativo:
+
 ```powershell
-cd NucleaInterface
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+$env:N8N_WEBHOOK_URL = "https://SEU-N8N/webhook/8cf7d87c-4184-460b-8b0e-95affded7054"
+$env:TTS_BASE_URL = "http://127.0.0.1:18080"
+$env:SECRET_KEY = "substitua-por-um-segredo-aleatorio"
 python app.py
 ```
 
-Acesse `http://localhost:5000`.
+Abra `http://localhost:5000`. Clique no microfone para gravar, novamente para
+enviar. O navegador precisa de permissao para o microfone e para tocar audio;
+o primeiro clique libera a reproducao. Nao ha reproducao automatica antes de
+uma interacao do usuario.
 
-O servidor iniciado por `app.py` usa o modo de desenvolvimento do Flask. Esta
-pasta não possui Dockerfile nem manifesto Kubernetes.
+O processo Flask precisa alcancar o MESMO runtime que criou o identificador.
+Se o TTS estiver no servico do workflow fornecido, abra outro terminal:
 
-## Configuração
+```bash
+kubectl -n ollama-system port-forward svc/ollama-service 18080:8000
+```
 
-Variáveis lidas por `app.py`:
+Se estiver no Deployment independente de exemplo do runtime, use o Service
+correspondente em ambos os lados (n8n e interface):
 
-| Variável | Função | Padrão |
+```bash
+kubectl -n ollama-system port-forward svc/voice-runtime 18080:8080
+```
+
+Dentro do cluster, `TTS_BASE_URL` pode usar o DNS do Service em vez de port-forward.
+`localhost` sempre identifica a maquina/container do processo que faz a chamada.
+Em outra maquina, abra a interface por HTTPS; HTTP em IP da rede local nao
+habilita o microfone nos navegadores.
+
+## Configuracao
+
+| Variavel | Padrao | Uso |
 | --- | --- | --- |
-| `N8N_WEBHOOK_URL` | Webhook chamado pela interface | URL definida em `app.py` |
-| `N8N_TIMEOUT_SECONDS` | Timeout da chamada ao n8n | `60` |
-| `SECRET_KEY` | Assinatura da sessão Flask | valor de desenvolvimento |
-| `PORT` | Porta HTTP local | `5000` |
+| `N8N_WEBHOOK_URL` | URL existente em `app.py` | Defina explicitamente para seu workflow |
+| `N8N_TIMEOUT_SECONDS` | `220` | Espera por transcricao, agente e ticket |
+| `TTS_BASE_URL` | `http://127.0.0.1:8080` | Endereco do runtime acessivel pelo Flask |
+| `TTS_STREAM_TIMEOUT_SECONDS` | `90` | Timeout de leitura do stream |
+| `TTS_PREBUFFER_SECONDS` | `3` | Audio acumulado antes de reproduzir; entre 0 e 12 |
+| `TTS_AUDIO_PROGRESS_TIMEOUT_SECONDS` | `60` | Prazo sem novos pacotes de audio no navegador; entre 5 e 300 |
+| `PORT` | `5000` | Porta da interface |
+| `SECRET_KEY` | Valor de desenvolvimento | Troque antes de publicar |
 
-Exemplo:
+Um buffer maior reduz a chance de pausas, mas aumenta a espera inicial. O
+Chatterbox gera uma frase inteira de cada vez e envia PCM16 mono em pacotes
+de ate 100 ms. Enquanto uma frase toca, a proxima pode estar sendo gerada.
+Se faltar audio, o player reconstroi o buffer e retoma sem sobrepor pacotes.
+Nao e possivel garantir continuidade se a geracao ficar mais lenta que a fala.
+Frases geradas separadamente tambem podem ter variacao de entonacao.
+O player limita o audio adiantado a aproximadamente 12 segundos e pausa a
+leitura quando esse limite e atingido. Pings nao renovam o prazo sem audio:
+uma geracao travada produz erro, em vez de manter a tela esperando sem limite.
+O runtime tambem possui limite de 90 segundos por espera de frase/fila.
+
+Identificadores sao de uso unico, expiram em 120 segundos e nao sobrevivem a
+reinicios do TTS. Um stream interrompido nao e retomado nem repetido
+automaticamente, evitando reproduzir a mesma resposta duas vezes.
+
+## Rotas
+
+- `POST /api/chat-audio`: multipart `audio`; encaminha com `sessionId` ao n8n.
+- `POST /api/chat`: JSON `message`; API legada, sem campo de texto na tela.
+- `POST /api/device-audio`: multipart `audio` e `deviceId` opcional; guarda o
+  identificador da resposta para o navegador sem esperar o TTS terminar.
+- `GET /api/device-response`: 204 sem resposta; senao entrega o stream uma vez.
+
+O navegador consulta respostas do ESP32 apos liberar audio por interacao, desde
+que nao esteja em outra conversa. A caixa de respostas do dispositivo continua
+sendo unica e em memoria: uma resposta nova substitui a anterior. Nao e um
+roteador para varios dispositivos/usuarios. O ESP continua enviando gravacao
+completa; esta mudanca e na entrega da resposta.
+
+Respostas legadas `audio/*` ainda sao aceitas, mas precisam chegar completas
+antes da reproducao. JSON com identificador invalido retorna erro controlado.
+URLs recebidas do n8n nao sao seguidas: somente o host configurado e utilizado.
+
+## Proxies e publicacao
+
+Desative buffering e compressao que acumule a resposta nas rotas de streaming.
+O Flask envia `X-Accel-Buffering: no` e `Cache-Control: no-store`; verifique se
+seu proxy respeita esses cabecalhos. Ajuste tambem timeouts de proxy/ingress.
+Um stream ocupa uma conexao/thread no Flask: use servidor WSGI com threads
+adequadas em producao, em vez do servidor de desenvolvimento.
+
+Nao publique as APIs sem controle de acesso. A aplicacao continua sendo uma
+interface de teste; a sessao de navegador e a mailbox nao substituem autenticacao.
+
+## Validacao
+
+Da raiz do repositorio, com as dependencias Python dos testes instaladas:
 
 ```powershell
-$env:N8N_WEBHOOK_URL = "https://seu-n8n/webhook/seu-workflow"
-$env:N8N_TIMEOUT_SECONDS = "180"
-$env:SECRET_KEY = "substitua-por-um-segredo"
-python app.py
+python -m pytest voice_runtime/tests NucleaInterface/tests -q
+node --test NucleaInterface/static/pcm-player.test.mjs NucleaInterface/static/voice-ui.test.mjs
 ```
 
-Para uso contínuo, o workflow do n8n precisa estar ativo e a URL deve utilizar
-`/webhook/`. URLs com `/webhook-test/` só funcionam enquanto o n8n aguarda uma
-execução de teste.
+O teste opcional de navegador usa Playwright e Chromium instalados, microfone
+sintetico e n8n/TTS simulados, sem pesos nem GPU:
 
-## Contrato com o n8n
-
-### Entrada de texto
-
-`POST /api/chat` recebe:
-
-```json
-{"message":"Onde estão os teclados?"}
+```powershell
+python -m NucleaInterface.tests.browser_streaming_smoke
 ```
 
-O Flask envia ao webhook:
-
-```json
-{
-  "message": "Onde estão os teclados?",
-  "sessionId": "uuid-da-sessao"
-}
-```
-
-### Entrada de áudio
-
-`POST /api/chat-audio` recebe `multipart/form-data` e encaminha:
-
-- arquivo no campo `audio`;
-- identificador no campo `sessionId`.
-
-No n8n, o arquivo fica na propriedade binária `audio`. O nó Webhook deve estar
-configurado para interpretar multipart, com `Raw Body` desativado.
-
-### Resposta
-
-Nos dois fluxos, o webhook deve responder com bytes de áudio e um
-`Content-Type` iniciado por `audio/`, normalmente `audio/mpeg`. Respostas JSON ou
-texto são rejeitadas pela interface.
-
-## Fluxo n8n com áudio
-
-Fluxo esperado:
-
-```text
-Webhook -> Whisper Runtime -> AI Agent -> Voice Runtime -> Respond to Webhook
-```
-
-Para transcrever o áudio recebido:
-
-```text
-POST http://whisper-runtime.ollama-system.svc.cluster.local:8080/v1/audio/transcriptions
-```
-
-No HTTP Request do n8n:
-
-- `Body Content Type`: `n8n Binary File`;
-- `Input Data Field Name`: `audio`;
-- resposta esperada: JSON com o campo `text`.
-
-Depois do agente, envie a resposta textual ao TTS:
-
-```text
-POST http://voice-runtime.ollama-system.svc.cluster.local:8080/v1/audio/speech
-```
-
-Corpo JSON:
-
-```json
-{"text":"={{ $json.output }}"}
-```
-
-Configure a resposta do HTTP Request como arquivo e armazene o resultado numa
-propriedade binária, por exemplo `audio`. No `Respond to Webhook`, responda com
-`Binary File` usando essa propriedade.
-
-## Audio do ESP32
-
-O firmware envia `multipart/form-data` para `POST /api/device-audio` com
-`audio` (arquivo WAV) e `deviceId` (identificador da conversa). O Flask usa esse
-identificador como `sessionId` no n8n e retorna `{"status":"ready"}` ao ESP32
-quando recebe a resposta de audio.
-
-O navegador consulta `GET /api/device-response` uma vez por segundo. A rota
-retorna `204` quando nao existe resposta ou o audio mais recente quando existe.
-Esse audio fica na RAM e e removido da fila ao ser consultado. Uma nova resposta
-substitui a anterior se ainda nao foi consumida. Use um processo Flask e uma aba
-para este teste; a primeira aba que consultar a rota recebe o audio.
-
-Mantenha a pagina aberta no computador. Se o navegador bloquear reproducao
-automatica, use o controle de reproducao exibido na mensagem.
-
-Configure Wi-Fi e URL pelo portal do ESP32: conecte a rede `Nuclea-Config`
-usando a senha `Nuclea-Dell2026` e abra exatamente `http://192.168.4.1`,
-sem VPN ou proxy. Se uma senha antiga estiver salva no computador, esqueça
-a rede e reconecte. Essa rede não fornece Internet.
-Informe a URL base da interface, por exemplo `http://192.168.1.100:5000`,
-sem `/api/device-audio`. O ESP32 precisa alcancar esse endereco; `localhost`
-no ESP32 nao aponta para o computador. Libere a porta no firewall da rede local.
-Depois de salvar, volte a rede normal. O portal fecha e a configuracao fica
-salva na flash do ESP32. O detector só inicia após conectar ao Wi-Fi.
-Consulte [o guia do firmware](../wake-word/README.md) para pinagem, teste sem
-tela, gravação do firmware e diagnóstico do microfone.
-
-## Wake word no navegador
-
-A página solicita acesso contínuo ao microfone e carrega localmente:
-
-```text
-static/wakeword/nuclea_int8.tflite
-static/wakeword.mjs
-static/wakeword-worklet.mjs
-```
-
-Quando o detector aceita a wake word, a interface inicia uma gravação e a envia
-automaticamente após silêncio ou ao atingir o limite máximo. O botão de
-microfone também permite iniciar e encerrar a gravação manualmente.
-
-O modelo da interface é independente do modelo embarcado no ESP32. Ao promover
-um novo TFLite, também precisam ser atualizados os parâmetros de quantização e
-os thresholds definidos em `static/wakeword.mjs`.
-
-## Requisito do navegador
-
-O microfone funciona em `http://localhost` ou numa origem HTTPS. Uma publicação
-em HTTP comum não recebe permissão de `getUserMedia` nos navegadores atuais.
+Ele confirma que a reproducao comeca antes da segunda frase terminar, testa
+desktop/celular e salva screenshots em `.pytest_cache/voice-browser`.
+Isso nao mede desempenho nem valida as credenciais do n8n real.

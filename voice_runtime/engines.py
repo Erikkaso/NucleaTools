@@ -49,7 +49,7 @@ class LocalChatterboxEngine:
         if text:
             self.synthesize(text)
 
-    def synthesize(self, text: str) -> bytes:
+    def _generate_samples(self, text: str):
         if self.model is None:
             raise RuntimeError("Chatterbox nao foi carregado")
         started = perf_counter()
@@ -61,11 +61,25 @@ class LocalChatterboxEngine:
         )
         samples = waveform.squeeze(0).cpu().numpy()
         generated = perf_counter()
+        return samples, (generated - started) * 1000
+
+    def synthesize_pcm(self, text: str) -> tuple[bytes, int]:
+        import numpy as np
+
+        samples, generation_ms = self._generate_samples(text)
+        pcm = (np.clip(samples, -1.0, 1.0) * 32767.0).astype('<i2').tobytes()
+        logger.info('tts_pcm generation_ms=%.1f audio_seconds=%.2f chars=%d',
+                    generation_ms, len(samples) / self.model.sr, len(text))
+        return pcm, self.model.sr
+
+    def synthesize(self, text: str) -> bytes:
+        samples, generation_ms = self._generate_samples(text)
+        generated = perf_counter()
         audio = encode_mp3(samples, self.model.sr)
         encoded = perf_counter()
         logger.info(
             "tts_synthesis generation_ms=%.1f encoding_ms=%.1f audio_seconds=%.2f chars=%d",
-            (generated - started) * 1000,
+            generation_ms,
             (encoded - generated) * 1000,
             len(samples) / self.model.sr,
             len(text),

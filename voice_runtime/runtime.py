@@ -7,6 +7,8 @@ import logging
 from time import perf_counter
 from typing import Protocol
 
+from voice_runtime.streaming import split_phrases
+
 logger = logging.getLogger(__name__)
 
 
@@ -15,6 +17,7 @@ class TtsEngine(Protocol):
     def warmup(self) -> None: ...
     def unload(self) -> None: ...
     def synthesize(self, text: str) -> bytes: ...
+    def synthesize_pcm(self, text: str) -> tuple[bytes, int]: ...
 
 
 class VoiceRuntime:
@@ -79,6 +82,14 @@ class VoiceRuntime:
                     (perf_counter() - started) * 1000,
                     len(text),
                 )
+
+    async def stream(self, text: str):
+        queued = perf_counter()
+        async with self._lock:
+            logger.info('tts_stream queue_ms=%.1f', (perf_counter() - queued) * 1000)
+            await self._ensure_ready()
+            for phrase in split_phrases(text):
+                yield await self._call(self.tts.synthesize_pcm, phrase)
 
     async def close(self) -> None:
         async with self._lock:

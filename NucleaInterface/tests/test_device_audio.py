@@ -56,8 +56,10 @@ class DeviceAudioTests(unittest.TestCase):
     def test_page_polls_for_device_response(self) -> None:
         response = self.client.get("/")
 
-        self.assertIn("pollDeviceResponse", response.text)
-        self.assertIn("fetch('/api/device-response'", response.text)
+        self.assertIn('/static/voice-ui.mjs', response.text)
+        script = self.client.get('/static/voice-ui.mjs')
+        self.assertEqual(script.status_code, 200)
+        self.assertIn("fetcher('/api/device-response'", script.text)
 
     @patch.object(interface_app.requests, "post")
     def test_upstream_timeout_keeps_previous_response(self, post) -> None:

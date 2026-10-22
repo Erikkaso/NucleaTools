@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: voice-runtime
-          image: nuclic/voice_runtime:2.4
+          image: nuclic/voice_runtime:2.5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
