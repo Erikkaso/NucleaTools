@@ -6,11 +6,11 @@ import uuid
 from pathlib import Path
 
 import requests
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, render_template, request, session
 from urllib3.exceptions import ReadTimeoutError
 
-#load_dotenv(Path(__file__).with_name(".env"), override=False, encoding="utf-8-sig")
+load_dotenv(Path(__file__).with_name(".env"), override=False, encoding="utf-8-sig")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-troque-em-producao")

@@ -362,6 +362,62 @@ atualize tambem `QUANT_SCALE` e `QUANT_ZERO_POINT` em
 
 ## Ligacao do INMP441
 
+### Esquema rapido: ESP32-S3, microfone e LED
+
+O esquema abaixo corresponde ao `sdkconfig` atual: microfone nos GPIOs
+**4/5/6**, visor habilitado e LED RGB integrado no **GPIO 48**.
+Os numeros sao os GPIOs impressos na placa, nao a posicao fisica dos pinos.
+Desligue o USB e qualquer outra alimentacao antes de montar ou alterar fios.
+
+```text
+ESP32-S3                         INMP441
+========                         =======
+3V3 ---------------------------- VDD
+GND ---------+------------------ GND
+             +------------------ L/R  (canal esquerdo)
+GPIO 4 ------------------------- SCK / BCLK
+GPIO 5 ------------------------- WS
+GPIO 6 <------------------------ SD   (audio do microfone)
+
+GPIO 48 ---- LED RGB integrado na propria placa
+             Nao precisa de fio, resistor ou alimentacao externa.
+```
+
+**LED integrado nao e o visor.** O firmware controla o LED RGB enderecavel
+WS2812 da placa pelo GPIO 48; nao se trata de um LED comum externo de dois
+terminais. O LED de alimentacao da placa tambem nao e esse indicador RGB.
+
+Se faltar um pino GND livre, use uma protoboard ou um distribuidor para criar
+um GND comum. Ligue um GND do ESP ao barramento e nele conecte GND e L/R do
+microfone e GND do visor. Nao use um GPIO como substituto de GND. O mesmo
+principio permite distribuir o 3V3 para os modulos, respeitando a capacidade
+de alimentacao da placa.
+
+### Esquema opcional do visor ST7789
+
+Para usar a tela do robo junto com o microfone acima:
+
+```text
+ESP32-S3                         ST7789
+========                         ======
+3V3 ---------+------------------ VCC
+             +------------------ BLK / BL (luz de fundo)
+GND ---------------------------- GND
+GPIO 10 ------------------------ SCK / SCL
+GPIO 11 ------------------------ MOSI / SDA
+GPIO 12 ------------------------ CS
+GPIO 9 ------------------------- DC
+GPIO 8 ------------------------- RST / RES
+```
+
+SCL/SDA neste visor sao sinais **SPI**, nao I2C. A ligacao acima nao usa MISO.
+VCC e BLK compartilham o 3V3, mas ambos os terminais precisam da conexao
+indicada. Nao remova tres sinais do visor para compensar a falta de jumpers.
+Para testar apenas o microfone, deixe a tela desconectada e siga a secao
+[Testar apenas o microfone, sem tela](#testar-apenas-o-microfone-sem-tela).
+
+### Pinagem do microfone
+
 | INMP441 | ESP32-S3 |
 | --- | --- |
 | VDD | 3.3 V |
