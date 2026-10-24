@@ -132,11 +132,19 @@ esp_err_t RobotDisplay::InitPanel() {
     return esp_lcd_panel_disp_on_off(panel_, true);
 }
 
-bool RobotDisplay::Flush(const uint16_t* pixels) {
+bool RobotDisplay::Flush(const uint16_t* pixels, bool mirror_x) {
     for (int y = 0; y < GifAnimation::kHeight; y += kStripLines) {
         const int lines = std::min(kStripLines, GifAnimation::kHeight - y);
-        std::memcpy(dma_strip_, pixels + y * GifAnimation::kWidth,
-                    lines * GifAnimation::kWidth * sizeof(uint16_t));
+        if (mirror_x) {
+            for (int row = 0; row < lines; ++row) {
+                const uint16_t* source = pixels + (y + row) * GifAnimation::kWidth;
+                std::reverse_copy(source, source + GifAnimation::kWidth,
+                                  dma_strip_ + row * GifAnimation::kWidth);
+            }
+        } else {
+            std::memcpy(dma_strip_, pixels + y * GifAnimation::kWidth,
+                        lines * GifAnimation::kWidth * sizeof(uint16_t));
+        }
         if (esp_lcd_panel_draw_bitmap(panel_, 0, y, GifAnimation::kWidth, y + lines, dma_strip_) != ESP_OK)
             return false;
         // Do not reuse this DMA buffer until the transfer is acknowledged.
@@ -216,7 +224,9 @@ void RobotDisplay::Run() {
             }
             pixels = animation_->Canvas();
         }
-        if (!Flush(pixels)) { ESP_LOGE(kTag, "Transferencia LCD falhou; audio continua ativo"); return; }
+        if (!Flush(pixels, current == VisualState::kSleeping)) {
+            ESP_LOGE(kTag, "Transferencia LCD falhou; audio continua ativo"); return;
+        }
         due = std::max(started + std::max(delay, 10), NowMs() + 10);
     }
 }

@@ -4,7 +4,7 @@ import unittest
 
 
 class InferenceStrideTest(unittest.TestCase):
-    def test_uses_160ms_stride_for_two_of_three_confirmation(self):
+    def test_stride_has_room_for_measured_220ms_inference(self):
         source = (
             Path(__file__).resolve().parents[1] / "main" / "app_main.cc"
         ).read_text(encoding="utf-8")
@@ -15,7 +15,10 @@ class InferenceStrideTest(unittest.TestCase):
         )
 
         self.assertIsNotNone(match)
-        self.assertEqual(match.group(1), "8")
+        self.assertEqual(match.group(1), "12")
+        stride_ms = int(match.group(1)) * 320 / 16000 * 1000
+        self.assertGreaterEqual(stride_ms, 220)
+        self.assertLessEqual(stride_ms, 320)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-troque-em-producao")
 # URL do webhook do n8n. Pode ser sobrescrita pela variável de ambiente N8N_WEBHOOK_URL.
 N8N_WEBHOOK_URL = os.environ.get(
     "N8N_WEBHOOK_URL",
-    "https://n8n.200-129-37-25.sslip.io/webhook-test/8cf7d87c-4184-460b-8b0e-95affded7054",
+    "https://n8n.200-129-37-25.sslip.io/webhook/8cf7d87c-4184-460b-8b0e-95affded7054",
     #"https://n8n.200-129-37-25.sslip.io/webhook-test/8cf7d87c-4184-460b-8b0e-95affded7054",
 )
 REQUEST_TIMEOUT = int(os.environ.get("N8N_TIMEOUT_SECONDS", "220"))
@@ -142,6 +142,10 @@ def device_audio():
     if audio_file is None or audio_file.filename == "":
         return jsonify({"error": "Nenhum áudio recebido."}), 400
 
+    response_mode = request.form.get("responseMode", "browser")
+    if response_mode not in ("browser", "speaker"):
+        return jsonify({"error": "responseMode deve ser browser ou speaker."}), 400
+
     device_id = (request.form.get("deviceId") or "nuclea-esp32").strip()[:128]
     files = {
         "audio": (
@@ -164,6 +168,8 @@ def device_audio():
     except requests.exceptions.RequestException as exc:
         return jsonify({"error": "Nao foi possivel falar com o n8n."}), upstream_error_status(exc)
 
+    if response_mode == "speaker":
+        return proxy_audio_response(n8n_response, require_stream=True)
     return queue_device_response(n8n_response)
 
 
@@ -206,6 +212,8 @@ def response_stream_id(response: requests.Response) -> str | None:
         ticket = response.json()
     except ValueError:
         return None
+    if isinstance(ticket, list) and len(ticket) == 1:
+        ticket = ticket[0]
     stream_id = ticket.get("stream_id") if isinstance(ticket, dict) else None
     if isinstance(stream_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{32,128}", stream_id):
         return stream_id
@@ -273,10 +281,15 @@ def proxy_tts_stream(stream_id: str) -> Response | tuple[Response, int]:
     return result
 
 
-def proxy_audio_response(response: requests.Response) -> Response | tuple[Response, int]:
+def proxy_audio_response(response: requests.Response, require_stream: bool = False) -> Response | tuple[Response, int]:
     try:
         content_type = response_audio_content_type(response)
         if content_type is not None:
+            if require_stream:
+                return jsonify({
+                    "error": "O alto-falante exige o workflow de streaming, nao MP3.",
+                    "code": "speaker_requires_streaming",
+                }), 502
             return Response(response.content, content_type=content_type)
         stream_id = response_stream_id(response)
     finally:

@@ -5,6 +5,12 @@ idf_component_register(
         "audio_recorder.cc"
         "audio_uploader.cc"
         "audio_upload_worker.cc"
+        "upload_cancellation.cc"
+        "audio_speaker.cc"
+        "speaker_music_test.cc"
+        "recording_cues.cc"
+        "speaker_response.cc"
+        "../tools/speaker_stream_tests.cc"
         "gif_animation.cc"
         "robot_display.cc"
         "../tools/visual_state_tests.cc"
@@ -42,7 +48,19 @@ idf_component_register(
         esp_driver_i2s
 )
 
-if(CONFIG_NUCLEA_DISPLAY_ENABLED)
+if(CONFIG_NUCLEA_RECORDING_SFX_ENABLED)
+    target_add_binary_data(${COMPONENT_LIB} "assets/onsfx.pcm" BINARY)
+    target_add_binary_data(${COMPONENT_LIB} "assets/offsfx.pcm" BINARY)
+endif()
+
+if(CONFIG_NUCLEA_SPEAKER_ONLY_TEST)
+    if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/speaker_test_data/music.pcm")
+        message(FATAL_ERROR "Run python tools/prepare_speaker_music.py before building the speaker-only test")
+    endif()
+    littlefs_create_partition_image(spiffs
+        "${CMAKE_CURRENT_LIST_DIR}/speaker_test_data"
+        FLASH_IN_PROJECT)
+elseif(CONFIG_NUCLEA_DISPLAY_ENABLED)
     littlefs_create_partition_image(spiffs
         "${CMAKE_CURRENT_LIST_DIR}/../../nuclea_gif_player_fixed/data"
         FLASH_IN_PROJECT)

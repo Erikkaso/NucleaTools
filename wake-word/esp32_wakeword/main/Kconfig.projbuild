@@ -1,5 +1,59 @@
 menu "Nuclea device audio"
 
+    config NUCLEA_SPEAKER_ENABLED
+        bool "Play streaming responses through MAX98357A on I2S1"
+        default y
+        help
+            Request responseMode=speaker on the same device-audio POST.
+            Disable to retain the browser mailbox response mode.
+
+    config NUCLEA_SPEAKER_ONLY_TEST
+        bool "Test speaker only: loop local music, skip all other devices"
+        depends on NUCLEA_SPEAKER_ENABLED && !NUCLEA_DISPLAY_ONLY_TEST
+        default n
+        help
+            Prepare main/speaker_test_data/music.pcm using tools/prepare_speaker_music.py.
+            Flash the complete firmware to replace the GIF filesystem with music.
+            Disable this option and flash again to restore the normal assistant.
+
+    config NUCLEA_SPEAKER_TEST_VOLUME_PERCENT
+        int "Speaker music test volume (percent)"
+        depends on NUCLEA_SPEAKER_ONLY_TEST
+        range 0 100
+        default 100
+
+    config NUCLEA_RECORDING_SFX_ENABLED
+        bool "Play local recording start/stop sound effects"
+        depends on NUCLEA_SPEAKER_ENABLED
+        default y
+        help
+            Play onsfx after wakeword acceptance, before recording the command.
+            Play offsfx after recording stops, before the HTTP request.
+
+    config NUCLEA_SPEAKER_BCLK_GPIO
+        int "MAX98357A BCLK GPIO"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range 0 48
+        default 14
+
+    config NUCLEA_SPEAKER_WS_GPIO
+        int "MAX98357A LRC/WS GPIO"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range 0 48
+        default 21
+
+    config NUCLEA_SPEAKER_DIN_GPIO
+        int "MAX98357A DIN GPIO (ESP TX)"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range 0 48
+        default 13
+
+    config NUCLEA_SPEAKER_VOLUME_PERCENT
+        int "Speaker digital volume (percent)"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range 0 100
+        default 100
+
     config NUCLEA_DEVICE_ID
         string "Device session ID"
         default "nuclea-esp32"
@@ -27,6 +81,15 @@ menu "Nuclea device audio"
 endmenu
 
 menu "Nuclea robot display"
+    config NUCLEA_DISPLAY_ONLY_TEST
+        bool "Test display only on GPIOs 4/5/6/7/15"
+        depends on NUCLEA_DISPLAY_ENABLED
+        default n
+        help
+            Skip microphone, speaker, Wi-Fi and wakeword initialization.
+            Cycle sleep and awake animations automatically. Disconnect other
+            peripherals that share these GPIOs before using this test.
+
     config NUCLEA_DISPLAY_ENABLED
         bool "Enable ST7789 robot animations (rewire microphone first)"
         default y
@@ -56,18 +119,15 @@ menu "Nuclea microphone pins"
     config NUCLEA_MIC_BCLK_GPIO
         int "INMP441 SCK/BCLK GPIO"
         range 0 48
-        default 4 if NUCLEA_DISPLAY_ENABLED
-        default 11
+        default 41
 
     config NUCLEA_MIC_WS_GPIO
         int "INMP441 WS GPIO"
         range 0 48
-        default 5 if NUCLEA_DISPLAY_ENABLED
-        default 10
+        default 42
 
     config NUCLEA_MIC_SD_GPIO
         int "INMP441 SD GPIO"
         range 0 48
-        default 6 if NUCLEA_DISPLAY_ENABLED
-        default 12
+        default 40
 endmenu

@@ -24,6 +24,7 @@ public:
     esp_err_t Connect();
     bool IsConnected() const;
     std::string InterfaceUrl() const;
+    std::string AuthKey() const;
 
 private:
     static void HandleEvent(void* context, esp_event_base_t base, int32_t id, void* data);
@@ -39,13 +40,19 @@ private:
     esp_err_t StartPortal();
     void StopPortal();
     void SetStatus(const char* message, bool busy);
-    esp_err_t SaveSettings(const WifiSettings& settings);
+    esp_err_t SaveSettings(const WifiSettings& settings, const char* auth_key);
+
+    struct PendingSettings {
+        WifiSettings settings;
+        char auth_key[129] = {};
+    };
 
     EventGroupHandle_t events_ = nullptr;
     QueueHandle_t pending_ = nullptr;
     SemaphoreHandle_t mutex_ = nullptr;
     httpd_handle_t server_ = nullptr;
     WifiSettings settings_;
+    char auth_key_[129] = {};
     PortalButtonHold portal_button_;
     bool manual_portal_ = false;
     const char* message_ = "Configure sua rede Wi-Fi.";

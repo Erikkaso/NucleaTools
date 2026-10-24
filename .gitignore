@@ -6,6 +6,7 @@ __pycache__/
 esp32_wakeword/build/
 esp32_wakeword/managed_components/
 esp32_wakeword/sdkconfig.old
+wake-word/esp32_wakeword/build-speaker/
 
 venv
 .vscode

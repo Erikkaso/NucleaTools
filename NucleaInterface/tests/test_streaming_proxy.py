@@ -97,8 +97,29 @@ def test_stream_is_incremental_and_closes_on_disconnect(backend, monkeypatch):
     assert upstream.closed
 
 
+def test_device_speaker_accepts_single_n8n_ticket_item(backend, monkeypatch):
+    upstream = Stream()
+    calls = setup_ticket(backend, monkeypatch, upstream)
+    monkeypatch.setattr(backend.requests, "post", lambda *a, **k: ticket_response([
+        {"stream_id": TOKEN, "format": "pcm_s16le", "channels": 1},
+    ]))
+    response = backend.app.test_client().post("/api/device-audio", data={
+        "audio": (BytesIO(b"RIFFtest"), "command.wav"),
+        "responseMode": "speaker",
+    }, buffered=False)
+    assert response.status_code == 200
+    assert response.mimetype == "application/x-ndjson"
+    assert len(calls) == 1
+    assert next(iter(response.response)) == START
+    response.close()
+    assert upstream.closed
+
+
 @pytest.mark.parametrize("payload", [
-    {}, [], None, {"url": "http://127.0.0.1/private"},
+    {}, [], [None], [[{"stream_id": TOKEN}]],
+    [{"stream_id": TOKEN}, {"stream_id": TOKEN}],
+    [{"stream_id": "../" + "x" * 40}],
+    None, {"url": "http://127.0.0.1/private"},
     {"stream_id": "http://evil.test/" + "x" * 40},
     {"stream_id": "../" + "x" * 40}, {"stream_id": "x" * 31},
     {"stream_id": "x" * 129}, {"stream_id": 123},
@@ -297,3 +318,44 @@ def test_index_passes_safe_audio_progress_timeout(backend, monkeypatch, value, e
     monkeypatch.setattr(backend, 'render_template', render)
     assert backend.app.test_client().get('/').status_code == 200
     assert captured['progress_seconds'] == expected
+
+
+def test_speaker_mode_streams_to_esp_without_consuming_browser_mailbox(backend, monkeypatch):
+    upstream = Stream()
+    setup_ticket(backend, monkeypatch, upstream)
+    backend.device_response_mailbox.put(b'previous-browser-response', 'audio/mpeg')
+    response = backend.app.test_client().post('/api/device-audio', data={
+        'audio': (BytesIO(b'RIFFtest'), 'command.wav'), 'responseMode': 'speaker',
+    }, buffered=False)
+    assert response.status_code == 200
+    assert response.mimetype == 'application/x-ndjson'
+    assert not upstream.finished
+    assert backend.device_response_mailbox.take() == (b'previous-browser-response', 'audio/mpeg')
+    response.close()
+    assert upstream.closed
+
+
+def test_speaker_mode_rejects_legacy_mp3_instead_of_sending_it_as_pcm(backend, monkeypatch):
+    upstream = requests.Response()
+    upstream.status_code = 200
+    upstream.headers['Content-Type'] = 'audio/mpeg'
+    upstream._content = b'ID3legacy'
+    upstream._content_consumed = True
+    monkeypatch.setattr(backend.requests, 'post', lambda *a, **k: upstream)
+    response = backend.app.test_client().post('/api/device-audio', data={
+        'audio': (BytesIO(b'RIFFtest'), 'command.wav'), 'responseMode': 'speaker',
+    })
+    assert response.status_code == 502
+    assert response.json['code'] == 'speaker_requires_streaming'
+    assert backend.device_response_mailbox.take() is None
+
+
+def test_invalid_device_response_mode_is_rejected_before_calling_n8n(backend, monkeypatch):
+    def unexpected(*args, **kwargs):
+        raise AssertionError('Invalid mode must not invoke the workflow')
+
+    monkeypatch.setattr(backend.requests, 'post', unexpected)
+    response = backend.app.test_client().post('/api/device-audio', data={
+        'audio': (BytesIO(b'RIFFtest'), 'command.wav'), 'responseMode': 'unknown',
+    })
+    assert response.status_code == 400

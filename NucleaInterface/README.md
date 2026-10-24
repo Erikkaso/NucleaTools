@@ -109,8 +109,9 @@ automaticamente, evitando reproduzir a mesma resposta duas vezes.
 
 - `POST /api/chat-audio`: multipart `audio`; encaminha com `sessionId` ao n8n.
 - `POST /api/chat`: JSON `message`; API legada, sem campo de texto na tela.
-- `POST /api/device-audio`: multipart `audio` e `deviceId` opcional; guarda o
-  identificador da resposta para o navegador sem esperar o TTS terminar.
+- `POST /api/device-audio`: multipart `audio`, `deviceId` opcional e
+  `responseMode` opcional. O padrao `browser` guarda a resposta para o navegador;
+  `speaker` devolve o stream diretamente na resposta HTTP para o ESP32.
 - `GET /api/device-response`: 204 sem resposta; senao entrega o stream uma vez.
 
 O navegador consulta respostas do ESP32 apos liberar audio por interacao, desde
@@ -118,6 +119,18 @@ que nao esteja em outra conversa. A caixa de respostas do dispositivo continua
 sendo unica e em memoria: uma resposta nova substitui a anterior. Nao e um
 roteador para varios dispositivos/usuarios. O ESP continua enviando gravacao
 completa; esta mudanca e na entrega da resposta.
+
+### Resposta no alto-falante do ESP32
+
+O firmware com MAX98357A envia `responseMode=speaker`. Nessa modalidade, a
+interface repassa os eventos PCM NDJSON na mesma conexao do upload e nao usa
+nem consome a caixa de respostas do navegador. Nao e necessario deixar a pagina
+aberta. O workflow n8n e o runtime de streaming existentes sao mantidos.
+
+Reinicie o Flask apos atualizar `app.py`. O workflow precisa devolver o
+identificador de streaming; um MP3 legado e recusado com
+`speaker_requires_streaming`, porque o firmware nao possui decodificador MP3.
+Consulte o README de `wake-word` para pinagem e configuracao do amplificador.
 
 Respostas legadas `audio/*` ainda sao aceitas, mas precisam chegar completas
 antes da reproducao. JSON com identificador invalido retorna erro controlado.

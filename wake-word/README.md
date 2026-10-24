@@ -9,7 +9,7 @@ TensorFlow Lite INT8 no proprio microcontrolador.
 - Variante: `v2g_replay_hardneg`
 - Entrada: `1 x 13 x 49 x 1`, MFCC INT8
 - Janela: 1 segundo
-- Avanco nominal entre janelas: 160 ms; a cadencia real depende do tempo de inferencia
+- Avanco nominal entre janelas: 240 ms; a cadencia real depende do tempo de inferencia
 - Threshold normal: `0.85`
 - Threshold de alta confianca: `0.98`
 - Confirmacao: 2 positivos nas ultimas 3 inferencias, ou 1 de alta confianca
@@ -362,10 +362,39 @@ atualize tambem `QUANT_SCALE` e `QUANT_ZERO_POINT` em
 
 ## Ligacao do INMP441
 
+### Teste isolado da tela (pinagem padrao)
+
+Com `CONFIG_NUCLEA_DISPLAY_ONLY_TEST=y`, conecte somente o visor:
+
+| Tela (ordem dos terminais) | ESP32-S3 |
+|---|---|
+| GND | GND |
+| VCC | 3V3 |
+| SCL | GPIO 4 |
+| SDA | GPIO 5 |
+| RES | GPIO 6 |
+| DC | GPIO 7 |
+| CS | GPIO 15 |
+| BLK | 3V3 |
+
+Desconecte microfone e amplificador desses GPIOs antes de alimentar.
+Neste modo, nao iniciam Wi-Fi, microfone, amplificador ou wakeword.
+A tela alterna automaticamente entre dormir, acordar e olhos abertos;
+o retorno ao repouso usa `NUCLEA_DISPLAY_IDLE_MS` (30 segundos por padrao).
+Esta pinagem tambem e usada no modo normal, validada no teste do visor.
+Para voltar ao assistente, desmarque `Test display only on GPIOs 4/5/6/7/15`
+em `idf.py menuconfig` > `Nuclea robot display`. O teste esta desabilitado no sdkconfig atual.
+
+Compile e grave a partir de `wake-word/esp32_wakeword`, no terminal ESP-IDF:
+
+```powershell
+idf.py -B build-speaker -p COM9 reconfigure build flash monitor
+```
+
 ### Esquema rapido: ESP32-S3, microfone e LED
 
 O esquema abaixo corresponde ao `sdkconfig` atual: microfone nos GPIOs
-**4/5/6**, visor habilitado e LED RGB integrado no **GPIO 48**.
+**41/42/40** (BCLK/WS/SD), visor habilitado e LED RGB integrado no **GPIO 48**.
 Os numeros sao os GPIOs impressos na placa, nao a posicao fisica dos pinos.
 Desligue o USB e qualquer outra alimentacao antes de montar ou alterar fios.
 
@@ -375,9 +404,9 @@ ESP32-S3                         INMP441
 3V3 ---------------------------- VDD
 GND ---------+------------------ GND
              +------------------ L/R  (canal esquerdo)
-GPIO 4 ------------------------- SCK / BCLK
-GPIO 5 ------------------------- WS
-GPIO 6 <------------------------ SD   (audio do microfone)
+GPIO 41 ------------------------ SCK / BCLK
+GPIO 42 ------------------------ WS
+GPIO 40 <----------------------- SD   (audio do microfone)
 
 GPIO 48 ---- LED RGB integrado na propria placa
              Nao precisa de fio, resistor ou alimentacao externa.
@@ -403,11 +432,11 @@ ESP32-S3                         ST7789
 3V3 ---------+------------------ VCC
              +------------------ BLK / BL (luz de fundo)
 GND ---------------------------- GND
-GPIO 10 ------------------------ SCK / SCL
-GPIO 11 ------------------------ MOSI / SDA
-GPIO 12 ------------------------ CS
-GPIO 9 ------------------------- DC
-GPIO 8 ------------------------- RST / RES
+GPIO 4 ------------------------- SCK / SCL
+GPIO 5 ------------------------- MOSI / SDA
+GPIO 15 ------------------------ CS
+GPIO 7 ------------------------- DC
+GPIO 6 ------------------------- RST / RES
 ```
 
 SCL/SDA neste visor sao sinais **SPI**, nao I2C. A ligacao acima nao usa MISO.
@@ -423,20 +452,19 @@ Para testar apenas o microfone, deixe a tela desconectada e siga a secao
 | VDD | 3.3 V |
 | GND | GND |
 | L/R | GND, canal esquerdo |
-| SCK/BCLK | GPIO 4 |
-| WS | GPIO 5 |
-| SD | GPIO 6 |
+| SCK/BCLK | GPIO 41 |
+| WS | GPIO 42 |
+| SD | GPIO 40 |
 
-Esta e a pinagem padrao com o visor habilitado. **Mude fisicamente os tres
-fios do microfone antes de gravar:** os antigos GPIOs 11/10/12 agora pertencem
-a tela. Os pinos podem ser alterados no menu `Nuclea microphone pins`.
-Com o visor desabilitado, um sdkconfig novo usa os antigos 11/10/12;
-se reutilizar configuracoes, confira os tres valores no menuconfig.
+Esta e a pinagem padrao com ou sem visor. Os GPIOs 4/5/6 agora sao do visor.
+Os pinos podem ser alterados no menu `Nuclea microphone pins`;
+se reutilizar configuracoes antigas, confira os tres valores no menuconfig.
 
 O LED RGB integrado usa o GPIO 48. No boot ele testa vermelho, verde e azul.
 Quando a wake word e aceita, o firmware grava o comando e envia o WAV para a
-NucleaInterface. O LED fica azul durante a gravacao, amarelo durante o envio,
-verde se o envio terminou com sucesso e vermelho se falhou.
+NucleaInterface. O LED fica azul durante a gravacao, amarelo durante o envio
+ou espera, verde durante a reproducao no alto-falante e ao concluir com sucesso,
+e vermelho se falhou.
 
 ### Testar apenas o microfone, sem tela
 
@@ -445,9 +473,8 @@ Na pasta `esp32_wakeword`, execute `idf.py menuconfig`:
 1. Em `Nuclea robot display`, desmarque
    `Enable ST7789 robot animations (rewire microphone first)`
    (`NUCLEA_DISPLAY_ENABLED`).
-2. Em `Nuclea microphone pins`, defina explicitamente SCK/BCLK=4, WS=5 e SD=6
-   para usar a ligacao da tabela acima. Nao dependa dos defaults ao desativar
-   o visor: eles podem ser 11/10/12.
+2. Em `Nuclea microphone pins`, confira SCK/BCLK=41, WS=42 e SD=40
+   para usar a ligacao da tabela acima.
 3. Salve e execute:
 
 ```powershell
@@ -455,11 +482,125 @@ idf.py -p COM9 build flash monitor
 ```
 
 Com esse firmware, a tela pode ficar totalmente desconectada. O monitor deve
-mostrar `INMP441: BCLK=4 WS=5 SD=6` e nao deve mostrar `ROBOT_DISPLAY: Cache wake`.
+mostrar `INMP441: BCLK=41 WS=42 SD=40` e nao deve mostrar `ROBOT_DISPLAY: Cache wake`.
 Fale perto do microfone e confira se `peak` e `audio` variam.
 
 Desligue a placa antes de alterar os fios. Alimente o INMP441 em 3.3 V, nao
 5 V, e mantenha L/R ligado ao GND para o canal esquerdo.
+
+## Alto-falante com MAX98357A
+
+O firmware pode receber a resposta diretamente no ESP32 e reproduzir no
+MAX98357A. O microfone continua no I2S0; a saida usa o I2S1, sem compartilhar
+os clocks ou alterar os GPIOs do microfone e do visor.
+
+| MAX98357A | Conexao |
+| --- | --- |
+| LRC / WS | GPIO 21 |
+| BCLK | GPIO 14 |
+| DIN | GPIO 13 |
+| GAIN | GND para 12 dB; aberto para o padrao de 9 dB |
+| SD | 3V3, habilitado e canal esquerdo |
+| GND | GND comum ao ESP32 e a fonte |
+| VIN | Fonte de 5 V adequada ao consumo do conjunto |
+| Saida + / - | Somente os dois terminais do alto-falante |
+
+Nao ligue nenhum terminal de saida do amplificador ao GND. O INMP441 continua
+em 3.3 V. Monte com a alimentacao desligada. O volume digital padrao atual e
+**100%**. O alto-falante usado e de 4 ohms e 3 W; se houver distorcao, reduza
+o volume. O teste musical confirmou brownout com a alimentacao anterior do PC;
+use uma alimentacao 5 V adequada ao conjunto.
+
+GAIN conectado diretamente ao GND aumenta o ganho de 9 para 12 dB sem mudar
+o firmware. Para 15 dB, use resistor de 100 kohms entre GAIN e GND. Conectar
+GAIN ao VIN reduz o ganho, nao aumenta. Mais ganho nao aumenta a potencia
+maxima do amplificador e pode causar distorcao. Referencia:
+[MAX98357A: controle de ganho](https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/pinouts).
+
+No menu `Nuclea device audio`, `NUCLEA_SPEAKER_ENABLED` vem habilitado.
+Os pinos sao configuraveis em `NUCLEA_SPEAKER_BCLK_GPIO`,
+`NUCLEA_SPEAKER_WS_GPIO` e `NUCLEA_SPEAKER_DIN_GPIO`; o volume em
+`NUCLEA_SPEAKER_VOLUME_PERCENT`.
+
+Com o alto-falante habilitado, o ESP envia `responseMode=speaker` junto ao WAV
+para `/api/device-audio`. A NucleaInterface atualizada devolve PCM16 mono a
+24 kHz em NDJSON na mesma conexao. O firmware valida os pacotes, acumula um
+buffer limitado em PSRAM e reproduz sem esperar o audio completo. Nao ha
+decodificador MP3: mantenha o workflow `nuclea-streaming.json` e o runtime de
+streaming. Nao e necessario deixar o navegador aberto.
+
+Durante envio, espera e reproducao TTS, novas deteccoes continuam ativas.
+Uma nova wakeword interrompe o audio, sinaliza cancelamento HTTP e descarta
+o retorno anterior. O worker encerra a conexao e libera o buffer antes de
+abrir um novo comando com `onsfx`; nao e preciso esperar o n8n responder.
+Os efeitos locais curtos de inicio/fim continuam bloqueando novas deteccoes.
+Ao terminar naturalmente ou falhar sem interrupcao, permanece a margem de
+dois segundos para drenar captura e eco. Audio invalido nao e repetido automaticamente.
+
+O cancelamento e local: n8n/GPU podem concluir uma execucao ja iniciada.
+Ele nao desfaz consultas, alteracoes de dados ou memoria que o workflow ja
+tenha produzido. Nao foi adicionada uma API para interromper execucoes no n8n.
+Durante DNS/conexao TLS ainda nao existe socket conectado para interromper;
+o timeout de transporte dessa fase e 5 s (a resolucao DNS depende da pilha).
+Nao ha cancelamento acustico de eco: se o proprio TTS disser a wakeword, ele
+pode acionar a interrupcao; distancia entre caixa e microfone e volume afetam isso.
+
+Para manter a resposta no navegador, desabilite `NUCLEA_SPEAKER_ENABLED` em
+`menuconfig` e regrave a placa; o modo antigo permanece disponivel.
+
+Reinicie tambem a NucleaInterface apos atualizar seu `app.py`. Nao e preciso
+alterar o n8n ou o TTS se o fluxo de streaming ja estava funcionando.
+
+Para esta atualizacao, use uma pasta de compilacao nova, evitando o cache
+antigo com caminhos anteriores a mudanca de repositorio:
+
+```powershell
+cd wake-word/esp32_wakeword
+idf.py -B build-speaker menuconfig
+idf.py -B build-speaker -p COM9 reconfigure build flash monitor
+```
+
+Execute em um terminal ESP-IDF 5.5.x. Substitua `COM9` pela porta da placa.
+O `reconfigure` atualiza tambem o caminho do Python caso seu terminal ESP-IDF
+use outro ambiente virtual que o utilizado na compilacao anterior.
+A pinagem do microfone deve aparecer no log como `BCLK=41 WS=42 SD=40`;
+o amplificador deve indicar `I2S1 TX BCLK=14 WS=21 DIN=13`, seguido do volume configurado.
+Os testes de software e a compilacao nao substituem a validacao do som na placa.
+
+## Teste isolado da caixa de som: musica em loop
+
+O teste fica desabilitado no `sdkconfig` atual. Para usa-lo, habilite
+`NUCLEA_SPEAKER_ONLY_TEST` em `menuconfig`; o volume de teste padrao e **100%**.
+Com o teste habilitado, ao ligar, o ESP toca a musica inteira em loop,
+sem iniciar Wi-Fi, visor, microfone ou wakeword. O volume do modo normal
+continua independente (`NUCLEA_SPEAKER_VOLUME_PERCENT`).
+
+Conecte apenas o MAX98357A: LRC em GPIO21, BCLK em GPIO14, DIN em GPIO13,
+SD em 3V3, GND em GND e VIN em 5V; GAIN pode ficar aberto. Ligue o alto-falante
+somente entre SPK+ e SPK-, nunca entre uma saida e GND. Desligue a alimentacao
+antes de alterar fios. O USB do ESP pode limitar a potencia e causar distorcao
+ou reinicializacao no volume maximo. Uma fonte regulada de 5V adequada pode
+alimentar apenas o VIN do MAX, mantendo GND comum e sem unir dois positivos de 5V.
+
+Para preparar e gravar, em `wake-word/esp32_wakeword`, com FFmpeg no PATH
+e terminal ESP-IDF habilitado:
+
+```powershell
+python tools/prepare_speaker_music.py
+idf.py -B build-speaker -p COM9 build flash monitor
+```
+
+O conversor usa o unico MP3 na raiz de NucleaTools; para outro caminho,
+use `--input "caminho/musica.mp3"`. Preserva o original e converte o canal
+esquerdo completo em PCM16 mono 24 kHz. O PCM gerado e ignorado pelo Git.
+O ESP le pequenos blocos da flash, sem carregar a musica inteira na RAM.
+
+Este teste substitui os GIFs na particao de arquivos pela musica, sem apagar
+as credenciais Wi-Fi na NVS. Para voltar ao assistente, desmarque
+`Test speaker only` em `idf.py -B build-speaker menuconfig` e execute novamente
+o comando completo `build flash monitor`: isso tambem restaura os GIFs.
+Nao use `erase-flash`. Para reduzir o volume do teste, altere
+`Speaker music test volume (percent)` no mesmo menu.
 
 ## Compilar e gravar
 
@@ -548,33 +689,98 @@ Com o visor habilitado, `idf.py flash` tambem grava os GIFs atuais no LittleFS: 
 daquela particao, mas nao apaga NVS. Nao execute `erase-flash` para esta mudanca.
 
 Troque `COM9` pela porta da placa. O firmware aguarda a conexao Wi-Fi e entao
-inicia o detector. Uma deteccao gera `Wakeword detectada` e inicia a gravacao
-PCM16 mono a 16 kHz, com 400 ms de audio anteriores a deteccao. Por padrao, ela
+inicia o detector. Uma deteccao gera `Wakeword detectada`, toca o `onsfx` local
+e abre a gravacao PCM16 mono a 16 kHz depois do efeito e de uma margem de 150 ms.
+Aguarde o som inicial acabar antes de falar o comando. Por padrao, ela
 grava no minimo 5 segundos. Audio com RMS >= -32 dBFS renova uma margem de
 1,5 segundo apos a ultima atividade, sem ultrapassar 12 segundos. Por exemplo,
 atividade ate 4,5 s leva o termino para 6 s; sem atividade perto do fim, o WAV
 termina em 5 s. Ruido alto tambem pode prorrogar: e deteccao de volume, nao VAD.
-Os tempos incluem os 400 ms anteriores a deteccao e sao contados pelas amostras,
+Com os efeitos habilitados, os tempos comecam depois do som inicial; sem efeitos,
+o firmware preserva os 400 ms de pre-roll anteriores a deteccao. Sao contados pelas amostras,
 nao pelo atraso de processamento. O ultimo bloco e limitado para nao ultrapassar
 a duracao calculada. Em `Nuclea device audio`, os parametros sao
 `NUCLEA_MIN_RECORDING_MS=5000`, `NUCLEA_SILENCE_MS=1500` e
 `NUCLEA_MAX_RECORDING_MS=12000`; o maximo permitido e 12 segundos.
 
-Execute a NucleaInterface no computador e mantenha sua pagina aberta. O n8n
-precisa responder com audio. A resposta e recebida pelo Flask, mantida
-temporariamente na RAM e entregue ao navegador pelo polling. Se o navegador
-bloquear autoplay, pressione o controle de reproducao na mensagem. O ESP32
-sinaliza o resultado do envio e volta a escutar; nao reproduz audio nesta etapa.
+Configure no portal a URL base do Voice Gateway ou execute a NucleaInterface
+no computador para manter o fluxo anterior. Com `NUCLEA_SPEAKER_ENABLED`, a resposta
+e reproduzida no MAX98357A conectado ao ESP32, sem pagina aberta. Sem essa opcao,
+a resposta segue para a caixa de audio do navegador por polling; libere audio
+com uma interacao na pagina. O workflow n8n deve ser o de streaming para usar
+o alto-falante. Consulte a secao `Alto-falante com MAX98357A` para configuracao.
+
+### Chave de acesso do n8n
+
+O portal Wi-Fi possui o campo mascarado **Chave de acesso do n8n**. Use a
+mesma chave da credencial Header Auth do Webhook, com nome `X-Nuclea-Key`.
+A chave deve ter entre 32 e 128 caracteres ASCII sem espacos; prefira uma
+chave aleatoria gerada com `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
+
+Segure BOOT por 3 segundos, conecte-se a `Nuclea-Config`, abra
+`http://192.168.4.1` e confira rede, senha e URL HTTPS antes de salvar.
+Rota e chave ficam bloqueadas por padrao, cada uma com seu botao **Editar**.
+Sem escolher editar, salvar o Wi-Fi preserva ambas na NVS; elas nao sao
+reenviadas pelo formulario. Para trocar a chave, clique em **Editar** e
+preencha uma nova. Vazio preserva a salva; o portal
+mostra apenas se existe chave configurada, sem ler o segredo de volta.
+Ela fica em uma entrada separada na NVS, sem mudar o blob legado de Wi-Fi.
+Nao e necessario `erase-flash`. A NVS atual nao e criptografada.
+
+O ESP envia `X-Nuclea-Key` ao gateway, que o repassa somente ao n8n.
+Com chave configurada, o ESP exige HTTPS e nao segue redirecionamentos.
+Atualize tambem o Voice Gateway e habilite Header Auth no Webhook do n8n;
+o gateway nao valida o valor sozinho e nao guarda uma chave mestra.
+Nenhuma mudanca no TTS e necessaria. Veja o guia completo em
+[Voice Gateway](../voice_gateway/README.md#chave-de-acesso-no-n8n-e-no-esp).
+
+### Sons de inicio e fim da gravacao
+
+`NUCLEA_RECORDING_SFX_ENABLED` vem habilitado quando o alto-falante esta ativo.
+Em `Nuclea device audio`, desmarque `Play local recording start/stop sound effects`
+para voltar ao comportamento anterior sem sons.
+
+- `onsfx`: toca uma vez quando a wakeword e aceita, antes de abrir o comando.
+- `offsfx`: toca depois de fechar a gravacao, antes do envio HTTP. Tambem toca
+  ao descartar uma gravacao por lacuna de captura; sem Wi-Fi, o som continua local.
+- Durante efeitos, o loop continua drenando o INMP441, sem gravar o proprio
+  som no WAV e sem executar novas inferencias. Efeitos e resposta TTS usam o
+  mesmo worker e a mesma saida I2S, sem reproducao simultanea.
+- A duracao minima de 5 s e a maxima de 12 s continuam valendo para o comando,
+  sem contar os sons. Os efeitos acrescentam seu tempo ao ciclo: aproximadamente
+  0,85 s no inicio, uma margem de 150 ms e 0,63 s no fim, mais o esvaziamento I2S.
+- O volume segue `NUCLEA_SPEAKER_VOLUME_PERCENT`, sem alterar o valor configurado.
+  O padrao atual e 100%, o maximo digital sem amplificacao adicional.
+
+Os arquivos `main/assets/onsfx.pcm` e `offsfx.pcm` sao embutidos no firmware
+como PCM16 little-endian, mono, 24 kHz, sem cabecalho WAV. Nao precisam do
+gateway, TTS, rede, MP3 decoder ou FFmpeg no ESP. Os originais `onsfx.mp4` e
+`offsfx.mp4` da raiz foram preservados; sao fontes de audio reconhecidas pelo FFmpeg.
+Somente o silencio inicial/final do `onsfx` foi removido.
+O `offsfx` recebeu +6,63 dB para aproximar seu nivel RMS do `onsfx`, sem
+recortar sua duracao nem saturar as amostras PCM. Isso nao garante o mesmo
+volume percebido, pois os efeitos possuem timbres diferentes.
+
+Para regenerar a partir da raiz de `NucleaTools` (FFmpeg instalado):
+
+```powershell
+ffmpeg -y -i onsfx.mp4 -map 0:a:0 -af "atrim=start=0.53:end=1.38,asetpts=PTS-STARTPTS" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le wake-word/esp32_wakeword/main/assets/onsfx.pcm
+ffmpeg -y -i offsfx.mp4 -map 0:a:0 -af "volume=6.63dB" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le wake-word/esp32_wakeword/main/assets/offsfx.pcm
+```
+
+O recorte acima corresponde ao `onsfx` fornecido; ajuste se trocar o arquivo.
+Inclua os dois `.pcm` no repositorio. O build normal nao depende de FFmpeg nem
+dos originais. Para gravar os efeitos, basta recompilar e fazer flash normalmente.
 
 ## Visor ST7789 e estados do robo
 
 | ST7789 | ESP32-S3 |
 | --- | --- |
-| SCK/SCL | GPIO 10 |
-| MOSI/SDA | GPIO 11 |
-| CS | GPIO 12 |
-| DC | GPIO 9 |
-| RST/RES | GPIO 8 |
+| SCK/SCL | GPIO 4 |
+| MOSI/SDA | GPIO 5 |
+| CS | GPIO 15 |
+| DC | GPIO 7 |
+| RST/RES | GPIO 6 |
 | VCC / BLK | 3.3 V |
 | GND | GND |
 
@@ -586,6 +792,7 @@ Nao altere a pasta dos GIFs sem manter os tres nomes e a resolucao 280x240.
 
 Por padrao, o visor mostra o robo dormindo desde a inicializacao, inclusive
 durante a configuracao Wi-Fi. Isso e apenas um estado visual, nao deep sleep.
+Somente `sleep.gif` tem inversao horizontal por software no envio ao visor; as animacoes de acordar e olhos abertos mantem a orientacao original.
 O detector inicia depois da conexao Wi-Fi, como no fluxo anterior.
 
 Uma wakeword aceita inicia a gravacao e envia o evento de abertura dos olhos.
@@ -602,9 +809,13 @@ X=20/Y=0. Se a imagem ficar deslocada, ajuste esses offsets conforme a tela;
 a orientacao e as cores ainda precisam ser confirmadas no hardware real.
 
 Captura I2S (prioridade 6), inferencia (4), envio HTTP (2) e visor (1) sao
-separados. O visor roda no core 1; captura/inferencia/envio usam core 0.
-Durante um envio, a captura continua, mas novas deteccoes sao suspensas
-ate o HTTP terminar. O buffer da gravacao nao e reutilizado antes disso.
+separados. Inferencia e visor rodam no core 1; captura, alto-falante (3) e
+envio usam core 0. Assim, inferencias longas nao bloqueiam o abastecimento I2S.
+Durante um envio, captura e deteccao continuam. A nova wakeword cancela o
+pedido anterior; o buffer da gravacao so e reutilizado apos o worker confirmar
+o encerramento. Apenas o worker HTTP fecha/libera seu cliente e consome a
+confirmacao de parada do alto-falante; a outra tarefa somente sinaliza e
+interrompe o socket com `shutdown`, sem liberar objetos em uso.
 Se a fila de captura atrasar, o firmware registra o descarte e recompoe
 a janela; uma gravacao com lacuna e descartada em vez de enviar audio incompleto.
 Erros de leitura e overflow DMA/I2S tambem sinalizam lacunas. O historico de
@@ -636,7 +847,7 @@ O teste de pilha analisa o objeto compilado com `xtensa-esp32s3-elf-objdump`,
 disponivel no terminal ESP-IDF. Se nao estiver no PATH, defina `XTENSA_OBJDUMP`
 com o caminho do executavel. Sem compilador ou objeto, esse teste e ignorado;
 ele mede a reserva local da funcao, nao substitui a medicao de pilha no hardware.
-No hardware, confira `Cache wake: 30 frames`, a pinagem `BCLK=4 WS=5 SD=6`,
+No hardware, confira `Cache wake: 30 frames`, a pinagem `BCLK=41 WS=42 SD=40`,
 a abertura ao falar Nuclea, gravacao/envio e retorno ao repouso. Confira que
 nao aparecem `Fila de audio atrasada` durante uso normal. Esta integracao
 nao foi gravada nem validada fisicamente pelo agente.

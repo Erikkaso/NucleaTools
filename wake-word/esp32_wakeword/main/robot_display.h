@@ -20,7 +20,7 @@ private:
                              esp_lcd_panel_io_event_data_t* event, void* context);
     esp_err_t InitPanel();
     bool PrepareTransition();
-    bool Flush(const uint16_t* pixels);
+    bool Flush(const uint16_t* pixels, bool mirror_x);
     void Run();
     void Post(Event event);
     QueueHandle_t events_ = nullptr;

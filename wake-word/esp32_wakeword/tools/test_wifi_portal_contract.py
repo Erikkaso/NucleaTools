@@ -6,6 +6,42 @@ MAIN = Path(__file__).resolve().parents[1] / "main"
 
 
 class WifiPortalContractTests(unittest.TestCase):
+    def test_omitted_gateway_and_key_preserve_saved_values(self):
+        wifi = (MAIN / "wifi_station.cc").read_text(encoding="utf-8")
+        handler = wifi.split("esp_err_t WifiStation::HandleConfigure", 1)[1]
+        self.assertIn("std::memcpy(candidate.base_url, wifi->settings_.base_url", handler)
+        self.assertIn("std::memcpy(pending.auth_key, wifi->auth_key_", handler)
+        self.assertIn("bool valid_url = !url ||", handler)
+        self.assertIn("bool valid_key = !key ||", handler)
+        self.assertIn("url->valuestring[0]", handler)
+        self.assertIn("key->valuestring[0]", handler)
+
+    def test_auth_key_is_separate_from_legacy_settings_and_never_read_back(self):
+        wifi = (MAIN / "wifi_station.cc").read_text(encoding="utf-8")
+        header = (MAIN / "wifi_station.h").read_text(encoding="utf-8")
+        legacy = header.split("struct WifiSettings {", 1)[1].split("};", 1)[0]
+        self.assertNotIn("auth_key", legacy)
+        self.assertIn('nvs_get_str(nvs, "auth_key"', wifi)
+        self.assertIn('nvs_set_str(nvs, "auth_key"', wifi)
+        status = wifi.split("esp_err_t WifiStation::HandleStatus", 1)[1].split("esp_err_t WifiStation::HandleScan", 1)[0]
+        self.assertIn('"auth_configured"', status)
+        self.assertNotIn('cJSON_AddStringToObject(root, "auth_key"', status)
+        uploader = (MAIN / "audio_uploader.cc").read_text(encoding="utf-8")
+        self.assertIn('"X-Nuclea-Key", auth_key.c_str()', uploader)
+        self.assertIn('base_url.compare(0, 8, "https://")', uploader)
+        self.assertIn("config.disable_auto_redirect = true", uploader)
+
+    def test_blank_saved_url_gets_default_before_validation_without_nvs_write(self):
+        wifi = (MAIN / "wifi_station.cc").read_text(encoding="utf-8")
+        load = wifi.split('size_t size = sizeof(settings_);', 1)[1]
+        load = load.split('nvs_close(nvs);', 1)[0]
+        self.assertIn("settings_.base_url[0] == '\\0'", load)
+        self.assertLess(load.index("std::memcpy(settings_.base_url"),
+                        load.index("!ValidSettings(settings_)"))
+        self.assertIn('https://voice-gateway.200-129-37-25.sslip.io', wifi)
+        self.assertNotIn("nvs_set", load)
+        self.assertNotIn("SaveSettings", load)
+
     def test_boot_button_reopens_portal_without_erasing_saved_settings(self):
         wifi = (MAIN / "wifi_station.cc").read_text(encoding="utf-8")
         self.assertIn("gpio_get_level(GPIO_NUM_0)", wifi)

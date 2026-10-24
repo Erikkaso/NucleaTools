@@ -15,12 +15,14 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "wifi_portal.h"
+#include "auth_key.h"
 
 namespace {
 constexpr const char* kTag = "WIFI_STATION";
 constexpr const char* kNamespace = "nuclea_wifi";
 constexpr const char* kApSsid = "Nuclea-Config";
 constexpr const char* kApPassword = "Nuclea-Dell2026";
+constexpr char kDefaultGatewayUrl[] = "https://voice-gateway.200-129-37-25.sslip.io";
 constexpr EventBits_t kGotIpBit = BIT0;
 constexpr EventBits_t kDisconnectedBit = BIT1;
 constexpr EventBits_t kReadyBit = BIT2;
@@ -100,14 +102,21 @@ esp_err_t WifiStation::Connect() {
     ESP_RETURN_ON_ERROR(nvs_flash_init(), kTag, "nvs init");
     mutex_ = xSemaphoreCreateMutex();
     events_ = xEventGroupCreate();
-    pending_ = xQueueCreate(1, sizeof(WifiSettings));
+    pending_ = xQueueCreate(1, sizeof(PendingSettings));
     if (mutex_ == nullptr || events_ == nullptr || pending_ == nullptr) return ESP_ERR_NO_MEM;
 
     nvs_handle_t nvs;
     ESP_RETURN_ON_ERROR(nvs_open(kNamespace, NVS_READWRITE, &nvs), kTag, "nvs open");
     size_t size = sizeof(settings_);
-    if (nvs_get_blob(nvs, "settings", &settings_, &size) != ESP_OK ||
-        size != sizeof(settings_) || !ValidSettings(settings_)) settings_ = WifiSettings{};
+    const esp_err_t loaded = nvs_get_blob(nvs, "settings", &settings_, &size);
+    if (loaded == ESP_OK && size == sizeof(settings_) && settings_.base_url[0] == '\0') {
+        std::memcpy(settings_.base_url, kDefaultGatewayUrl, sizeof(kDefaultGatewayUrl));
+    }
+    if (loaded != ESP_OK || size != sizeof(settings_) || !ValidSettings(settings_))
+        settings_ = WifiSettings{};
+    size_t key_size = sizeof(auth_key_);
+    if (nvs_get_str(nvs, "auth_key", auth_key_, &key_size) != ESP_OK ||
+        !ValidAuthKey(auth_key_)) auth_key_[0] = '\0';
     nvs_close(nvs);
 
     gpio_config_t button = {};
@@ -152,6 +161,13 @@ std::string WifiStation::InterfaceUrl() const {
     return url;
 }
 
+std::string WifiStation::AuthKey() const {
+    xSemaphoreTake(mutex_, portMAX_DELAY);
+    const std::string key(auth_key_);
+    xSemaphoreGive(mutex_);
+    return key;
+}
+
 void WifiStation::SetStatus(const char* message, bool busy) {
     xSemaphoreTake(mutex_, portMAX_DELAY);
     message_ = message;
@@ -159,11 +175,12 @@ void WifiStation::SetStatus(const char* message, bool busy) {
     xSemaphoreGive(mutex_);
 }
 
-esp_err_t WifiStation::SaveSettings(const WifiSettings& settings) {
+esp_err_t WifiStation::SaveSettings(const WifiSettings& settings, const char* auth_key) {
     nvs_handle_t nvs;
     esp_err_t result = nvs_open(kNamespace, NVS_READWRITE, &nvs);
     if (result != ESP_OK) return result;
     result = nvs_set_blob(nvs, "settings", &settings, sizeof(settings));
+    if (result == ESP_OK) result = nvs_set_str(nvs, "auth_key", auth_key);
     if (result == ESP_OK) result = nvs_commit(nvs);
     nvs_close(nvs);
     return result;
@@ -232,18 +249,20 @@ void WifiStation::Run() {
     int64_t disconnected_at = NowMs();
     int64_t close_portal_at = 0;
     int64_t retry_at = NowMs() + 10000;
-    WifiSettings candidate;
+    PendingSettings pending;
+    WifiSettings& candidate = pending.settings;
     while (true) {
         PollPortalButton();
         if (manual_portal_) close_portal_at = 0;
-        if (xQueueReceive(pending_, &candidate, pdMS_TO_TICKS(250)) == pdTRUE) {
+        if (xQueueReceive(pending_, &pending, pdMS_TO_TICKS(250)) == pdTRUE) {
             close_portal_at = 0;
             const bool connected = TryConnect(candidate, kConnectionTimeoutMs);
-            const esp_err_t saved = connected ? SaveSettings(candidate) : ESP_FAIL;
+            const esp_err_t saved = connected ? SaveSettings(candidate, pending.auth_key) : ESP_FAIL;
             if (saved == ESP_OK) {
                 manual_portal_ = false;
                 xSemaphoreTake(mutex_, portMAX_DELAY);
                 settings_ = candidate;
+                std::memcpy(auth_key_, pending.auth_key, sizeof(auth_key_));
                 xSemaphoreGive(mutex_);
                 xEventGroupSetBits(events_, kReadyBit);
                 SetStatus("Conectado. Configuracao salva; o portal fechara em 10 segundos.", false);
@@ -255,7 +274,7 @@ void WifiStation::Run() {
                 SetStatus(connected ? "Falha ao salvar na flash. Configuracao anterior mantida."
                                     : "Nao conectou. Confira rede e senha; configuracao anterior mantida.", false);
             }
-            candidate = WifiSettings{};
+            pending = PendingSettings{};
             retry_at = NowMs() + 10000;
             disconnected_at = NowMs();
         }
@@ -378,6 +397,7 @@ esp_err_t WifiStation::HandleStatus(httpd_req_t* request) {
         cJSON_AddStringToObject(root, "message", wifi->message_);
         cJSON_AddStringToObject(root, "ssid", wifi->settings_.ssid);
         cJSON_AddStringToObject(root, "base_url", wifi->settings_.base_url);
+        cJSON_AddBoolToObject(root, "auth_configured", wifi->auth_key_[0] != '\0');
         xSemaphoreGive(wifi->mutex_);
     }
     return SendJson(request, root);
@@ -422,18 +442,35 @@ esp_err_t WifiStation::HandleConfigure(httpd_req_t* request) {
         received += count;
     }
     cJSON* root = cJSON_ParseWithOpts(body, nullptr, true);
-    WifiSettings candidate;
+    auto* wifi = static_cast<WifiStation*>(request->user_ctx);
+    PendingSettings pending;
+    WifiSettings& candidate = pending.settings;
+    xSemaphoreTake(wifi->mutex_, portMAX_DELAY);
+    std::memcpy(pending.auth_key, wifi->auth_key_, sizeof(pending.auth_key));
+    std::memcpy(candidate.base_url, wifi->settings_.base_url, sizeof(candidate.base_url));
+    xSemaphoreGive(wifi->mutex_);
+    if (!candidate.base_url[0])
+        std::memcpy(candidate.base_url, kDefaultGatewayUrl, sizeof(kDefaultGatewayUrl));
+    const cJSON* url = cJSON_GetObjectItemCaseSensitive(root, "base_url");
+    bool valid_url = !url || (cJSON_IsString(url) && url->valuestring);
+    if (valid_url && url && url->valuestring[0])
+        valid_url = CopyJsonString(root, "base_url", candidate.base_url, sizeof(candidate.base_url));
+    const cJSON* key = cJSON_GetObjectItemCaseSensitive(root, "auth_key");
+    bool valid_key = !key || (cJSON_IsString(key) && key->valuestring);
+    if (valid_key && key && key->valuestring[0]) {
+        valid_key = ValidAuthKey(key->valuestring);
+        if (valid_key) std::memcpy(pending.auth_key, key->valuestring, std::strlen(key->valuestring) + 1);
+    }
     const bool valid = cJSON_IsObject(root) &&
         CopyJsonString(root, "ssid", candidate.ssid, sizeof(candidate.ssid)) &&
         CopyJsonString(root, "password", candidate.password, sizeof(candidate.password)) &&
-        CopyJsonString(root, "base_url", candidate.base_url, sizeof(candidate.base_url)) &&
-        ValidSettings(candidate);
+        ValidSettings(candidate) && valid_url && valid_key &&
+        (!pending.auth_key[0] || std::strncmp(candidate.base_url, "https://", 8) == 0);
     cJSON_Delete(root);
     if (!valid) return httpd_resp_send_err(request, HTTPD_400_BAD_REQUEST,
-        "Informe rede, senha valida e URL base http(s)://host:porta, sem rota.");
-    auto* wifi = static_cast<WifiStation*>(request->user_ctx);
+        "Informe rede, senha, URL base HTTPS com chave e chave de 32 a 128 caracteres ASCII sem espacos.");
     xSemaphoreTake(wifi->mutex_, portMAX_DELAY);
-    if (wifi->busy_ || wifi->connecting_ || xQueueSend(wifi->pending_, &candidate, 0) != pdTRUE) {
+    if (wifi->busy_ || wifi->connecting_ || xQueueSend(wifi->pending_, &pending, 0) != pdTRUE) {
         xSemaphoreGive(wifi->mutex_);
         httpd_resp_set_status(request, "409 Conflict");
         return httpd_resp_send(request, "Aguarde a tentativa atual.", HTTPD_RESP_USE_STRLEN);
