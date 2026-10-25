@@ -3,23 +3,52 @@
 #include <cstring>
 #include <new>
 #include "device_pins.h"
+#include "display_timing.h"
 #include "driver/spi_master.h"
 #include "esp_check.h"
 #include "esp_heap_caps.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_littlefs.h"
 #include "esp_log.h"
+#include "esp_random.h"
 #include "esp_timer.h"
 #include "freertos/task.h"
 #include "sdkconfig.h"
+#include "shake_detector.h"
 
 namespace {
 constexpr const char* kTag = "ROBOT_DISPLAY";
 constexpr int kStripLines = 16;
-constexpr size_t kCacheLimit = 5 * 1024 * 1024;
-constexpr const char* kSleep = "/robot/sleep.gif";
-constexpr const char* kWake = "/robot/wake.gif";
-constexpr const char* kAwake = "/robot/nuclea-blink.gif";
+constexpr const char* kSleep = "/robot/sleep2.gif";
+// wake-open2.gif goes from open to closed eyes; wake-open2-reverse.gif is its exact reverse
+// (tools/reverse_gif.py), so neither transition needs a PSRAM frame cache.
+constexpr const char* kWake = "/robot/wake-open2-reverse.gif";
+constexpr const char* kClose = "/robot/wake-open2.gif";
+constexpr const char* kAwake = "/robot/idle.gif";
+constexpr const char* kSmile = "/robot/smile.gif";
+constexpr const char* kElegant = "/robot/elegant.gif";
+constexpr const char* kDizzy = "/robot/dizzy.gif";
+constexpr const char* kAngry = "/robot/angry.gif";
+constexpr const char* kCry = "/robot/cry.gif";
+constexpr const char* kLoadingIn = "/robot/loadingtrans.gif";
+constexpr const char* kLoading = "/robot/loading.gif";
+constexpr const char* kLoadingOut = "/robot/loadingtrans-reverse.gif";
+const char* ClipPath(VisualClip clip) {
+    switch (clip) {
+        case VisualClip::kSleep: return kSleep;
+        case VisualClip::kSmile: return kSmile;
+        case VisualClip::kElegant: return kElegant;
+        case VisualClip::kDizzy: return kDizzy;
+        case VisualClip::kAngry: return kAngry;
+        case VisualClip::kCry: return kCry;
+        case VisualClip::kLoadingIn: return kLoadingIn;
+        case VisualClip::kLoading: return kLoading;
+        case VisualClip::kLoadingOut: return kLoadingOut;
+        case VisualClip::kWake: return kWake;
+        case VisualClip::kClose: return kClose;
+        default: return kAwake;
+    }
+}
 int64_t NowMs() { return esp_timer_get_time() / 1000; }
 }
 
@@ -36,56 +65,33 @@ esp_err_t RobotDisplay::Start() {
     if (!memory) return ESP_ERR_NO_MEM;
     animation_ = new (memory) GifAnimation();
     if (!animation_->Init()) return ESP_ERR_NO_MEM;
-    for (const char* asset : {kSleep, kWake, kAwake}) {
+    for (const char* asset : {kSleep, kWake, kClose, kAwake}) {
         if (!animation_->Open(asset)) {
             ESP_LOGE(kTag, "GIF ausente ou invalido (esperado 280x240): %s", asset);
             return ESP_ERR_NOT_FOUND;
         }
         animation_->Close();
     }
-    if (!PrepareTransition()) ESP_LOGW(kTag, "Sem cache reverso: troca direta entre poses");
+    for (const char* asset : {kSmile, kElegant, kDizzy, kAngry, kCry, kLoadingIn, kLoading, kLoadingOut}) {
+        if (!animation_->Open(asset)) ESP_LOGW(kTag, "GIF opcional indisponivel: %s; usando blink", asset);
+        animation_->Close();
+    }
     ESP_RETURN_ON_ERROR(InitPanel(), kTag, "ST7789 init");
-    events_ = xQueueCreate(8, sizeof(Event));
+    events_ = xQueueCreate(16, sizeof(Event));
     if (!events_) return ESP_ERR_NO_MEM;
-    if (xTaskCreatePinnedToCore(Entry, "robot_display", 6144, this, 1, nullptr, 1) != pdPASS) {
+    // Core 0, one above the decoder: when a DMA strip completes the LCD task preempts the
+    // decoder at once (equal priorities would wait for a 10 ms tick per strip). It mostly sleeps
+    // on DMA, so capture (6), speaker (3) and inference (core 1) keep their timing.
+    if (xTaskCreatePinnedToCore(LcdEntry, "robot_lcd", 3072, this, 2, nullptr, 0) != pdPASS)
+        return ESP_ERR_NO_MEM;
+    // Keep decoding off the inference core, below capture, speaker and HTTP priorities.
+    if (xTaskCreatePinnedToCore(Entry, "robot_display", 6144, this, 1, nullptr, 0) != pdPASS) {
         vQueueDelete(events_);
         events_ = nullptr;
         return ESP_ERR_NO_MEM;
     }
     return ESP_OK;
 #endif
-}
-
-bool RobotDisplay::PrepareTransition() {
-    if (!animation_->Open(kWake)) return false;
-    GIFINFO info = {};
-    const bool valid = animation_->Info(&info) && info.iFrameCount > 1 && info.iFrameCount <= 128 &&
-        static_cast<size_t>(info.iFrameCount) <= kCacheLimit / GifAnimation::kFrameBytes;
-    if (!valid) { animation_->Close(); return false; }
-    const size_t bytes = info.iFrameCount * GifAnimation::kFrameBytes;
-    transition_ = static_cast<uint16_t*>(heap_caps_malloc(bytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
-    if (!transition_) { animation_->Close(); return false; }
-    // Reopen after metadata scan. Cache fully composited frames, without skipping.
-    bool good = animation_->Open(kWake);
-    int count = 0;
-    for (; good && count < info.iFrameCount; ++count) {
-        int delay = 0;
-        good = animation_->Next(&delay);
-        if (good) {
-            std::memcpy(transition_ + count * GifAnimation::kPixels,
-                        animation_->Canvas(), GifAnimation::kFrameBytes);
-            delays_[count] = static_cast<uint16_t>(std::clamp(delay, 10, 65535));
-        }
-    }
-    animation_->Close();
-    if (!good || count != info.iFrameCount) {
-        heap_caps_free(transition_);
-        transition_ = nullptr;
-        return false;
-    }
-    frame_count_ = count;
-    ESP_LOGI(kTag, "Cache wake: %d frames, %u bytes PSRAM", frame_count_, static_cast<unsigned>(bytes));
-    return true;
 }
 
 bool RobotDisplay::TransferDone(esp_lcd_panel_io_handle_t,
@@ -99,7 +105,12 @@ esp_err_t RobotDisplay::InitPanel() {
     dma_done_ = xSemaphoreCreateBinary();
     dma_strip_ = static_cast<uint16_t*>(heap_caps_malloc(
         GifAnimation::kWidth * kStripLines * 2, MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL));
-    if (!dma_done_ || !dma_strip_) return ESP_ERR_NO_MEM;
+    frame_copy_ = static_cast<uint16_t*>(heap_caps_malloc(GifAnimation::kFrameBytes,
+                                                          MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
+    lcd_go_ = xSemaphoreCreateBinary();
+    lcd_idle_ = xSemaphoreCreateBinary();
+    if (!dma_done_ || !dma_strip_ || !frame_copy_ || !lcd_go_ || !lcd_idle_) return ESP_ERR_NO_MEM;
+    xSemaphoreGive(lcd_idle_);
     spi_bus_config_t bus = {};
     bus.sclk_io_num = DevicePins::kLcdClock;
     bus.mosi_io_num = DevicePins::kLcdMosi;
@@ -132,20 +143,17 @@ esp_err_t RobotDisplay::InitPanel() {
     return esp_lcd_panel_disp_on_off(panel_, true);
 }
 
-bool RobotDisplay::Flush(const uint16_t* pixels, bool mirror_x) {
-    for (int y = 0; y < GifAnimation::kHeight; y += kStripLines) {
-        const int lines = std::min(kStripLines, GifAnimation::kHeight - y);
-        if (mirror_x) {
-            for (int row = 0; row < lines; ++row) {
-                const uint16_t* source = pixels + (y + row) * GifAnimation::kWidth;
-                std::reverse_copy(source, source + GifAnimation::kWidth,
-                                  dma_strip_ + row * GifAnimation::kWidth);
-            }
-        } else {
-            std::memcpy(dma_strip_, pixels + y * GifAnimation::kWidth,
-                        lines * GifAnimation::kWidth * sizeof(uint16_t));
+bool RobotDisplay::Flush(int x0, int y0, int x1, int y1) {
+    const int w = x1 - x0;
+    if (w <= 0 || y1 <= y0) return true;
+    const int max_lines = std::max(1, kStripLines * GifAnimation::kWidth / w);
+    for (int y = y0; y < y1; y += max_lines) {
+        const int lines = std::min(max_lines, y1 - y);
+        for (int row = 0; row < lines; ++row) {
+            const uint16_t* source = frame_copy_ + (y + row) * GifAnimation::kWidth + x0;
+            std::memcpy(dma_strip_ + row * w, source, w * sizeof(uint16_t));
         }
-        if (esp_lcd_panel_draw_bitmap(panel_, 0, y, GifAnimation::kWidth, y + lines, dma_strip_) != ESP_OK)
+        if (esp_lcd_panel_draw_bitmap(panel_, x0, y, x0 + w, y + lines, dma_strip_) != ESP_OK)
             return false;
         // Do not reuse this DMA buffer until the transfer is acknowledged.
         if (xSemaphoreTake(dma_done_, pdMS_TO_TICKS(1000)) != pdTRUE) return false;
@@ -153,12 +161,46 @@ bool RobotDisplay::Flush(const uint16_t* pixels, bool mirror_x) {
     return true;
 }
 
-void RobotDisplay::Post(Event event) {
+void RobotDisplay::LcdEntry(void* context) {
+    auto* self = static_cast<RobotDisplay*>(context);
+    while (true) {
+        xSemaphoreTake(self->lcd_go_, portMAX_DELAY);
+        self->lcd_ok_ = self->Flush(self->job_x0_, self->job_y0_, self->job_x1_, self->job_y1_);
+        xSemaphoreGive(self->lcd_idle_);
+    }
+}
+
+bool RobotDisplay::WaitLcdIdle() {
+    xSemaphoreTake(lcd_idle_, portMAX_DELAY);
+    const bool ok = lcd_ok_;
+    xSemaphoreGive(lcd_idle_);
+    return ok;
+}
+
+bool RobotDisplay::Submit() {
+    xSemaphoreTake(lcd_idle_, portMAX_DELAY);
+    if (!lcd_ok_) { xSemaphoreGive(lcd_idle_); return false; }
+    int x0, y0, x1, y1;
+    animation_->Dirty(&x0, &y0, &x1, &y1);
+    const uint16_t* canvas = animation_->Canvas();
+    std::memcpy(frame_copy_ + y0 * GifAnimation::kWidth, canvas + y0 * GifAnimation::kWidth,
+                (y1 - y0) * GifAnimation::kWidth * sizeof(uint16_t));
+    job_x0_ = x0; job_y0_ = y0; job_x1_ = x1; job_y1_ = y1;
+    xSemaphoreGive(lcd_go_);
+    return true;
+}
+
+void RobotDisplay::Post(EventKind kind, bool strong) {
+    const Event event{kind, strong, NowMs()};
     if (events_ && xQueueSend(events_, &event, 0) != pdTRUE)
         ESP_LOGW(kTag, "Fila de eventos visuais cheia");
 }
-void RobotDisplay::Wake() { Post(Event::kWake); }
-void RobotDisplay::Ready() { Post(Event::kReady); }
+void RobotDisplay::Wake() { Post(EventKind::kWake); }
+void RobotDisplay::Ready() { Post(EventKind::kReady); }
+void RobotDisplay::Response() { Post(EventKind::kResponse); }
+void RobotDisplay::Loading() { Post(EventKind::kLoading); }
+void RobotDisplay::ObserveMotion(bool strong) { Post(EventKind::kMotion, strong); }
+void RobotDisplay::Shake() { Post(EventKind::kShake); }
 void RobotDisplay::Entry(void* context) {
     static_cast<RobotDisplay*>(context)->Run();
     vTaskDelete(nullptr);
@@ -166,67 +208,114 @@ void RobotDisplay::Entry(void* context) {
 
 void RobotDisplay::Run() {
     VisualStateMachine state(CONFIG_NUCLEA_DISPLAY_IDLE_MS);
-    VisualState previous = VisualState::kSleeping;
-    int position = 0;
+    ShakeDetector motion;
     bool transition_finished = false;
     bool loop_open = false;
     int64_t due = 0;
-    Event event;
+    int64_t report_at = NowMs();
+    int64_t decode_ms = 0, lcd_ms = 0, max_frame_ms = 0;
+    unsigned frames = 0;
+    Event event{};
     while (true) {
         const int64_t now = NowMs();
-        if (xQueueReceive(events_, &event, pdMS_TO_TICKS(std::max<int64_t>(0, due - now))) == pdTRUE) {
-            if (event == Event::kWake) {
-                if (state.State() == VisualState::kClosing) position = std::max(0, position - 1);
-                state.Wake();
+        const int64_t remaining = due - now;
+        // With a 10 ms tick, a shorter wait rounds up to a full tick and drops frames: go early.
+        const TickType_t wait = remaining >= portTICK_PERIOD_MS ? pdMS_TO_TICKS(remaining) : 0;
+        if (xQueueReceive(events_, &event, wait) == pdTRUE) {
+            switch (event.kind) {
+                case EventKind::kWake: {
+                    const bool was_sleeping = state.Clip() == VisualClip::kSleep;
+                    state.Wake();
+                    if (was_sleeping) {
+                        // A wakeword interrupts only the idle loop, between completed LCD transfers.
+                        animation_->Close();
+                        loop_open = false;
+                        transition_finished = false;
+                        due = 0;
+                    }
+                    break;
+                }
+                case EventKind::kReady: state.Ready(event.timestamp); break;
+                case EventKind::kResponse: state.Response(esp_random() % 100); break;
+                case EventKind::kLoading: state.Loading(event.timestamp); break;
+                case EventKind::kMotion:
+                case EventKind::kShake:
+                    if (event.kind == EventKind::kShake || motion.Observe(event.strong, event.timestamp)) {
+                        if (state.Shake(event.timestamp)) {
+                            ESP_LOGI(kTag, "Chacoalho confirmado; etapa=%u", state.ShakeCount());
+                            if (state.TakeInterrupt()) {
+                                animation_->Close();
+                                loop_open = false;
+                                transition_finished = false;
+                                due = 0;
+                            }
+                        } else ESP_LOGW(kTag, "Fila de reacoes cheia; chacoalho ignorado");
+                    }
+                    break;
             }
-            else state.Ready(NowMs());
         }
-        if (state.State() == previous && transition_finished && NowMs() >= due) {
-            state.TransitionComplete(NowMs());
-            transition_finished = false;
-        }
-        state.Tick(NowMs());
-        const VisualState current = state.State();
-        if (current != previous) {
-            transition_finished = false;
+        if (state.LoadingDue(NowMs())) {
+            // Cut the idle loop instead of waiting up to its full 8 s cycle.
             animation_->Close();
             loop_open = false;
-            if (current == VisualState::kWaking && previous != VisualState::kClosing) position = frame_count_ - 1;
-            if (current == VisualState::kClosing) position = 0;
+            transition_finished = false;
+            state.CycleComplete(NowMs());
             due = 0;
-            ESP_LOGI(kTag, "Estado visual: %d", static_cast<int>(current));
-            previous = current;
         }
-        if (NowMs() < due) continue;
+        if (NowMs() + static_cast<int64_t>(portTICK_PERIOD_MS) <= due) continue;
+        if (transition_finished) {
+            state.CycleComplete(NowMs());
+            transition_finished = false;
+        }
+        const VisualClip clip = state.Clip();
         const int64_t started = NowMs();
         int delay = 40;
-        const uint16_t* pixels = nullptr;
-        if (current == VisualState::kWaking || current == VisualState::kClosing) {
-            if (!transition_) {
-                state.TransitionComplete(started);
-                due = started;
-                continue;
+        const char* path = ClipPath(clip);
+        if (!loop_open) {
+            loop_open = animation_->Open(path);
+            if (!loop_open && clip != VisualClip::kSleep && clip != VisualClip::kBlink &&
+                clip != VisualClip::kWake && clip != VisualClip::kClose) {
+                ESP_LOGW(kTag, "GIF opcional invalido: %s; usando blink", path);
+                loop_open = animation_->Open(kAwake);
             }
-            position = std::clamp(position, 0, frame_count_ - 1);
-            pixels = transition_ + position * GifAnimation::kPixels;
-            delay = delays_[position];
-            if (current == VisualState::kWaking) transition_finished = position-- == 0;
-            else transition_finished = position++ == frame_count_ - 1;
-        } else {
-            const char* path = current == VisualState::kSleeping ? kSleep : kAwake;
-            if (!loop_open) loop_open = animation_->Open(path);
-            if (!loop_open) { ESP_LOGE(kTag, "Falha abrindo %s", path); return; }
-            if (!animation_->Next(&delay)) {
-                animation_->Close();
-                loop_open = false;
-                due = started + 10;
-                continue;
-            }
-            pixels = animation_->Canvas();
+            ESP_LOGI(kTag, "Animacao: %s", path);
         }
-        if (!Flush(pixels, current == VisualState::kSleeping)) {
+        if (!loop_open) { ESP_LOGE(kTag, "Falha abrindo %s", path); return; }
+        if (!animation_->Next(&delay)) {
+            animation_->Close();
+            loop_open = false;
+            state.CycleComplete(started);
+            due = started;
+            continue;
+        }
+        const bool last_frame = animation_->LastFrame();
+        const int64_t decoded = NowMs();
+        // Decode of the next frame overlaps this transfer; the final hold waits for it to finish.
+        if (!Submit() || (last_frame && !WaitLcdIdle())) {
             ESP_LOGE(kTag, "Transferencia LCD falhou; audio continua ativo"); return;
         }
-        due = std::max(started + std::max(delay, 10), NowMs() + 10);
+        const int64_t rendered = NowMs();
+        // Intermediate frames include rendering in the budget; never shorten the final hold.
+        due = DisplayFrameDeadline(started, rendered, delay, last_frame);
+        if (last_frame) {
+            animation_->Close();
+            loop_open = false;
+            transition_finished = true;
+        }
+        ++frames;
+        decode_ms += decoded - started;
+        lcd_ms += rendered - decoded;
+        max_frame_ms = std::max(max_frame_ms, rendered - started);
+        if (rendered - report_at >= 5000) {
+            ESP_LOGI(kTag, "perf core=0 frames=%u window_ms=%lld decode_avg_ms=%lld lcd_avg_ms=%lld frame_max_ms=%lld heap_internal=%u stack_free=%uB",
+                     frames, static_cast<long long>(rendered - report_at),
+                     static_cast<long long>(decode_ms / frames), static_cast<long long>(lcd_ms / frames),
+                     static_cast<long long>(max_frame_ms),
+                     static_cast<unsigned>(heap_caps_get_free_size(MALLOC_CAP_INTERNAL)),
+                     static_cast<unsigned>(uxTaskGetStackHighWaterMark(nullptr)));
+            report_at = rendered;
+            frames = 0;
+            decode_ms = lcd_ms = max_frame_ms = 0;
+        }
     }
 }

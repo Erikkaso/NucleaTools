@@ -11,10 +11,13 @@ SCK/BCLK=4, WS=5 e SD=6. E necessario mudar fisicamente esses tres fios.
 Para testar so o microfone, desative NUCLEA_DISPLAY_ENABLED no menuconfig
 do ESP-IDF, confira os GPIOs e regrave. Nao e necessario gravar este sketch.
 
-Arquivos atuais (280x240):
-- nuclea-blink.gif: 66 frames, 7,88 segundos.
-- sleep.gif: 66 frames, 7,92 segundos.
-- wake.gif: 30 frames, 1,20 segundo.
+Arquivos atuais (280x240), lista completa em ../README.md:
+- idle.gif: 97 frames, 8,08 segundos (substitui nuclea-blink.gif).
+- sleep.gif: 70 frames, 5,83 segundos.
+- wake.gif: 53 frames, 2,21 segundos.
+- wake-open.gif: reverso de wake.gif, gerado por
+  ../esp32_wakeword/tools/reverse_gif.py.
+O sketch Arduino abaixo ainda procura nuclea-blink.gif.
 
 PLAYER ARDUINO INDEPENDENTE:
 O sketch alterna estados por tempo, sem detectar wakeword. Seu cache RLE

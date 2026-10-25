@@ -13,7 +13,7 @@ esp_err_t AudioUploadWorker::Init() {
     jobs_ = xQueueCreate(1, sizeof(Job));
     results_ = xQueueCreate(1, sizeof(Completion));
     if (jobs_ == nullptr || results_ == nullptr ||
-        xTaskCreatePinnedToCore(Entry, "audio_upload", 8192, this, 2, nullptr, 0) != pdPASS) {
+        xTaskCreatePinnedToCore(Entry, "audio_upload", 8192, this, 3, nullptr, 0) != pdPASS) {
         if (jobs_) vQueueDelete(jobs_);
         if (results_) vQueueDelete(results_);
         jobs_ = results_ = nullptr;
@@ -46,6 +46,7 @@ esp_err_t AudioUploadWorker::StartCue(RecordingCue cue) {
 esp_err_t AudioUploadWorker::Submit(const Job& job) {
     if (jobs_ == nullptr || busy_) return ESP_ERR_INVALID_STATE;
     cancellation_.Reset();
+    response_started_ = false;
     interruptible_ = false;
     busy_ = true;
     if (xQueueSend(jobs_, &job, 0) == pdTRUE) return ESP_OK;
@@ -56,6 +57,7 @@ esp_err_t AudioUploadWorker::Submit(const Job& job) {
 void AudioUploadWorker::Cancel() {
     if (!busy_) return;
     cancellation_.Cancel();
+    response_started_ = false;
     speaker_.RequestStop();
 }
 
@@ -64,6 +66,8 @@ bool AudioUploadWorker::Poll(esp_err_t* result) {
     if (!results_ || !result || xQueuePeek(results_, &completed, 0) != pdTRUE ||
         completed.kind != JobKind::kUpload) return false;
     if (xQueueReceive(results_, &completed, 0) != pdTRUE) return false;
+    // The owner has finished publishing: discard even a flag racing with Cancel().
+    if (cancellation_.Cancelled()) response_started_ = false;
     *result = completed.result;
     busy_ = false;
     return true;
@@ -96,7 +100,8 @@ void AudioUploadWorker::Entry(void* context) {
                     ESP_LOGW("AUDIO_UPLOAD", "Continuando envio apesar da falha no offsfx");
                 self->interruptible_ = true;
                 result = job.url[0] && !self->cancellation_.Cancelled()
-                    ? uploader.Upload(job.samples, job.count, job.url, &self->speaker_, job.auth_key, &self->cancellation_)
+                    ? uploader.Upload(job.samples, job.count, job.url, &self->speaker_, job.auth_key,
+                                      &self->cancellation_, &self->response_started_)
                     : ESP_ERR_INVALID_STATE;
             }
             self->interruptible_ = false;

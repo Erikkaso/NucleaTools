@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_stop_cue_matches_start_rms_without_clipping():
     levels = []
     for name in ("onsfx", "offsfx"):
-        samples = array.array("h", (ROOT / "main" / "assets" / f"{name}.pcm").read_bytes())
+        samples = array.array("h", (ROOT / "main" / "assets" / "recording" / f"{name}.pcm").read_bytes())
         assert max(abs(sample) for sample in samples) < 32700
         levels.append(math.sqrt(sum(sample * sample for sample in samples) / len(samples)))
     assert abs(20 * math.log10(levels[1] / levels[0])) < 1.0
@@ -19,7 +19,7 @@ def test_stop_cue_matches_start_rms_without_clipping():
 
 @pytest.mark.parametrize("name", ["onsfx", "offsfx"])
 def test_embedded_cue_is_short_non_silent_pcm16(name):
-    pcm = (ROOT / "main" / "assets" / f"{name}.pcm").read_bytes()
+    pcm = (ROOT / "main" / "assets" / "recording" / f"{name}.pcm").read_bytes()
     assert pcm and len(pcm) % 2 == 0
     assert not pcm.startswith(b"RIFF")
     assert 0.1 < len(pcm) / 48000 < 1.2
@@ -30,8 +30,8 @@ def test_embedded_cue_is_short_non_silent_pcm16(name):
 def test_cues_are_embedded_only_when_enabled():
     cmake = (ROOT / "main" / "CMakeLists.txt").read_text()
     assert "if(CONFIG_NUCLEA_RECORDING_SFX_ENABLED)" in cmake
-    assert "assets/onsfx.pcm" in cmake
-    assert "assets/offsfx.pcm" in cmake
+    assert "assets/recording/onsfx.pcm" in cmake
+    assert "assets/recording/offsfx.pcm" in cmake
 
 
 def test_sfx_job_uses_same_serial_worker_as_tts():

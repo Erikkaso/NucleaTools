@@ -5,6 +5,7 @@
 #include "esp_err.h"
 #include "sdkconfig.h"
 #include "pcm_coalescer.h"
+#include "speaker_dsp.h"
 
 #ifdef CONFIG_NUCLEA_SPEAKER_ENABLED
 #include "driver/i2s_std.h"
@@ -37,6 +38,7 @@ private:
     Frame* frame_ = nullptr;
     PcmCoalescer* coalescer_ = nullptr;
     int16_t* stereo_ = nullptr;
+    SpeakerDsp dsp_;  // Consumer-only after Init.
     SemaphoreHandle_t done_ = nullptr;
     TaskHandle_t task_ = nullptr;
     bool session_ = false;  // Producer-only: every Begin consumes exactly one completion acknowledgement.

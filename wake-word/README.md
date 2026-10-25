@@ -6,27 +6,27 @@ TensorFlow Lite INT8 no proprio microcontrolador.
 
 ## Modelo ativo
 
-- Variante: `v2g_replay_hardneg`
+- Variante: `multispeaker_v7_reviewed` (confirmada pelos bytes embutidos no firmware)
 - Entrada: `1 x 13 x 49 x 1`, MFCC INT8
 - Janela: 1 segundo
 - Avanco nominal entre janelas: 240 ms; a cadencia real depende do tempo de inferencia
-- Threshold normal: `0.85`
-- Threshold de alta confianca: `0.98`
-- Confirmacao: 2 positivos nas ultimas 3 inferencias, ou 1 de alta confianca
+- Threshold no firmware: `0.93359375` (mantido no ajuste de 2026-10-25)
+- Confirmacao normal: 2 scores >=0.93359375 nas ultimas 3 inferencias, incluindo a atual
+- Alternativa para fala curta: pico >=0.98 mais outra janela >=0.5, com a atual >=0.5
+- Um score alto isolado, mesmo `0.996`, nao ativa sozinho
 - Cooldown: 2 segundos
 
 Artefatos atuais:
 
 ```text
-output/output_noise_robust_v2g_replay_hardneg/
-output/output_noise_robust_v2g_replay_hardneg_int8/
+output/output_multispeaker_v7_reviewed/
 esp32_wakeword/main/model/
 ```
 
 SHA-256 do TFLite ativo:
 
 ```text
-AF197A126D607AEF903068A665BCF766281A739E514F377A106A44AAC17EEC3E
+6B4321B5B38A4FD793080B0A3889A0AEFF7BDA30DBA1ACD31063689266728AAF
 ```
 
 ## Estrutura
@@ -37,7 +37,7 @@ train_models/        Treinamento e avaliacao
 tools/               Preparacao do dataset e replay continuo
 output/              Artefatos do modelo atual
 esp32_wakeword/      Firmware ESP-IDF ativo
-voz/                 Gravacoes-fonte preservadas
+dataset/voz/         Gravacoes-fonte preservadas
 convert_int8.py      Conversao e avaliacao FULL INT8
 ```
 
@@ -97,11 +97,108 @@ Teste essencial desta etapa:
 python -m unittest discover -s tools -p test_augment_reviewed_candidates.py
 ```
 
+## Gerar negativos sinteticos de fala
+
+O gerador `tools/generate_synthetic_negatives.py` usa cinco vozes publicas
+do Edge TTS: Antonio, Francisca e Thalita (pt-BR), Duarte e Raquel (pt-PT).
+Sao 16 textos em tres velocidades (-15%, normal, +15%): palavras isoladas,
+frases com `corno`, `problema`, `Singapura`, `irma` e confusores proximos.
+Nenhum texto negativo pode conter a palavra completa `Nuclea`, inclusive
+com acento. Apenas esses textos publicos sao enviados ao servico TTS.
+
+Na pasta `wake-word`, com FFmpeg no PATH:
+
+```powershell
+python -m pip install -r requirements-tts.txt
+python tools/generate_synthetic_negatives.py
+```
+
+Para concluir uma geracao interrompida, use `--resume`. O comando confere
+os hashes e nao substitui fontes concluidas ou um corpus existente diferente.
+O Edge TTS precisa de Internet; sua disponibilidade nao e garantida.
+
+- `dataset/synthetic_negatives_v1/sources/`: falas completas em WAV mono
+  PCM16, 16 kHz, sem cortar palavras, com contexto silencioso curto.
+- `dataset/synthetic_negatives_v1/manifest.json`: texto, voz, velocidade,
+  origem, hashes, grupo e parametros. Label 0, somente treino.
+- `dataset/background_hard_negative/generated/synthetic_confusers_v1/`:
+  ate tres janelas energeticas de 1 s por fonte, com versoes limpa,
+  -9 dB e mistura de ambiente INMP441 a 18 dB de SNR, sem clipping digital.
+  O silencio nao vira exemplo principal; falas completas sao preservadas.
+
+Os treinadores existentes leem as janelas pela pasta de hard negatives.
+Variacoes da mesma voz/texto pertencem ao mesmo grupo e nunca devem ser
+distribuidas entre treino, validacao e teste. Os sinteticos nao substituem
+negativos reais captados no INMP441; a pronuncia deve ser ouvida antes de um
+novo treinamento. Gerar audios nao retreina nem altera os pesos do TFLite.
+
+O ajuste de sensibilidade atual mantem o threshold normal 0.93359375 e exige
+evidencia temporal nas ultimas tres janelas, incluindo a atual. Duas janelas
+acima desse limiar confirmam normalmente. Para preservar palavras curtas,
+um pico >=0.98 tambem pode ser confirmado por outra janela >=0.5, desde que
+a atual seja >=0.5. Um pico isolado nao ativa sozinho. Os limiares sao iguais
+durante espera, envio e reproducao. A referencia Python le os limiares do
+header C++, evitando divergencia entre os testes e o firmware.
+
+Para comparar as duas regras com o INT8 realmente embutido no firmware:
+
+```powershell
+python tools/evaluate_synthetic_negatives.py
+```
+
+O relatorio fica em `output/synthetic_negatives_v1/gate_diagnostic.json`.
+Inclui as fontes sinteticas e uma amostra pequena de positivos reais, sem
+Thayza. E um diagnostico de regressao, nao um teste independente de acuracia;
+nao simula a caixa de som, o ambiente ou o cancelamento acustico de eco.
+
+Diagnostico de 2026-10-25, sem retreinar os pesos:
+
+| Fontes com acionamento | Regra anterior | Regra atual |
+| --- | --- | --- |
+| Negativos sinteticos (240 fontes) | 51 | 45 |
+| Positivos amostrados (42 fontes) | 34 | 33 |
+
+Exigir duas janelas >=0.93359375 sem a alternativa de apoio reduzia os
+negativos para 30, mas reconhecia apenas 22 positivos; essa regra mais
+agressiva foi descartada. O ajuste atual e moderado e nao elimina as
+confusoes: `corno` e `irma` ainda acionaram em 4 de 45 fontes cada. Os novos
+negativos estao preparados para um proximo treinamento, nao incorporados
+aos pesos atuais. Nao use esses numeros como acuracia de producao.
+
+### Confusores foneticos (corpus v2)
+
+`python tools/generate_synthetic_negatives.py --corpus v2` gera, com as mesmas
+cinco vozes e tres velocidades, palavras e nomes proximos de "Nuclea":
+`nuclear`, `nucleo`, `nuclideo`, `nucleolo`, `nuca`, `Clea/Clea`, `Nubia`,
+`luz clara`, `nunca mais`, `Cleo`, `Claudia`, `Nicole` e `Nadia`, tambem em
+saudacoes ("Oi, nuclear", "Boa tarde, nucleo"). Fontes em
+`dataset/synthetic_negatives_v2/` e janelas em
+`dataset/background_hard_negative/generated/synthetic_confusers_v2/`. O v1
+permanece intacto. Ouca algumas fontes antes de treinar: o TTS pode ler
+`Clea` de forma diferente da pronuncia real.
+
+O treinador agrupa qualquer pasta `synthetic_confusers*` no tipo
+`synthetic_confuser`, com peso proprio (`CONFUSER_SHARE`, 12% da massa dos
+positivos), em vez de misturar com ambiente/conversa legados. Os pesos de fala
+e ruido nao mudam.
+
+### Cortes parciais da palavra
+
+`--partial-word-negatives` transforma cada positivo **clean do split de treino**
+(nunca validacao/teste, nunca sinteticos) em tres negativos: inicio ("Nu..."),
+fim ("...clea") e meio, cada um com 25-55% da regiao falada, sobre um piso de
+ruido medido no proprio audio. Inicio tende a ficar na borda direita da janela e
+fim na esquerda, como quando a palavra entra ou sai da janela deslizante. Os WAVs
+vao para `<saida>/partial_word/`, com `parent_file` e hashes no manifesto, e o
+tipo `partial_word` recebe o mesmo peso fixo dos confusores. Risco: um corte de
+mais de ~60% pode ensinar o modelo a rejeitar palavras faladas rapido; confira o
+recall de Eric/Gabriel e a regra de fala curta antes de promover.
+
 ## Treinar o modelo
 
 ### Treinamento multispeaker v3
 
-**Experimental, nao promovido ao firmware.** Os candidatos treinados ainda
+O v7 e o modelo atualmente embutido no firmware. Os candidatos treinados ainda
 apresentam falsos acionamentos em ruido/conversas. Veja o
 [resultado v7 com recortes revisados](output/RESULTADO_TREINO_V7.md), o
 [resultado v6 com parametros sorteados](output/RESULTADO_TREINO_V6.md), o
@@ -330,6 +427,9 @@ output/output_noise_robust_v2g_replay_hardneg/
 
 ## Converter para INT8
 
+O treinador multispeaker exporta seu proprio `nuclea_int8.tflite`. O exemplo
+abaixo e do pipeline legado v2g, nao do modelo atualmente promovido.
+
 ```powershell
 python convert_int8.py `
   --model output\output_noise_robust_v2g_replay_hardneg\nuclea_final.keras `
@@ -345,7 +445,7 @@ continuos e os falsos positivos em conversas e ruido ambiente.
 
 ```powershell
 Copy-Item `
-  output\output_noise_robust_v2g_replay_hardneg_int8\nuclea_int8.tflite `
+  output\output_multispeaker_v7_reviewed\nuclea_int8.tflite `
   esp32_wakeword\main\model\nuclea_int8.tflite -Force
 
 python esp32_wakeword\tools\tflite_to_cc.py `
@@ -482,7 +582,7 @@ idf.py -p COM9 build flash monitor
 ```
 
 Com esse firmware, a tela pode ficar totalmente desconectada. O monitor deve
-mostrar `INMP441: BCLK=41 WS=42 SD=40` e nao deve mostrar `ROBOT_DISPLAY: Cache wake`.
+mostrar `INMP441: BCLK=41 WS=42 SD=40` e nao deve mostrar `ROBOT_DISPLAY: Animacao`.
 Fale perto do microfone e confira se `peak` e `audio` variam.
 
 Desligue a placa antes de alterar os fios. Alimente o INMP441 em 3.3 V, nao
@@ -506,21 +606,54 @@ os clocks ou alterar os GPIOs do microfone e do visor.
 | Saida + / - | Somente os dois terminais do alto-falante |
 
 Nao ligue nenhum terminal de saida do amplificador ao GND. O INMP441 continua
-em 3.3 V. Monte com a alimentacao desligada. O volume digital padrao atual e
-**100%**. O alto-falante usado e de 4 ohms e 3 W; se houver distorcao, reduza
-o volume. O teste musical confirmou brownout com a alimentacao anterior do PC;
-use uma alimentacao 5 V adequada ao conjunto.
+em 3.3 V. Monte com a alimentacao desligada. O alto-falante atual e de
+**4 ohms e 5 W**. O MAX98357A entrega no maximo cerca de 3,2 W em 4 ohms com
+5 V; um alto-falante de 5 W suporta essa potencia com folga, mas nao fica mais
+alto por isso. O teste musical confirmou brownout com a alimentacao anterior
+do PC; use uma alimentacao 5 V adequada ao conjunto (2 A ou mais) e um
+capacitor eletrolitico de 470 a 1000 uF entre VIN e GND, perto do modulo.
 
 GAIN conectado diretamente ao GND aumenta o ganho de 9 para 12 dB sem mudar
 o firmware. Para 15 dB, use resistor de 100 kohms entre GAIN e GND. Conectar
 GAIN ao VIN reduz o ganho, nao aumenta. Mais ganho nao aumenta a potencia
-maxima do amplificador e pode causar distorcao. Referencia:
+maxima do amplificador e pode causar distorcao. Com o limitador abaixo, prefira
+GAIN aberto (9 dB) ou em GND (12 dB). Referencia:
 [MAX98357A: controle de ganho](https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/pinouts).
 
 No menu `Nuclea device audio`, `NUCLEA_SPEAKER_ENABLED` vem habilitado.
 Os pinos sao configuraveis em `NUCLEA_SPEAKER_BCLK_GPIO`,
-`NUCLEA_SPEAKER_WS_GPIO` e `NUCLEA_SPEAKER_DIN_GPIO`; o volume em
-`NUCLEA_SPEAKER_VOLUME_PERCENT`.
+`NUCLEA_SPEAKER_WS_GPIO` e `NUCLEA_SPEAKER_DIN_GPIO`.
+
+### Volume, passa-altas e limitador
+
+Todo audio do alto-falante (TTS, `onsfx` e `offsfx`) passa por
+`main/speaker_dsp.h` antes do I2S, nesta ordem:
+
+| Opcao | Padrao | Efeito |
+| --- | --- | --- |
+| `NUCLEA_SPEAKER_VOLUME_PERCENT` | 100 | Volume digital |
+| `NUCLEA_SPEAKER_BOOST_DB` | 6 | Ganho extra antes do limitador; aumenta a fala media |
+| `NUCLEA_SPEAKER_HIGHPASS_HZ` | 150 | Passa-altas de 2a ordem; 0 desliga |
+| `NUCLEA_SPEAKER_LIMIT_DBFS` | -3 | Teto dos picos enviados ao amplificador |
+
+Antes, os picos do TTS chegavam a 0 dBFS e saturavam o amplificador (som
+"estourado"). O passa-altas remove graves que um alto-falante pequeno nao
+reproduz e que so consomem potencia e fazem o cone distorcer. O limitador tem
+ataque instantaneo e liberacao de 80 ms: nenhum pico passa do teto, e o ganho
+extra deixa a fala mais alta sem cortar a onda.
+
+Ajuste na placa, ouvindo:
+
+- Ainda distorce nas silabas fortes: baixe `NUCLEA_SPEAKER_LIMIT_DBFS` para -6
+  ou deixe GAIN aberto (9 dB).
+- Limpo, mas baixo: suba `NUCLEA_SPEAKER_BOOST_DB` para 9 ou 12.
+- Voz fina demais: baixe `NUCLEA_SPEAKER_HIGHPASS_HZ` para 100.
+
+Ao fim de cada reproducao, `SPEAKER: Playback ended` informa `limiter`
+(maior reducao aplicada, em dB) e `clipped`. `clipped` maior que zero indica
+amostras ja saturadas na origem: corrija o nivel no TTS/gateway, pois o
+limitador nao recupera uma onda ja cortada. Fixar o alto-falante numa caixa
+fechada ou baffle aumenta bastante o volume percebido e os medios-graves.
 
 Com o alto-falante habilitado, o ESP envia `responseMode=speaker` junto ao WAV
 para `/api/device-audio`. A NucleaInterface atualizada devolve PCM16 mono a
@@ -529,21 +662,14 @@ buffer limitado em PSRAM e reproduz sem esperar o audio completo. Nao ha
 decodificador MP3: mantenha o workflow `nuclea-streaming.json` e o runtime de
 streaming. Nao e necessario deixar o navegador aberto.
 
-Durante envio, espera e reproducao TTS, novas deteccoes continuam ativas.
-Uma nova wakeword interrompe o audio, sinaliza cancelamento HTTP e descarta
-o retorno anterior. O worker encerra a conexao e libera o buffer antes de
-abrir um novo comando com `onsfx`; nao e preciso esperar o n8n responder.
-Os efeitos locais curtos de inicio/fim continuam bloqueando novas deteccoes.
-Ao terminar naturalmente ou falhar sem interrupcao, permanece a margem de
-dois segundos para drenar captura e eco. Audio invalido nao e repetido automaticamente.
-
-O cancelamento e local: n8n/GPU podem concluir uma execucao ja iniciada.
-Ele nao desfaz consultas, alteracoes de dados ou memoria que o workflow ja
-tenha produzido. Nao foi adicionada uma API para interromper execucoes no n8n.
-Durante DNS/conexao TLS ainda nao existe socket conectado para interromper;
-o timeout de transporte dessa fase e 5 s (a resolucao DNS depende da pilha).
-Nao ha cancelamento acustico de eco: se o proprio TTS disser a wakeword, ele
-pode acionar a interrupcao; distancia entre caixa e microfone e volume afetam isso.
+Durante gravacao, efeitos, envio, espera e reproducao TTS, novas wakewords sao
+ignoradas: nao cancelam nem substituem o pedido atual. A captura continua sendo
+drenada, mas a inferencia fica pausada durante efeitos/HTTP/reproducao, evitando
+trabalho desnecessario e acionamentos pela propria resposta. O buffer e
+liberado somente apos o worker terminar o pedido e a reproducao.
+Ao terminar ou falhar, ha dois segundos para drenar captura e eco antes de
+aceitar outra wakeword com uma nova janela. Audio invalido nao e repetido
+automaticamente. Essa pausa de deteccao nao e cancelamento acustico de eco.
 
 Para manter a resposta no navegador, desabilite `NUCLEA_SPEAKER_ENABLED` em
 `menuconfig` e regrave a placa; o modo antigo permanece disponivel.
@@ -564,43 +690,25 @@ Execute em um terminal ESP-IDF 5.5.x. Substitua `COM9` pela porta da placa.
 O `reconfigure` atualiza tambem o caminho do Python caso seu terminal ESP-IDF
 use outro ambiente virtual que o utilizado na compilacao anterior.
 A pinagem do microfone deve aparecer no log como `BCLK=41 WS=42 SD=40`;
-o amplificador deve indicar `I2S1 TX BCLK=14 WS=21 DIN=13`, seguido do volume configurado.
+o amplificador deve indicar `I2S1 TX BCLK=14 WS=21 DIN=13`, seguido de volume,
+boost, passa-altas e limite configurados.
 Os testes de software e a compilacao nao substituem a validacao do som na placa.
 
-## Teste isolado da caixa de som: musica em loop
+## Remocao da musica de teste
 
-O teste fica desabilitado no `sdkconfig` atual. Para usa-lo, habilite
-`NUCLEA_SPEAKER_ONLY_TEST` em `menuconfig`; o volume de teste padrao e **100%**.
-Com o teste habilitado, ao ligar, o ESP toca a musica inteira em loop,
-sem iniciar Wi-Fi, visor, microfone ou wakeword. O volume do modo normal
-continua independente (`NUCLEA_SPEAKER_VOLUME_PERCENT`).
-
-Conecte apenas o MAX98357A: LRC em GPIO21, BCLK em GPIO14, DIN em GPIO13,
-SD em 3V3, GND em GND e VIN em 5V; GAIN pode ficar aberto. Ligue o alto-falante
-somente entre SPK+ e SPK-, nunca entre uma saida e GND. Desligue a alimentacao
-antes de alterar fios. O USB do ESP pode limitar a potencia e causar distorcao
-ou reinicializacao no volume maximo. Uma fonte regulada de 5V adequada pode
-alimentar apenas o VIN do MAX, mantendo GND comum e sem unir dois positivos de 5V.
-
-Para preparar e gravar, em `wake-word/esp32_wakeword`, com FFmpeg no PATH
-e terminal ESP-IDF habilitado:
+O modo de teste musical e seu PCM foram removidos. A compilacao normal com
+visor habilitado gera uma imagem LittleFS contendo somente os nove GIFs.
+Execute o flash completo, nao apenas `app-flash`, para substituir tambem a
+particao de arquivos e remover a musica da memoria acessivel do ESP:
 
 ```powershell
-python tools/prepare_speaker_music.py
+cd esp32_wakeword
 idf.py -B build-speaker -p COM9 build flash monitor
 ```
 
-O conversor usa o unico MP3 na raiz de NucleaTools; para outro caminho,
-use `--input "caminho/musica.mp3"`. Preserva o original e converte o canal
-esquerdo completo em PCM16 mono 24 kHz. O PCM gerado e ignorado pelo Git.
-O ESP le pequenos blocos da flash, sem carregar a musica inteira na RAM.
-
-Este teste substitui os GIFs na particao de arquivos pela musica, sem apagar
-as credenciais Wi-Fi na NVS. Para voltar ao assistente, desmarque
-`Test speaker only` em `idf.py -B build-speaker menuconfig` e execute novamente
-o comando completo `build flash monitor`: isso tambem restaura os GIFs.
-Nao use `erase-flash`. Para reduzir o volume do teste, altere
-`Speaker music test volume (percent)` no mesmo menu.
+Substitua `COM9` pela porta atual. Isso preserva as credenciais na NVS.
+Nao use `erase-flash`. O agente nao atualiza a memoria fisica da placa
+apenas alterando ou compilando os arquivos no computador.
 
 ## Compilar e gravar
 
@@ -692,15 +800,29 @@ Troque `COM9` pela porta da placa. O firmware aguarda a conexao Wi-Fi e entao
 inicia o detector. Uma deteccao gera `Wakeword detectada`, toca o `onsfx` local
 e abre a gravacao PCM16 mono a 16 kHz depois do efeito e de uma margem de 150 ms.
 Aguarde o som inicial acabar antes de falar o comando. Por padrao, ela
-grava no minimo 5 segundos. Audio com RMS >= -32 dBFS renova uma margem de
-1,5 segundo apos a ultima atividade, sem ultrapassar 12 segundos. Por exemplo,
+grava no minimo 3 segundos. A extensao usa um limiar adaptativo congelado a
+cada deteccao: o maior entre **RMS da janela da wakeword - 10 dB** e
+**ruido ambiente + 8 dB**, limitado entre -65 e 0 dBFS. O ambiente e estimado
+pelo percentil 20 dos ultimos 100 blocos de repouso (cerca de 2 s), com
+referencia provisoria de -60 dBFS antes de 25 blocos. Efeitos, resposta TTS,
+gravacao e cooldown nao alimentam essa estimativa.
+Exige 100 ms continuos acima do limiar para confirmar atividade; picos
+isolados nao renovam a gravacao. Depois de confirmar, ha histerese de 3 dB:
+cair abaixo desse segundo limiar encerra a atividade e exige nova confirmacao.
+Atividade confirmada renova uma margem de 1,5 segundo, sem ultrapassar 12 s. Por exemplo,
 atividade ate 4,5 s leva o termino para 6 s; sem atividade perto do fim, o WAV
-termina em 5 s. Ruido alto tambem pode prorrogar: e deteccao de volume, nao VAD.
+termina em 3 s. Ruido/TV suficientemente altos ainda podem prorrogar: isto e
+um filtro de energia, nao um classificador de fala. Os parametros sao iniciais
+e precisam ser conferidos no ambiente real, sobretudo com pouco contraste
+entre a voz e o ruido. Isso nao altera o modelo/limiar da wakeword.
+No inicio, o log `AUDIO_RECORDER: Atividade adaptativa` informa wake, ambiente,
+on e off em dBFS. `NUCLEA_SILENCE_DBFS` so e usado como fallback quando nao ha
+referencia valida da wakeword. Referencias sao preservadas apos onsfx.
 Com os efeitos habilitados, os tempos comecam depois do som inicial; sem efeitos,
 o firmware preserva os 400 ms de pre-roll anteriores a deteccao. Sao contados pelas amostras,
 nao pelo atraso de processamento. O ultimo bloco e limitado para nao ultrapassar
 a duracao calculada. Em `Nuclea device audio`, os parametros sao
-`NUCLEA_MIN_RECORDING_MS=5000`, `NUCLEA_SILENCE_MS=1500` e
+`NUCLEA_MIN_RECORDING_MS=3000`, `NUCLEA_SILENCE_MS=1500` e
 `NUCLEA_MAX_RECORDING_MS=12000`; o maximo permitido e 12 segundos.
 
 Configure no portal a URL base do Voice Gateway ou execute a NucleaInterface
@@ -746,26 +868,29 @@ para voltar ao comportamento anterior sem sons.
 - Durante efeitos, o loop continua drenando o INMP441, sem gravar o proprio
   som no WAV e sem executar novas inferencias. Efeitos e resposta TTS usam o
   mesmo worker e a mesma saida I2S, sem reproducao simultanea.
-- A duracao minima de 5 s e a maxima de 12 s continuam valendo para o comando,
+- A duracao minima de 3 s e a maxima de 12 s continuam valendo para o comando,
   sem contar os sons. Os efeitos acrescentam seu tempo ao ciclo: aproximadamente
   0,85 s no inicio, uma margem de 150 ms e 0,63 s no fim, mais o esvaziamento I2S.
-- O volume segue `NUCLEA_SPEAKER_VOLUME_PERCENT`, sem alterar o valor configurado.
-  O padrao atual e 100%, o maximo digital sem amplificacao adicional.
+- Os efeitos passam pelo mesmo volume, passa-altas e limitador da resposta TTS
+  (veja [Volume, passa-altas e limitador](#volume-passa-altas-e-limitador)).
 
-Os arquivos `main/assets/onsfx.pcm` e `offsfx.pcm` sao embutidos no firmware
+Os arquivos `main/assets/recording/onsfx.pcm` e `offsfx.pcm` sao embutidos no firmware
 como PCM16 little-endian, mono, 24 kHz, sem cabecalho WAV. Nao precisam do
 gateway, TTS, rede, MP3 decoder ou FFmpeg no ESP. Os originais `onsfx.mp4` e
-`offsfx.mp4` da raiz foram preservados; sao fontes de audio reconhecidas pelo FFmpeg.
+`offsfx.mp4` ficam em `main/assets/recording/source/`, sem alteracoes.
 Somente o silencio inicial/final do `onsfx` foi removido.
-O `offsfx` recebeu +6,63 dB para aproximar seu nivel RMS do `onsfx`, sem
+Para reduzir o volume dos dois efeitos, que estavam estourados, o `onsfx` recebeu
+-3 dB e o `offsfx` passou a +3,63 dB (antes +6,63 dB). Ambos ficaram com RMS
+em torno de -19 dBFS e pico abaixo de -5 dBFS. O `offsfx` continua com nivel RMS
+proximo do `onsfx`, sem
 recortar sua duracao nem saturar as amostras PCM. Isso nao garante o mesmo
 volume percebido, pois os efeitos possuem timbres diferentes.
 
-Para regenerar a partir da raiz de `NucleaTools` (FFmpeg instalado):
+Para regenerar em `esp32_wakeword/main/assets/recording` (FFmpeg instalado):
 
 ```powershell
-ffmpeg -y -i onsfx.mp4 -map 0:a:0 -af "atrim=start=0.53:end=1.38,asetpts=PTS-STARTPTS" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le wake-word/esp32_wakeword/main/assets/onsfx.pcm
-ffmpeg -y -i offsfx.mp4 -map 0:a:0 -af "volume=6.63dB" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le wake-word/esp32_wakeword/main/assets/offsfx.pcm
+ffmpeg -y -i source/onsfx.mp4 -map 0:a:0 -af "atrim=start=0.53:end=1.38,asetpts=PTS-STARTPTS,volume=-3dB" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le onsfx.pcm
+ffmpeg -y -i source/offsfx.mp4 -map 0:a:0 -af "volume=3.63dB" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le offsfx.pcm
 ```
 
 O recorte acima corresponde ao `onsfx` fornecido; ajuste se trocar o arquivo.
@@ -785,23 +910,124 @@ dos originais. Para gravar os efeitos, basta recompilar e fazer flash normalment
 | GND | GND |
 
 O firmware ESP-IDF utiliza os arquivos existentes em
-`nuclea_gif_player_fixed/data/`: `sleep.gif`, `wake.gif` e `nuclea-blink.gif`.
+`nuclea_gif_player_fixed/data/`:
+
+| Arquivo | Frames | Duracao | Uso |
+| --- | ---: | ---: | --- |
+| `sleep2.gif` | 72 | 6,00 s | Repouso, em loop |
+| `wake-open2.gif` | 24 | 2,00 s | Olhos abertos -> fechados (fechar) |
+| `wake-open2-reverse.gif` | 24 | 2,00 s | Reverso exato de `wake-open2.gif` (abrir) |
+| `idle.gif` | 97 | 8,08 s | Olhos abertos, em loop |
+| `loadingtrans.gif` | 12 | 1,00 s | Idle -> loading, 1,5 s apos enviar o comando (corta o idle) |
+| `loading.gif` | 24 | 2,00 s | Em loop enquanto o modelo processa a requisicao |
+| `loadingtrans-reverse.gif` | 11 | 1,00 s | Loading -> idle, uma vez antes da resposta |
+| `smile.gif`, `elegant.gif` | | | Reacoes a resposta |
+| `dizzy.gif`, `angry.gif`, `cry.gif` | | | Reacoes a chacoalhos |
+
 Nao e preciso gravar o sketch Arduino nem executar o uploader LittleFS
 separadamente. A imagem LittleFS e gerada durante o build e incluida no flash.
-Nao altere a pasta dos GIFs sem manter os tres nomes e a resolucao 280x240.
+Mantenha os nomes e a resolucao 280x240. Os quatro primeiros GIFs sao
+obrigatorios; uma expressao opcional ausente/invalida usa idle, sem desativar
+todo o visor. Nao deixe outros arquivos em `data/`: todos entram na imagem.
+
+Ao trocar `wake-open2.gif`, regenere o reverso (requer Pillow). O script confere que
+cada imagem e cada tempo do resultado sao identicos ao original invertido:
+
+```powershell
+python esp32_wakeword/tools/reverse_gif.py `
+  nuclea_gif_player_fixed/data/wake-open2.gif nuclea_gif_player_fixed/data/wake-open2-reverse.gif
+```
+
+Frames identicos consecutivos sao unidos, somando seus tempos; por isso
+`wake-open.gif` tem 51 frames e a mesma duracao.
 
 Por padrao, o visor mostra o robo dormindo desde a inicializacao, inclusive
 durante a configuracao Wi-Fi. Isso e apenas um estado visual, nao deep sleep.
-Somente `sleep.gif` tem inversao horizontal por software no envio ao visor; as animacoes de acordar e olhos abertos mantem a orientacao original.
+Nenhum GIF e espelhado por software; `sleep2.gif` ja vem na orientacao final.
 O detector inicia depois da conexao Wi-Fi, como no fluxo anterior.
 
-Uma wakeword aceita inicia a gravacao e envia o evento de abertura dos olhos.
-Os 30 frames de `wake.gif` sao decodificados no boot e guardados completos em
-PSRAM (4.032.000 bytes), sem pular frames nem criar um GIF invertido na flash.
-Depois, `nuclea-blink.gif` permanece em loop durante a gravacao e o HTTP.
+Uma wakeword aceita inicia a gravacao e envia o evento de abertura dos olhos,
+tocando `wake-open.gif`. Fechar os olhos toca `wake.gif`. As duas transicoes
+sao decodificadas da flash como as demais animacoes, sem cache em PSRAM: com
+53 frames, o cache antigo exigiria 7,1 MB dos 8 MB de PSRAM.
+Depois, `idle.gif` permanece em loop durante a gravacao e o HTTP.
+Quando o primeiro pacote PCM valido da resposta TTS chega, ocorre um sorteio:
+**45% idle, 30% smile e 25% elegant**. A expressao escolhida toca um ciclo
+inteiro e retorna ao idle. Onsfx, offsfx, pings e erros sem audio nao geram
+esse sorteio. Um pacote aceito indica inicio de recebimento, nao garante
+que toda a resposta terminara sem erro.
 O tempo de inatividade comeca ao concluir ou falhar o envio: por padrao,
 30 segundos. A transicao normal fecha os olhos e retorna a `sleep.gif`.
-Uma nova deteccao pode interromper o fechamento.
+A wakeword aceita sai imediatamente do loop de `sleep.gif`, entre transferencias
+de frames, e inicia a abertura dos olhos antes do onsfx e da gravacao. Nao
+aguarda os quase seis segundos do ciclo de repouso nem o envio do comando.
+As demais trocas aguardam o fim do ciclo atual e a duracao do ultimo frame.
+Uma deteccao durante o fechamento agenda a reabertura apos ele terminar.
+Esse caso adia somente o visual; a gravacao nao aguarda o GIF.
+
+### Reacoes a chacoalhos (piezo)
+
+**Modo atual: batidas** (`NUCLEA_PIEZO_KNOCK_MODE=y`). Com 220k em serie e o
+pull-down interno, cada batida gera so 1 ou 2 pulsos, pouco para o detector de
+chacoalho continuo descrito abaixo. Neste modo, **3 batidas em ate 2 s**
+(`NUCLEA_PIEZO_KNOCKS`, `NUCLEA_PIEZO_KNOCK_WINDOW_MS`) disparam a mesma
+sequencia de reacoes. Pulsos a menos de 150 ms um do outro contam como uma
+batida. O monitor mostra `PIEZO: Batida 1/3`, `2/3` e `Batidas confirmadas`.
+Depois de colocar 1 Mohm entre os terminais do piezo, desmarque o modo batidas
+e `NUCLEA_PIEZO_PULLDOWN` para usar o chacoalho continuo.
+
+O piezo e lido pelo periferico PCNT, que conta pulsos em hardware com filtro
+de glitch. A cada 20 ms, `main/piezo_sensor.cc` envia a `ObserveMotion` se
+houve pulso nos ultimos `NUCLEA_PIEZO_HOLD_MS` (100 ms por padrao) e a janela teve pelo menos
+`NUCLEA_PIEZO_MIN_PULSES` pulsos (3 por padrao). Aumentar ambos reduz a sensibilidade:
+
+- Mais de 1 segundo de movimento forte continuo confirma um evento.
+- Pulsos curtos ou lacunas de amostragem maiores que 100 ms nao qualificam.
+- Movimento mantido gera somente um evento; exige 250 ms de quietude para rearmar.
+- Primeiro evento: dizzy e depois idle.
+- Segundo: dizzy, angry e depois idle.
+- Terceiro: dizzy, cry e depois idle; reinicia a contagem.
+- Dois minutos sem novo evento confirmado reiniciam a sequencia no proximo evento.
+
+As reacoes aguardam o fim do GIF atual e sao enfileiradas com memoria limitada.
+Eventos excedentes sao descartados com aviso. O primeiro dizzy corta a animacao atual na hora (inclusive sleep e abertura dos olhos); reacoes seguintes aguardam o ciclo.
+
+Ligacao atual, com o menu `Nuclea robot display` > `NUCLEA_PIEZO_*`:
+
+```text
+ESP32-S3                         Disco piezo
+========                         ===========
+GPIO 1 -------[ 220k ]-------+-- terminal + (vermelho)
+                             |
+                           [1M]  (opcional; desmarque o pull-down interno)
+                             |
+GND -------------------------+-- terminal - (preto)
+```
+
+Montagem atual: 220k em serie, sem o 1M. O pull-down interno (cerca de 45k)
+fica ligado e forma um divisor com o 220k: o pino recebe so cerca de 1/6 da
+tensao do piezo, entao apenas batidas/trancos fortes contam. Para mais
+sensibilidade, coloque 1 Mohm entre os terminais do piezo e desmarque
+`NUCLEA_PIEZO_PULLDOWN`. Nunca desmarque o pull-down sem o 1M: o pino fica
+flutuando e conta ruido.
+
+- **Nao use GPIO 19/20.** Sao D-/D+ da USB nativa, usada para gravar e
+  monitorar esta placa: com o piezo no GPIO 20 a porta COM some apos o boot.
+  O build recusa 19/20 enquanto o console USB estiver ligado. GPIO 1, 2, 8, 9
+  e 10 tambem estao livres.
+- Um disco piezo golpeado gera dezenas de volts. O resistor em serie limita a
+  corrente nos diodos de protecao do ESP; nao ligue o disco direto no GPIO por
+  muito tempo. O pull-down interno (cerca de 45 kohms) descarrega o disco; com
+  o resistor de 1 Mohm externo, ele fica mais sensivel a movimentos lentos.
+- O pino digital so conta pulsos acima de cerca de 1,6 V: batidas e chacoalhos
+  com impacto, nao inclinacao suave. O disco precisa estar preso ao corpo do
+  robo, de preferencia com um pequeno peso colado no centro.
+
+Para testar, abra o monitor e chacoalhe: `PIEZO: pulsos=N forte=M/50 amostras`
+aparece a cada segundo com atividade. Chacoalhando por mais de 1 s, o visor
+registra `Chacoalho confirmado`. Sem nenhuma linha `PIEZO: pulsos`, confira a
+ligacao. Se `forte` ficar com falhas mesmo chacoalhando, aumente
+`NUCLEA_PIEZO_HOLD_MS` (por exemplo 300).
 
 No menu `Nuclea robot display`, ajuste o tempo, clock SPI e offsets do painel,
 ou desabilite o visor. O padrao e SPI 40 MHz, orientacao horizontal e offsets
@@ -809,23 +1035,54 @@ X=20/Y=0. Se a imagem ficar deslocada, ajuste esses offsets conforme a tela;
 a orientacao e as cores ainda precisam ser confirmadas no hardware real.
 
 Captura I2S (prioridade 6), inferencia (4), envio HTTP (2) e visor (1) sao
-separados. Inferencia e visor rodam no core 1; captura, alto-falante (3) e
-envio usam core 0. Assim, inferencias longas nao bloqueiam o abastecimento I2S.
-Durante um envio, captura e deteccao continuam. A nova wakeword cancela o
-pedido anterior; o buffer da gravacao so e reutilizado apos o worker confirmar
-o encerramento. Apenas o worker HTTP fecha/libera seu cliente e consome a
-confirmacao de parada do alto-falante; a outra tarefa somente sinaliza e
-interrompe o socket com `shutdown`, sem liberar objetos em uso.
+separados. A inferencia roda no core 1; captura, alto-falante (3), envio e
+visor usam core 0. O visor permanece abaixo das tarefas de audio/rede e nao
+disputa mais o core ocupado pelas inferencias longas.
+Nos frames intermediarios, o tempo de decodificacao/transferencia integra o
+intervalo do GIF, sem somar outra espera completa. O ultimo frame ainda
+fica visivel pelo seu intervalo inteiro antes das trocas normais; sair do
+repouso por wakeword e a excecao para responder prontamente ao usuario.
+Nao ha descarte de frames nas outras animacoes nem garantia de FPS fixo.
+Durante um envio, a captura continua, mas deteccao e interrupcao por nova
+wakeword ficam desativadas. O buffer da gravacao so e reutilizado apos o
+worker confirmar o encerramento. Apenas o worker HTTP fecha/libera seu
+cliente e consome a confirmacao de parada do alto-falante.
 Se a fila de captura atrasar, o firmware registra o descarte e recompoe
 a janela; uma gravacao com lacuna e descartada em vez de enviar audio incompleto.
 Erros de leitura e overflow DMA/I2S tambem sinalizam lacunas. O historico de
 confirmacao da wakeword e limpo entre pedidos e apos lacunas, preservando cooldown.
 
-O cache reverso tem limite de 5 MiB. Se ele nao puder ser criado, o visor
-troca diretamente entre as animacoes de repouso/acordado. Falha de montagem
-nao formata a flash; falha de inicializacao do visor permite continuar sem ele.
+Falha de montagem nao formata a flash; falha de inicializacao do visor
+permite continuar sem ele.
 O firmware nao recebe eventos de fim de reproducao do navegador: o temporizador
 se baseia no fim do HTTP, nao no fim audivel do TTS.
+
+### Diagnosticar lentidao do visor e HTTP 403
+
+A cada aproximadamente cinco segundos, `ROBOT_DISPLAY: perf` informa o numero
+de frames na janela, `decode_avg_ms`, `lcd_avg_ms`, `frame_max_ms`, memoria
+interna livre e pilha livre. Os tempos incluem preempcoes por tarefas de
+maior prioridade; envie algumas dessas linhas durante repouso e resposta
+para comparar o comportamento real, sem alterar os limiares da wakeword.
+`stack_livre` agora usa diretamente os bytes devolvidos pelo ESP-IDF;
+versoes anteriores multiplicavam incorretamente esse numero por quatro.
+
+HTTP 401/403 e uma recusa de acesso, nao um indicador de sobrecarga da CPU.
+No gateway atual, 401/403 do n8n sao repassados ao ESP. Confira se a chave
+salva no portal corresponde a credencial Header Auth do webhook, com nome
+`X-Nuclea-Key`. Para confirmar a origem, procure o mesmo `request_id` nos
+logs do gateway (`code=authentication_failed` indica recusa do n8n).
+O firmware registra uma orientacao ao receber esses status, nunca a chave.
+Nao remova a autenticacao para corrigir animacao lenta.
+
+### Tamanho das animacoes e memoria
+
+Os nove GIFs atuais somam 10.539.924 bytes de flash, dentro da particao
+LittleFS de 0xCF0000 (13,5 MB). Na RAM, o visor usa apenas o canvas RGB565 e o
+buffer de restauracao do decoder em PSRAM (2 x 134.400 bytes) e uma faixa DMA
+interna; o antigo cache de 4 MB do `wake.gif` foi removido.
+Os GIFs fornecidos continuam intactos, sem reduzir cores, resolucao ou
+quantidade de frames; somente `wake-open.gif` e gerado a partir deles.
 
 ### Validacao essencial da integracao
 
@@ -837,9 +1094,11 @@ python -m unittest tools.test_capture_stack_budget
 idf.py -p COM9 flash monitor
 ```
 
-O build tambem verifica tres cenarios da maquina de estados por `static_assert`.
+O build verifica a maquina visual por `static_assert`: pesos do sorteio,
+trocas apenas entre ciclos, sequencia/timeout dos chacoalhos, fila limitada,
+retorno ao idle, duracao minima, rearme e falhas de amostragem do sensor.
 O controle de gravacao verifica cinco cenarios adicionais por `static_assert`:
-silencio com WAV de 5 s, renovacao da margem de 1,5 s, volume continuo limitado
+silencio com WAV de 3 s, renovacao da margem de 1,5 s, volume continuo limitado
 a 12 s, silencio inicial sem encerramento antecipado e buffer cheio sem escrita.
 Tambem verifica o BOOT: acionamento apos 3 segundos, acionamento unico por
 pressao e reinicio da contagem apos soltar o botao.
@@ -847,7 +1106,10 @@ O teste de pilha analisa o objeto compilado com `xtensa-esp32s3-elf-objdump`,
 disponivel no terminal ESP-IDF. Se nao estiver no PATH, defina `XTENSA_OBJDUMP`
 com o caminho do executavel. Sem compilador ou objeto, esse teste e ignorado;
 ele mede a reserva local da funcao, nao substitui a medicao de pilha no hardware.
-No hardware, confira `Cache wake: 30 frames`, a pinagem `BCLK=41 WS=42 SD=40`,
+Tambem verifica o limitador (nenhum pico acima do teto, fala comum sem
+reducao, passa-altas removendo DC) e a envoltoria do piezo (chacoalho de 1,5 s
+confirma; batida isolada ou chacoalho curto nao).
+No hardware, confira `Animacao: /robot/wake-open.gif`, a pinagem `BCLK=41 WS=42 SD=40`,
 a abertura ao falar Nuclea, gravacao/envio e retorno ao repouso. Confira que
 nao aparecem `Fila de audio atrasada` durante uso normal. Esta integracao
 nao foi gravada nem validada fisicamente pelo agente.
@@ -876,7 +1138,7 @@ python -m unittest discover -s esp32_wakeword\tools -p "test_*.py"
 alimentacao, GND comum, L/R em GND e os GPIOs exibidos na linha `INMP441:`.
 Nao altere MFCC ou limiar de deteccao para compensar um microfone sem sinal.
 Para testar sem tela, desative `NUCLEA_DISPLAY_ENABLED` em `menuconfig`,
-confira os GPIOs do microfone e regrave. A linha `ROBOT_DISPLAY: Cache wake`
+confira os GPIOs do microfone e regrave. A linha `ROBOT_DISPLAY: Animacao`
 significa que o visor ainda esta habilitado no firmware gravado.
 
 Se `audio` variar mas `q_in` ficar constante, revise o DSP. Se `q_in` variar e

@@ -47,7 +47,7 @@ class VisualContractTests(unittest.TestCase):
         self.assertIn("format_if_mount_failed = false", display)
         self.assertIn("littlefs_create_partition_image", cmake)
         self.assertIn("FLASH_IN_PROJECT", cmake)
-        for name in ("sleep.gif", "wake.gif", "nuclea-blink.gif"):
+        for name in ("sleep2.gif", "wake-open2.gif", "wake-open2-reverse.gif", "idle.gif"):
             self.assertIn(name, display)
 
     def test_microphone_gpio_is_configurable_and_display_is_optional(self):

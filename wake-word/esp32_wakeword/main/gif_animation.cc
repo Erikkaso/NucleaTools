@@ -58,6 +58,7 @@ bool GifAnimation::Open(const char* path) {
     disposal_ = 0;
     background_ = 0;
     first_frame_ = true;
+    fresh_ = true;
     more_ = true;
     return true;
 }
@@ -77,9 +78,19 @@ bool GifAnimation::Next(int* delay_ms) {
     } else if (disposal_ == 3) {
         std::memcpy(canvas_, restore_, kFrameBytes);
     }
+    const int px = x_, py = y_, pw = width_, ph = height_;
+    const bool full = fresh_ || disposal_ == 3;
     drawn_ = false;
     const int result = gif_.playFrame(false, delay_ms, this);
     more_ = result == 1;
+    if (full || !drawn_) {
+        dx0_ = dy0_ = 0; dx1_ = kWidth; dy1_ = kHeight;
+    } else {
+        dx0_ = std::max(0, std::min(px, x_)); dy0_ = std::max(0, std::min(py, y_));
+        dx1_ = std::min(kWidth, std::max(px + pw, x_ + width_));
+        dy1_ = std::min(kHeight, std::max(py + ph, y_ + height_));
+    }
+    fresh_ = false;
     return result >= 0 && drawn_;
 }
 

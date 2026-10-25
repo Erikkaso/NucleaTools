@@ -70,7 +70,7 @@ bool NdjsonMime(const char* mime) {
 }
 
 esp_err_t PlayResponse(esp_http_client_handle_t client, AudioSpeaker& speaker, int64_t deadline,
-                       ResponseHeaders& context) {
+                       ResponseHeaders& context, std::atomic<bool>* response_started) {
     const auto cancelled = [&context] {
         return context.cancellation && context.cancellation->Cancelled();
     };
@@ -120,8 +120,10 @@ esp_err_t PlayResponse(esp_http_client_handle_t client, AudioSpeaker& speaker, i
         }
         RefreshReadTimeout(client, context);
         if (context.expired) result = ESP_ERR_TIMEOUT;
-        if (result == ESP_OK && response.AudioEvents() != before)
+        if (result == ESP_OK && response.AudioEvents() != before) {
             context.budget.AudioProgress(esp_timer_get_time());
+            if (before == 0 && response_started && !cancelled()) response_started->store(true);
+        }
     }
     context.reading_body = false;
     if (result == ESP_OK) result = speaker.Finish();
@@ -188,7 +190,8 @@ bool WriteAll(esp_http_client_handle_t client, const void* data, size_t size, in
 
 esp_err_t AudioUploader::Upload(const int16_t* samples, size_t sample_count,
                                 const std::string& base_url, AudioSpeaker* speaker,
-                                const std::string& auth_key, UploadCancellation* cancellation) const {
+                                const std::string& auth_key, UploadCancellation* cancellation,
+                                std::atomic<bool>* response_started) const {
     if (samples == nullptr || sample_count == 0 || base_url.empty()) return ESP_ERR_INVALID_ARG;
     if (cancellation && cancellation->Cancelled()) return ESP_ERR_INVALID_STATE;
     if (!auth_key.empty() && (!ValidAuthKey(auth_key) || base_url.compare(0, 8, "https://") != 0)) {
@@ -207,6 +210,7 @@ esp_err_t AudioUploader::Upload(const int16_t* samples, size_t sample_count,
         "\r\nContent-Disposition: form-data; name=\"responseMode\"\r\n\r\nspeaker\r\n";
 #else
     (void)speaker;
+    (void)response_started;
     const std::string mode;
 #endif
     char prefix[768];
@@ -265,6 +269,10 @@ esp_err_t AudioUploader::Upload(const int16_t* samples, size_t sample_count,
     const int status = result == ESP_OK ? esp_http_client_get_status_code(client) : 0;
     ESP_LOGI(kTag, "Response headers: HTTP=%d MIME=%.95s encoding=%.31s request_id=%.64s",
              status, headers.mime, headers.encoding[0] ? headers.encoding : "identity", headers.request_id);
+    if (status == 401 || status == 403) {
+        ESP_LOGE(kTag, "Acesso recusado pelo servidor (HTTP=%d). Confira X-Nuclea-Key no portal e Header Auth no n8n; request_id=%.64s",
+                 status, headers.request_id);
+    }
     if (result == ESP_OK && (status < 200 || status >= 300)) result = ESP_FAIL;
 #ifdef CONFIG_NUCLEA_SPEAKER_ENABLED
     if (result == ESP_OK && !NdjsonMime(headers.mime)) result = ESP_ERR_INVALID_RESPONSE;
@@ -272,7 +280,7 @@ esp_err_t AudioUploader::Upload(const int16_t* samples, size_t sample_count,
         ESP_LOGE(kTag, "Unsupported HTTP encoding: %s; disable compression on gateway Ingress", headers.encoding);
         result = ESP_ERR_INVALID_RESPONSE;
     }
-    if (result == ESP_OK) result = PlayResponse(client, *speaker, deadline, headers);
+    if (result == ESP_OK) result = PlayResponse(client, *speaker, deadline, headers, response_started);
 #else
     (void)deadline;
     int discarded = 0;

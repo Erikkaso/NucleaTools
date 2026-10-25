@@ -16,7 +16,7 @@
 #include "wakeword_detector.h"
 #include "wifi_station.h"
 #include "robot_display.h"
-#include "speaker_music_test.h"
+#include "piezo_sensor.h"
 
 namespace {
 constexpr const char* kTag = "NUCLEA_WAKEWORD";
@@ -29,10 +29,6 @@ int64_t NowMs() { return esp_timer_get_time() / 1000; }
 }
 
 static void RunAssistant() {
-#ifdef CONFIG_NUCLEA_SPEAKER_ONLY_TEST
-    RunSpeakerMusicTest();
-    return;
-#endif
 #ifdef CONFIG_NUCLEA_DISPLAY_ONLY_TEST
     static RobotDisplay test_display;
     ESP_LOGW(kTag, "TESTE SOMENTE TELA: SCL=4 SDA=5 RES=6 DC=7 CS=15 BLK=3V3");
@@ -61,6 +57,7 @@ static void RunAssistant() {
     static AudioRecorder recorder;
     static AudioUploadWorker upload_worker;
     static RobotDisplay display;
+    static PiezoSensor piezo;
     MFCC mfcc;
     WakewordDetector detector;
     if (recorder.Init() != ESP_OK || !mfcc.init() ||
@@ -76,6 +73,8 @@ static void RunAssistant() {
     const esp_err_t display_result = display.Start();
     if (display_result != ESP_OK)
         ESP_LOGW(kTag, "Visor indisponivel; continuando sem animacoes: %s", esp_err_to_name(display_result));
+    else if (const esp_err_t piezo_result = piezo.Start(&display); piezo_result != ESP_OK)
+        ESP_LOGW(kTag, "Piezo indisponivel; sem reacoes a chacoalhos: %s", esp_err_to_name(piezo_result));
     if (wifi.Connect() != ESP_OK || upload_worker.Init() != ESP_OK || capture.Init() != ESP_OK) {
         ESP_LOGE(kTag, "Falha ao iniciar rede, envio ou captura");
         if (led_result == ESP_OK) led.SetError();
@@ -84,6 +83,8 @@ static void RunAssistant() {
     // Audio capture has priority 6; inference must also outrank the visual task.
     vTaskPrioritySet(nullptr, 4);
     DetectionGate gate;
+    AmbientNoise ambient_noise;
+    float wake_dbfs = -32, noise_dbfs = -60;
     static int16_t audio_window[kWindowSamples] = {};
     static int8_t features[kFeatureBytes] = {};
     int16_t chunk[320];
@@ -98,9 +99,9 @@ static void RunAssistant() {
     int64_t playback_cooldown_until = 0;
     int64_t recording_start_at = 0;
     bool was_playing = false;
-    bool restart_pending = false;
 
     while (true) {
+        if (upload_worker.TakeResponseStarted()) display.Response();
         RecordingCue completed_cue;
         esp_err_t cue_result;
         if (upload_worker.PollCue(&completed_cue, &cue_result)) {
@@ -119,29 +120,15 @@ static void RunAssistant() {
             recorder.Reset();
             filled = samples_since_inference = 0;
             gate.ResetConfirmation();
-            if (restart_pending) {
-                restart_pending = false;
-                playback_cooldown_until = 0;
-                recording_start_at = NowMs() + 150;
-#ifdef CONFIG_NUCLEA_RECORDING_SFX_ENABLED
-                if (upload_worker.StartCue(RecordingCue::kOn) == ESP_OK)
-                    recording_start_at = 0;
-#endif
-                display.Wake();
-                led_clear_at = 0;
-                if (led_result == ESP_OK) led.SetUploading();
-                ESP_LOGI(kTag, "Requisicao anterior liberada; ouvindo novo comando apos onsfx");
-            } else {
-                display.Ready();
+            display.Ready();
 #ifdef CONFIG_NUCLEA_SPEAKER_ENABLED
-                // Only natural completion needs the longer room-echo cooldown.
-                playback_cooldown_until = NowMs() + 2000;
+            // Finish the reply and let room echo settle before accepting another wakeword.
+            playback_cooldown_until = NowMs() + 2000;
 #endif
-                if (led_result == ESP_OK) {
-                    if (completed_upload == ESP_OK) led.SetSuccess();
-                    else led.SetError();
-                    led_clear_at = NowMs() + 700;
-                }
+            if (led_result == ESP_OK) {
+                if (completed_upload == ESP_OK) led.SetSuccess();
+                else led.SetError();
+                led_clear_at = NowMs() + 700;
             }
         }
         if (led_clear_at != 0 && NowMs() >= led_clear_at) {
@@ -173,16 +160,24 @@ static void RunAssistant() {
                 if (led_result == ESP_OK) led.SetError();
             }
         }
-        // Keep inference active during HTTP/TTS, but never overwrite the worker's PCM.
-        if (upload_worker.Busy() && !upload_worker.Interruptible()) continue;
+        // Drain capture during effects, HTTP and playback without detecting another command.
+        if (upload_worker.Busy()) {
+            filled = samples_since_inference = 0;
+            gate.ResetConfirmation();
+            continue;
+        }
         if (NowMs() < playback_cooldown_until) continue;
+
+        // Never learn the local sound effects, playback, or command as ambient noise.
+        if (!upload_worker.Busy() && !recorder.IsRecording() && recording_start_at == 0)
+            ambient_noise.Observe(capture.LastLevel().rms_dbfs);
 
         if (recording_start_at != 0) {
             if (capture.LastTimestampMs() < recording_start_at) continue;
             recording_start_at = 0;
             filled = samples_since_inference = 0;
             // No pre-roll here: the previous window belongs to the wakeword, before onsfx.
-            if (recorder.Start(chunk, 0, capture.LastTimestampMs()) != ESP_OK) {
+            if (recorder.Start(chunk, 0, capture.LastTimestampMs(), wake_dbfs, noise_dbfs) != ESP_OK) {
                 ESP_LOGE(kTag, "Nao foi possivel iniciar gravacao apos onsfx");
                 display.Ready();
                 if (led_result == ESP_OK) led.SetError();
@@ -211,6 +206,8 @@ static void RunAssistant() {
                     recorder.Reset();
                     display.Ready();
                     if (led_result == ESP_OK) { led.SetError(); led_clear_at = NowMs() + 700; }
+                } else {
+                    display.Loading();
                 }
                 filled = 0;
                 samples_since_inference = 0;
@@ -244,21 +241,16 @@ static void RunAssistant() {
         max_score_since_telemetry = std::max(max_score_since_telemetry, score);
         ++inferences_since_telemetry;
         if (gate.Accept(score, now)) {
+            wake_dbfs = PcmRmsDbfs(audio_window, kWindowSamples);
+            noise_dbfs = ambient_noise.Dbfs();
+            ESP_LOGW(kTag, "Wakeword detectada: score=%.3f pico_janela=%.3f",
+                     static_cast<double>(score), static_cast<double>(gate.RecentMaxScore()));
             gate.ResetConfirmation();
-            ESP_LOGW(kTag, "Wakeword detectada: score=%.3f", static_cast<double>(score));
-            if (upload_worker.Busy()) {
-                upload_worker.Cancel();
-                restart_pending = true;
-                filled = samples_since_inference = 0;
-                recording_start_at = 0;
-                ESP_LOGW(kTag, "Interrompendo requisicao/resposta anterior por nova wakeword");
-                continue;
-            }
+            display.Wake();
             bool cue_scheduled = false;
 #ifdef CONFIG_NUCLEA_RECORDING_SFX_ENABLED
             cue_scheduled = upload_worker.StartCue(RecordingCue::kOn) == ESP_OK;
             if (cue_scheduled) {
-                display.Wake();
                 led_clear_at = 0;
                 if (led_result == ESP_OK) led.SetUploading();
             } else {
@@ -267,19 +259,20 @@ static void RunAssistant() {
 #endif
             if (!cue_scheduled) {
                 if (recorder.Start(audio_window + kWindowSamples - kPreRollSamples,
-                                   kPreRollSamples, capture.LastTimestampMs()) == ESP_OK) {
-                    display.Wake();
+                                   kPreRollSamples, capture.LastTimestampMs(), wake_dbfs, noise_dbfs) == ESP_OK) {
                     led_clear_at = 0;
                     if (led_result == ESP_OK) led.SetRecording();
                 } else {
                     ESP_LOGE(kTag, "Nao foi possivel iniciar a gravacao");
+                    display.Ready();
                     if (led_result == ESP_OK) led.SetError();
                 }
             }
         }
         if (now - last_telemetry >= kTelemetryIntervalMs) {
             const AudioLevel level = capture.LastLevel();
-            const UBaseType_t stack_words = uxTaskGetStackHighWaterMark(nullptr);
+            // ESP-IDF returns bytes here, unlike upstream FreeRTOS word counts.
+            const UBaseType_t stack_bytes = uxTaskGetStackHighWaterMark(nullptr);
             ESP_LOGI(kTag, "audio=%.1f dBFS peak=%d score=%.3f max_score=%.3f q_in=[%d,%d] q_out=[%d,%d] inferencias=%lu duracao=%lldms positivos=%u cooldown=%lldms led=%s stack_livre=%uB captura_stack_livre=%uB",
                       static_cast<double>(level.rms_dbfs), level.peak, static_cast<double>(score),
                       static_cast<double>(max_score_since_telemetry),
@@ -289,7 +282,7 @@ static void RunAssistant() {
                       static_cast<long long>(inference_ms),
                       gate.PositiveCount(), static_cast<long long>(gate.CooldownRemainingMs(now)),
                       led.IsGreen() ? "verde" : "apagado",
-                      static_cast<unsigned>(stack_words * sizeof(StackType_t)),
+                      static_cast<unsigned>(stack_bytes),
                       static_cast<unsigned>(capture.StackFreeBytes()));
             last_telemetry = now;
             max_score_since_telemetry = 0.0f;

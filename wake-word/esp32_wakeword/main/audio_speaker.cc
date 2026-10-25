@@ -13,6 +13,9 @@ esp_err_t AudioSpeaker::Init(int volume_percent) {
     if (volume_percent < 0 || volume_percent > 100) return ESP_ERR_INVALID_ARG;
     if (task_) return ESP_OK;
     volume_percent_ = volume_percent;
+    dsp_ = SpeakerDsp(SpeakerDsp::MakeConfig(
+        24000, CONFIG_NUCLEA_SPEAKER_HIGHPASS_HZ, volume_percent, CONFIG_NUCLEA_SPEAKER_BOOST_DB,
+        CONFIG_NUCLEA_SPEAKER_LIMIT_DBFS, 80));
     i2s_chan_config_t chan = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_1, I2S_ROLE_MASTER);
     chan.dma_desc_num = 4;
     chan.dma_frame_num = 240;
@@ -53,9 +56,10 @@ esp_err_t AudioSpeaker::Init(int volume_percent) {
         queue_storage_ = nullptr; frame_ = nullptr; coalescer_ = nullptr; stereo_ = nullptr;
         return result;
     }
-    ESP_LOGI("SPEAKER", "I2S1 TX BCLK=%d WS=%d DIN=%d volume=%d%%, PCM queue=%u bytes",
+    ESP_LOGI("SPEAKER", "I2S1 TX BCLK=%d WS=%d DIN=%d volume=%d%% boost=%d dB highpass=%d Hz limit=%d dBFS, PCM queue=%u bytes",
              DevicePins::kSpeakerBclk, DevicePins::kSpeakerWs, DevicePins::kSpeakerData,
-             volume_percent_, unsigned(kFrames * sizeof(Frame)));
+             volume_percent_, CONFIG_NUCLEA_SPEAKER_BOOST_DB, CONFIG_NUCLEA_SPEAKER_HIGHPASS_HZ,
+             CONFIG_NUCLEA_SPEAKER_LIMIT_DBFS, unsigned(kFrames * sizeof(Frame)));
     return ESP_OK;
 }
 
@@ -141,6 +145,7 @@ void AudioSpeaker::Run() {
         size_t clipped_samples = 0;
         unsigned rebuffer_count = 0;
         int64_t last_pcm = esp_timer_get_time();
+        dsp_.Reset();
         while (!abort_ && !failed_) {
             // Observe producer EOF before inspecting the queue so the final enqueue is visible.
             const bool ended = eof_.load();
@@ -185,7 +190,7 @@ void AudioSpeaker::Run() {
             for (size_t i = 0; i < frame_->bytes / 2; ++i) {
                 const uint16_t raw = frame_->pcm[i * 2] | (uint16_t(frame_->pcm[i * 2 + 1]) << 8);
                 const int32_t signed_sample = raw < 32768 ? raw : int32_t(raw) - 65536;
-                const int16_t sample = signed_sample * volume_percent_ / 100;
+                const int16_t sample = dsp_.Process(static_cast<int16_t>(signed_sample));
                 input_square_sum += static_cast<int64_t>(signed_sample) * signed_sample;
                 ++input_samples;
                 if (signed_sample >= 32760 || signed_sample <= -32760) ++clipped_samples;
@@ -211,9 +216,10 @@ void AudioSpeaker::Run() {
         const double rms_dbfs = input_samples && input_square_sum
             ? 10.0 * std::log10(static_cast<double>(input_square_sum) / input_samples / 1073741824.0)
             : -120.0;
-        ESP_LOGI("SPEAKER", "Playback ended: PCM_bytes=%u peak_in=%d peak_out=%d rms_in=%.1f dBFS clipped=%u rebuffer=%u failed=%d aborted=%d",
+        // clipped counts source samples already at full scale (clipped before the ESP).
+        ESP_LOGI("SPEAKER", "Playback ended: PCM_bytes=%u peak_in=%d peak_out=%d rms_in=%.1f dBFS clipped=%u limiter=%.1f dB rebuffer=%u failed=%d aborted=%d",
                  unsigned(pcm_bytes_written), peak_input, peak_output,
-                 rms_dbfs, unsigned(clipped_samples), rebuffer_count,
+                 rms_dbfs, unsigned(clipped_samples), 20.0 * std::log10(dsp_.MinGain()), rebuffer_count,
                  int(failed_.load()), int(abort_.load()));
         xQueueReset(frames_);
         idle_ = true;

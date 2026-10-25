@@ -7,21 +7,6 @@ menu "Nuclea device audio"
             Request responseMode=speaker on the same device-audio POST.
             Disable to retain the browser mailbox response mode.
 
-    config NUCLEA_SPEAKER_ONLY_TEST
-        bool "Test speaker only: loop local music, skip all other devices"
-        depends on NUCLEA_SPEAKER_ENABLED && !NUCLEA_DISPLAY_ONLY_TEST
-        default n
-        help
-            Prepare main/speaker_test_data/music.pcm using tools/prepare_speaker_music.py.
-            Flash the complete firmware to replace the GIF filesystem with music.
-            Disable this option and flash again to restore the normal assistant.
-
-    config NUCLEA_SPEAKER_TEST_VOLUME_PERCENT
-        int "Speaker music test volume (percent)"
-        depends on NUCLEA_SPEAKER_ONLY_TEST
-        range 0 100
-        default 100
-
     config NUCLEA_RECORDING_SFX_ENABLED
         bool "Play local recording start/stop sound effects"
         depends on NUCLEA_SPEAKER_ENABLED
@@ -54,14 +39,44 @@ menu "Nuclea device audio"
         range 0 100
         default 100
 
+    config NUCLEA_SPEAKER_BOOST_DB
+        int "Speaker loudness boost before the limiter (dB)"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range 0 12
+        default 6
+        help
+            Raises quiet and average speech; the limiter keeps peaks under
+            NUCLEA_SPEAKER_LIMIT_DBFS. More boost sounds louder but more compressed.
+
+    config NUCLEA_SPEAKER_LIMIT_DBFS
+        int "Speaker peak limiter ceiling (dBFS)"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range -12 0
+        default -3
+        help
+            Highest digital peak sent to the MAX98357A. Lower it if the amplifier
+            or the 5 V supply still distorts on loud syllables.
+
+    config NUCLEA_SPEAKER_HIGHPASS_HZ
+        int "Speaker high-pass cutoff (Hz, 0 disables)"
+        depends on NUCLEA_SPEAKER_ENABLED
+        range 0 400
+        default 150
+        help
+            Removes bass a small speaker cannot reproduce; it would only use
+            amplifier headroom and make the cone distort.
+
     config NUCLEA_DEVICE_ID
         string "Device session ID"
         default "nuclea-esp32"
 
     config NUCLEA_SILENCE_DBFS
-        int "Silence threshold in dBFS"
+        int "Fallback activity threshold in dBFS (no wakeword reference)"
         range -90 0
         default -32
+        help
+            Normal recordings use the wakeword RMS and measured idle noise floor.
+            This value is only used if the wakeword reference is unavailable.
 
     config NUCLEA_SILENCE_MS
         int "Activity extension after last loud audio (ms)"
@@ -71,7 +86,7 @@ menu "Nuclea device audio"
     config NUCLEA_MIN_RECORDING_MS
         int "Base recording duration including pre-roll (ms)"
         range 1000 12000
-        default 5000
+        default 3000
 
     config NUCLEA_MAX_RECORDING_MS
         int "Maximum recording duration (ms)"
@@ -113,6 +128,66 @@ menu "Nuclea robot display"
         int "Panel vertical offset in landscape orientation"
         range 0 80
         default 0
+
+    config NUCLEA_PIEZO_ENABLED
+        bool "Read a piezo shake sensor"
+        depends on NUCLEA_DISPLAY_ENABLED && !NUCLEA_DISPLAY_ONLY_TEST
+        default y
+        help
+            Counts piezo pulses with PCNT and feeds the shake reactions.
+            On GPIO 19/20 the native USB port stops working; flash and
+            monitor through the UART port.
+
+    config NUCLEA_PIEZO_GPIO
+        int "Piezo GPIO"
+        depends on NUCLEA_PIEZO_ENABLED
+        range 0 48
+        default 1
+
+    config NUCLEA_PIEZO_PULLDOWN
+        bool "Enable internal pull-down (no external 1 Mohm resistor)"
+        depends on NUCLEA_PIEZO_ENABLED
+        default n
+
+    config NUCLEA_PIEZO_KNOCK_MODE
+        bool "Trigger on a knock pattern instead of continuous shaking"
+        depends on NUCLEA_PIEZO_ENABLED
+        default n
+        help
+            For weak wiring (series resistor plus internal pull-down) where a
+            knock yields only one or two pulses. Disable after adding a 1 Mohm
+            resistor across the piezo to use continuous shake detection.
+
+    config NUCLEA_PIEZO_KNOCKS
+        int "Knocks needed to trigger a reaction"
+        depends on NUCLEA_PIEZO_KNOCK_MODE
+        range 1 8
+        default 3
+
+    config NUCLEA_PIEZO_KNOCK_WINDOW_MS
+        int "All knocks must happen within (ms)"
+        depends on NUCLEA_PIEZO_KNOCK_MODE
+        range 300 10000
+        default 2000
+
+    config NUCLEA_PIEZO_SHAKE_BUCKETS
+        int "Consecutive 100 ms periods of shaking needed"
+        depends on NUCLEA_PIEZO_ENABLED && !NUCLEA_PIEZO_KNOCK_MODE
+        range 2 50
+        default 4
+        help
+            Shaking must last this many 100 ms periods (4 = 0.4 s) with a
+            single quiet period tolerated. Higher = less sensitive.
+
+    config NUCLEA_PIEZO_MIN_PULSES
+        int "Pulses per 100 ms period needed to count as movement"
+        depends on NUCLEA_PIEZO_ENABLED && !NUCLEA_PIEZO_KNOCK_MODE
+        range 1 200
+        default 60
+        help
+            Sparse noise at rest produces fewer pulses than this and is
+            ignored. Higher = less sensitive. Measured on the board: idle
+            interference bursts reach ~460 pulses/s, real shaking 1000-2000/s (100-200 per period).
 endmenu
 
 menu "Nuclea microphone pins"
