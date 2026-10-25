@@ -7,21 +7,6 @@ menu "Nuclea device audio"
             Request responseMode=speaker on the same device-audio POST.
             Disable to retain the browser mailbox response mode.
 
-    config NUCLEA_SPEAKER_ONLY_TEST
-        bool "Test speaker only: loop local music, skip all other devices"
-        depends on NUCLEA_SPEAKER_ENABLED && !NUCLEA_DISPLAY_ONLY_TEST
-        default n
-        help
-            Prepare main/speaker_test_data/music.pcm using tools/prepare_speaker_music.py.
-            Flash the complete firmware to replace the GIF filesystem with music.
-            Disable this option and flash again to restore the normal assistant.
-
-    config NUCLEA_SPEAKER_TEST_VOLUME_PERCENT
-        int "Speaker music test volume (percent)"
-        depends on NUCLEA_SPEAKER_ONLY_TEST
-        range 0 100
-        default 100
-
     config NUCLEA_RECORDING_SFX_ENABLED
         bool "Play local recording start/stop sound effects"
         depends on NUCLEA_SPEAKER_ENABLED

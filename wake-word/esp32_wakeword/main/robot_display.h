@@ -13,8 +13,12 @@ public:
     esp_err_t Start();
     void Wake();
     void Ready();
+    void Response();
+    // Future sensor adapter: call every 20 ms with a conditioned motion envelope.
+    void ObserveMotion(bool strong);
 private:
-    enum class Event { kWake, kReady };
+    enum class EventKind { kWake, kReady, kResponse, kMotion };
+    struct Event { EventKind kind; bool strong; int64_t timestamp; };
     static void Entry(void* context);
     static bool TransferDone(esp_lcd_panel_io_handle_t io,
                              esp_lcd_panel_io_event_data_t* event, void* context);
@@ -22,7 +26,7 @@ private:
     bool PrepareTransition();
     bool Flush(const uint16_t* pixels, bool mirror_x);
     void Run();
-    void Post(Event event);
+    void Post(EventKind kind, bool strong = false);
     QueueHandle_t events_ = nullptr;
     SemaphoreHandle_t dma_done_ = nullptr;
     esp_lcd_panel_io_handle_t io_ = nullptr;

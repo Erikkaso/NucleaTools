@@ -16,6 +16,7 @@ public:
     bool Interruptible() const { return busy_ && interruptible_.load() && !cancellation_.Cancelled(); }
     void Cancel();
     bool Playing() const { return speaker_.Playing(); }
+    bool TakeResponseStarted() { return response_started_.exchange(false) && !cancellation_.Cancelled(); }
 private:
     enum class JobKind { kUpload, kCue };
     struct Job {
@@ -33,6 +34,7 @@ private:
     QueueHandle_t results_ = nullptr;
     bool busy_ = false;
     std::atomic<bool> interruptible_{false};
+    std::atomic<bool> response_started_{false};
     UploadCancellation cancellation_;
     AudioSpeaker speaker_;
 };

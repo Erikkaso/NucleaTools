@@ -16,7 +16,6 @@
 #include "wakeword_detector.h"
 #include "wifi_station.h"
 #include "robot_display.h"
-#include "speaker_music_test.h"
 
 namespace {
 constexpr const char* kTag = "NUCLEA_WAKEWORD";
@@ -29,10 +28,6 @@ int64_t NowMs() { return esp_timer_get_time() / 1000; }
 }
 
 static void RunAssistant() {
-#ifdef CONFIG_NUCLEA_SPEAKER_ONLY_TEST
-    RunSpeakerMusicTest();
-    return;
-#endif
 #ifdef CONFIG_NUCLEA_DISPLAY_ONLY_TEST
     static RobotDisplay test_display;
     ESP_LOGW(kTag, "TESTE SOMENTE TELA: SCL=4 SDA=5 RES=6 DC=7 CS=15 BLK=3V3");
@@ -101,6 +96,7 @@ static void RunAssistant() {
     bool restart_pending = false;
 
     while (true) {
+        if (upload_worker.TakeResponseStarted() && !restart_pending) display.Response();
         RecordingCue completed_cue;
         esp_err_t cue_result;
         if (upload_worker.PollCue(&completed_cue, &cue_result)) {
@@ -244,8 +240,9 @@ static void RunAssistant() {
         max_score_since_telemetry = std::max(max_score_since_telemetry, score);
         ++inferences_since_telemetry;
         if (gate.Accept(score, now)) {
+            ESP_LOGW(kTag, "Wakeword detectada: score=%.3f pico_janela=%.3f",
+                     static_cast<double>(score), static_cast<double>(gate.RecentMaxScore()));
             gate.ResetConfirmation();
-            ESP_LOGW(kTag, "Wakeword detectada: score=%.3f", static_cast<double>(score));
             if (upload_worker.Busy()) {
                 upload_worker.Cancel();
                 restart_pending = true;

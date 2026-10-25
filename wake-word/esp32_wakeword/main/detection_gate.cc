@@ -3,18 +3,24 @@
 #include <algorithm>
 
 void DetectionGate::ResetConfirmation() {
-    std::fill_n(history_, 3, false);
+    std::fill_n(history_, 3, 0.0f);
     count_ = cursor_ = 0;
 }
 
 bool DetectionGate::Accept(float score, int64_t now_ms) {
-    history_[cursor_] = score >= kThreshold;
+    history_[cursor_] = score;
     cursor_ = (cursor_ + 1) % 3;
     count_ = std::min<uint8_t>(count_ + 1, 3);
     if (CooldownRemainingMs(now_ms) > 0) {
         return false;
     }
-    if (score < kHighConfidenceThreshold && PositiveCount() < 2) {
+    const bool normal_confirmation = score >= kThreshold && PositiveCount() >= 2;
+    uint8_t support = 0;
+    for (float previous : history_) support += previous >= kSupportThreshold;
+    // High peaks still need temporal evidence; weaker support preserves short spoken wakewords.
+    const bool supported_peak = score >= kSupportThreshold && support >= 2 &&
+                                RecentMaxScore() >= kHighConfidenceThreshold;
+    if (!normal_confirmation && !supported_peak) {
         return false;
     }
     last_detection_ms_ = now_ms;
@@ -23,10 +29,14 @@ bool DetectionGate::Accept(float score, int64_t now_ms) {
 
 uint8_t DetectionGate::PositiveCount() const {
     uint8_t positives = 0;
-    for (bool result : history_) {
-        positives += result ? 1 : 0;
+    for (float result : history_) {
+        positives += result >= kThreshold ? 1 : 0;
     }
     return positives;
+}
+
+float DetectionGate::RecentMaxScore() const {
+    return *std::max_element(history_, history_ + 3);
 }
 
 int64_t DetectionGate::CooldownRemainingMs(int64_t now_ms) const {

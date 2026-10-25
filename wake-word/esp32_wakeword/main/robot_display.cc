@@ -9,9 +9,11 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_littlefs.h"
 #include "esp_log.h"
+#include "esp_random.h"
 #include "esp_timer.h"
 #include "freertos/task.h"
 #include "sdkconfig.h"
+#include "shake_detector.h"
 
 namespace {
 constexpr const char* kTag = "ROBOT_DISPLAY";
@@ -20,6 +22,24 @@ constexpr size_t kCacheLimit = 5 * 1024 * 1024;
 constexpr const char* kSleep = "/robot/sleep.gif";
 constexpr const char* kWake = "/robot/wake.gif";
 constexpr const char* kAwake = "/robot/nuclea-blink.gif";
+constexpr const char* kSmile = "/robot/smile.gif";
+constexpr const char* kElegant = "/robot/elegant.gif";
+constexpr const char* kDizzy = "/robot/dizzy.gif";
+constexpr const char* kAngry = "/robot/angry.gif";
+constexpr const char* kCry = "/robot/cry.gif";
+const char* ClipPath(VisualClip clip) {
+    switch (clip) {
+        case VisualClip::kSleep: return kSleep;
+        case VisualClip::kSmile: return kSmile;
+        case VisualClip::kElegant: return kElegant;
+        case VisualClip::kDizzy: return kDizzy;
+        case VisualClip::kAngry: return kAngry;
+        case VisualClip::kCry: return kCry;
+        case VisualClip::kWake:
+        case VisualClip::kClose: return kWake;
+        default: return kAwake;
+    }
+}
 int64_t NowMs() { return esp_timer_get_time() / 1000; }
 }
 
@@ -43,9 +63,13 @@ esp_err_t RobotDisplay::Start() {
         }
         animation_->Close();
     }
+    for (const char* asset : {kSmile, kElegant, kDizzy, kAngry, kCry}) {
+        if (!animation_->Open(asset)) ESP_LOGW(kTag, "GIF opcional indisponivel: %s; usando blink", asset);
+        animation_->Close();
+    }
     if (!PrepareTransition()) ESP_LOGW(kTag, "Sem cache reverso: troca direta entre poses");
     ESP_RETURN_ON_ERROR(InitPanel(), kTag, "ST7789 init");
-    events_ = xQueueCreate(8, sizeof(Event));
+    events_ = xQueueCreate(16, sizeof(Event));
     if (!events_) return ESP_ERR_NO_MEM;
     if (xTaskCreatePinnedToCore(Entry, "robot_display", 6144, this, 1, nullptr, 1) != pdPASS) {
         vQueueDelete(events_);
@@ -153,12 +177,15 @@ bool RobotDisplay::Flush(const uint16_t* pixels, bool mirror_x) {
     return true;
 }
 
-void RobotDisplay::Post(Event event) {
+void RobotDisplay::Post(EventKind kind, bool strong) {
+    const Event event{kind, strong, NowMs()};
     if (events_ && xQueueSend(events_, &event, 0) != pdTRUE)
         ESP_LOGW(kTag, "Fila de eventos visuais cheia");
 }
-void RobotDisplay::Wake() { Post(Event::kWake); }
-void RobotDisplay::Ready() { Post(Event::kReady); }
+void RobotDisplay::Wake() { Post(EventKind::kWake); }
+void RobotDisplay::Ready() { Post(EventKind::kReady); }
+void RobotDisplay::Response() { Post(EventKind::kResponse); }
+void RobotDisplay::ObserveMotion(bool strong) { Post(EventKind::kMotion, strong); }
 void RobotDisplay::Entry(void* context) {
     static_cast<RobotDisplay*>(context)->Run();
     vTaskDelete(nullptr);
@@ -166,67 +193,78 @@ void RobotDisplay::Entry(void* context) {
 
 void RobotDisplay::Run() {
     VisualStateMachine state(CONFIG_NUCLEA_DISPLAY_IDLE_MS);
-    VisualState previous = VisualState::kSleeping;
+    ShakeDetector motion;
     int position = 0;
     bool transition_finished = false;
     bool loop_open = false;
     int64_t due = 0;
-    Event event;
+    Event event{};
     while (true) {
         const int64_t now = NowMs();
         if (xQueueReceive(events_, &event, pdMS_TO_TICKS(std::max<int64_t>(0, due - now))) == pdTRUE) {
-            if (event == Event::kWake) {
-                if (state.State() == VisualState::kClosing) position = std::max(0, position - 1);
-                state.Wake();
+            switch (event.kind) {
+                case EventKind::kWake: state.Wake(); break;
+                case EventKind::kReady: state.Ready(event.timestamp); break;
+                case EventKind::kResponse: state.Response(esp_random() % 100); break;
+                case EventKind::kMotion:
+                    if (motion.Observe(event.strong, event.timestamp)) {
+                        if (state.Shake(event.timestamp))
+                            ESP_LOGI(kTag, "Chacoalho confirmado; etapa=%u", state.ShakeCount());
+                        else ESP_LOGW(kTag, "Fila de reacoes cheia; chacoalho ignorado");
+                    }
+                    break;
             }
-            else state.Ready(NowMs());
-        }
-        if (state.State() == previous && transition_finished && NowMs() >= due) {
-            state.TransitionComplete(NowMs());
-            transition_finished = false;
-        }
-        state.Tick(NowMs());
-        const VisualState current = state.State();
-        if (current != previous) {
-            transition_finished = false;
-            animation_->Close();
-            loop_open = false;
-            if (current == VisualState::kWaking && previous != VisualState::kClosing) position = frame_count_ - 1;
-            if (current == VisualState::kClosing) position = 0;
-            due = 0;
-            ESP_LOGI(kTag, "Estado visual: %d", static_cast<int>(current));
-            previous = current;
         }
         if (NowMs() < due) continue;
+        if (transition_finished) {
+            state.CycleComplete(NowMs());
+            transition_finished = false;
+        }
+        const VisualClip clip = state.Clip();
         const int64_t started = NowMs();
         int delay = 40;
         const uint16_t* pixels = nullptr;
-        if (current == VisualState::kWaking || current == VisualState::kClosing) {
+        if (clip == VisualClip::kWake || clip == VisualClip::kClose) {
             if (!transition_) {
-                state.TransitionComplete(started);
+                state.CycleComplete(started);
                 due = started;
                 continue;
+            }
+            if (!loop_open) {
+                position = clip == VisualClip::kWake ? frame_count_ - 1 : 0;
+                loop_open = true;
+                ESP_LOGI(kTag, "Animacao: %s (%s)", kWake, clip == VisualClip::kWake ? "abrindo" : "fechando");
             }
             position = std::clamp(position, 0, frame_count_ - 1);
             pixels = transition_ + position * GifAnimation::kPixels;
             delay = delays_[position];
-            if (current == VisualState::kWaking) transition_finished = position-- == 0;
+            if (clip == VisualClip::kWake) transition_finished = position-- == 0;
             else transition_finished = position++ == frame_count_ - 1;
+            if (transition_finished) loop_open = false;
         } else {
-            const char* path = current == VisualState::kSleeping ? kSleep : kAwake;
-            if (!loop_open) loop_open = animation_->Open(path);
+            const char* path = ClipPath(clip);
+            if (!loop_open) {
+                loop_open = animation_->Open(path);
+                if (!loop_open && clip != VisualClip::kSleep && clip != VisualClip::kBlink) {
+                    ESP_LOGW(kTag, "GIF opcional invalido: %s; usando blink", path);
+                    loop_open = animation_->Open(kAwake);
+                }
+                ESP_LOGI(kTag, "Animacao: %s", path);
+            }
             if (!loop_open) { ESP_LOGE(kTag, "Falha abrindo %s", path); return; }
             if (!animation_->Next(&delay)) {
                 animation_->Close();
                 loop_open = false;
-                due = started + 10;
+                state.CycleComplete(started);
+                due = started;
                 continue;
             }
             pixels = animation_->Canvas();
         }
-        if (!Flush(pixels, current == VisualState::kSleeping)) {
+        if (!Flush(pixels, clip == VisualClip::kSleep)) {
             ESP_LOGE(kTag, "Transferencia LCD falhou; audio continua ativo"); return;
         }
-        due = std::max(started + std::max(delay, 10), NowMs() + 10);
+        // Hold the completed image for its GIF delay, including the final frame.
+        due = NowMs() + std::max(delay, 10);
     }
 }

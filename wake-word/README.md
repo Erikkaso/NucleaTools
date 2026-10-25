@@ -6,27 +6,27 @@ TensorFlow Lite INT8 no proprio microcontrolador.
 
 ## Modelo ativo
 
-- Variante: `v2g_replay_hardneg`
+- Variante: `multispeaker_v7_reviewed` (confirmada pelos bytes embutidos no firmware)
 - Entrada: `1 x 13 x 49 x 1`, MFCC INT8
 - Janela: 1 segundo
 - Avanco nominal entre janelas: 240 ms; a cadencia real depende do tempo de inferencia
-- Threshold normal: `0.85`
-- Threshold de alta confianca: `0.98`
-- Confirmacao: 2 positivos nas ultimas 3 inferencias, ou 1 de alta confianca
+- Threshold no firmware: `0.93359375` (mantido no ajuste de 2026-10-25)
+- Confirmacao normal: 2 scores >=0.93359375 nas ultimas 3 inferencias, incluindo a atual
+- Alternativa para fala curta: pico >=0.98 mais outra janela >=0.5, com a atual >=0.5
+- Um score alto isolado, mesmo `0.996`, nao ativa sozinho
 - Cooldown: 2 segundos
 
 Artefatos atuais:
 
 ```text
-output/output_noise_robust_v2g_replay_hardneg/
-output/output_noise_robust_v2g_replay_hardneg_int8/
+output/output_multispeaker_v7_reviewed/
 esp32_wakeword/main/model/
 ```
 
 SHA-256 do TFLite ativo:
 
 ```text
-AF197A126D607AEF903068A665BCF766281A739E514F377A106A44AAC17EEC3E
+6B4321B5B38A4FD793080B0A3889A0AEFF7BDA30DBA1ACD31063689266728AAF
 ```
 
 ## Estrutura
@@ -37,7 +37,7 @@ train_models/        Treinamento e avaliacao
 tools/               Preparacao do dataset e replay continuo
 output/              Artefatos do modelo atual
 esp32_wakeword/      Firmware ESP-IDF ativo
-voz/                 Gravacoes-fonte preservadas
+dataset/voz/         Gravacoes-fonte preservadas
 convert_int8.py      Conversao e avaliacao FULL INT8
 ```
 
@@ -97,11 +97,79 @@ Teste essencial desta etapa:
 python -m unittest discover -s tools -p test_augment_reviewed_candidates.py
 ```
 
+## Gerar negativos sinteticos de fala
+
+O gerador `tools/generate_synthetic_negatives.py` usa cinco vozes publicas
+do Edge TTS: Antonio, Francisca e Thalita (pt-BR), Duarte e Raquel (pt-PT).
+Sao 16 textos em tres velocidades (-15%, normal, +15%): palavras isoladas,
+frases com `corno`, `problema`, `Singapura`, `irma` e confusores proximos.
+Nenhum texto negativo pode conter a palavra completa `Nuclea`, inclusive
+com acento. Apenas esses textos publicos sao enviados ao servico TTS.
+
+Na pasta `wake-word`, com FFmpeg no PATH:
+
+```powershell
+python -m pip install -r requirements-tts.txt
+python tools/generate_synthetic_negatives.py
+```
+
+Para concluir uma geracao interrompida, use `--resume`. O comando confere
+os hashes e nao substitui fontes concluidas ou um corpus existente diferente.
+O Edge TTS precisa de Internet; sua disponibilidade nao e garantida.
+
+- `dataset/synthetic_negatives_v1/sources/`: falas completas em WAV mono
+  PCM16, 16 kHz, sem cortar palavras, com contexto silencioso curto.
+- `dataset/synthetic_negatives_v1/manifest.json`: texto, voz, velocidade,
+  origem, hashes, grupo e parametros. Label 0, somente treino.
+- `dataset/background_hard_negative/generated/synthetic_confusers_v1/`:
+  ate tres janelas energeticas de 1 s por fonte, com versoes limpa,
+  -9 dB e mistura de ambiente INMP441 a 18 dB de SNR, sem clipping digital.
+  O silencio nao vira exemplo principal; falas completas sao preservadas.
+
+Os treinadores existentes leem as janelas pela pasta de hard negatives.
+Variacoes da mesma voz/texto pertencem ao mesmo grupo e nunca devem ser
+distribuidas entre treino, validacao e teste. Os sinteticos nao substituem
+negativos reais captados no INMP441; a pronuncia deve ser ouvida antes de um
+novo treinamento. Gerar audios nao retreina nem altera os pesos do TFLite.
+
+O ajuste de sensibilidade atual mantem o threshold normal 0.93359375 e exige
+evidencia temporal nas ultimas tres janelas, incluindo a atual. Duas janelas
+acima desse limiar confirmam normalmente. Para preservar palavras curtas,
+um pico >=0.98 tambem pode ser confirmado por outra janela >=0.5, desde que
+a atual seja >=0.5. Um pico isolado nao ativa sozinho. Os limiares sao iguais
+durante espera, envio e reproducao. A referencia Python le os limiares do
+header C++, evitando divergencia entre os testes e o firmware.
+
+Para comparar as duas regras com o INT8 realmente embutido no firmware:
+
+```powershell
+python tools/evaluate_synthetic_negatives.py
+```
+
+O relatorio fica em `output/synthetic_negatives_v1/gate_diagnostic.json`.
+Inclui as fontes sinteticas e uma amostra pequena de positivos reais, sem
+Thayza. E um diagnostico de regressao, nao um teste independente de acuracia;
+nao simula a caixa de som, o ambiente ou o cancelamento acustico de eco.
+
+Diagnostico de 2026-10-25, sem retreinar os pesos:
+
+| Fontes com acionamento | Regra anterior | Regra atual |
+| --- | --- | --- |
+| Negativos sinteticos (240 fontes) | 51 | 45 |
+| Positivos amostrados (42 fontes) | 34 | 33 |
+
+Exigir duas janelas >=0.93359375 sem a alternativa de apoio reduzia os
+negativos para 30, mas reconhecia apenas 22 positivos; essa regra mais
+agressiva foi descartada. O ajuste atual e moderado e nao elimina as
+confusoes: `corno` e `irma` ainda acionaram em 4 de 45 fontes cada. Os novos
+negativos estao preparados para um proximo treinamento, nao incorporados
+aos pesos atuais. Nao use esses numeros como acuracia de producao.
+
 ## Treinar o modelo
 
 ### Treinamento multispeaker v3
 
-**Experimental, nao promovido ao firmware.** Os candidatos treinados ainda
+O v7 e o modelo atualmente embutido no firmware. Os candidatos treinados ainda
 apresentam falsos acionamentos em ruido/conversas. Veja o
 [resultado v7 com recortes revisados](output/RESULTADO_TREINO_V7.md), o
 [resultado v6 com parametros sorteados](output/RESULTADO_TREINO_V6.md), o
@@ -330,6 +398,9 @@ output/output_noise_robust_v2g_replay_hardneg/
 
 ## Converter para INT8
 
+O treinador multispeaker exporta seu proprio `nuclea_int8.tflite`. O exemplo
+abaixo e do pipeline legado v2g, nao do modelo atualmente promovido.
+
 ```powershell
 python convert_int8.py `
   --model output\output_noise_robust_v2g_replay_hardneg\nuclea_final.keras `
@@ -345,7 +416,7 @@ continuos e os falsos positivos em conversas e ruido ambiente.
 
 ```powershell
 Copy-Item `
-  output\output_noise_robust_v2g_replay_hardneg_int8\nuclea_int8.tflite `
+  output\output_multispeaker_v7_reviewed\nuclea_int8.tflite `
   esp32_wakeword\main\model\nuclea_int8.tflite -Force
 
 python esp32_wakeword\tools\tflite_to_cc.py `
@@ -567,40 +638,21 @@ A pinagem do microfone deve aparecer no log como `BCLK=41 WS=42 SD=40`;
 o amplificador deve indicar `I2S1 TX BCLK=14 WS=21 DIN=13`, seguido do volume configurado.
 Os testes de software e a compilacao nao substituem a validacao do som na placa.
 
-## Teste isolado da caixa de som: musica em loop
+## Remocao da musica de teste
 
-O teste fica desabilitado no `sdkconfig` atual. Para usa-lo, habilite
-`NUCLEA_SPEAKER_ONLY_TEST` em `menuconfig`; o volume de teste padrao e **100%**.
-Com o teste habilitado, ao ligar, o ESP toca a musica inteira em loop,
-sem iniciar Wi-Fi, visor, microfone ou wakeword. O volume do modo normal
-continua independente (`NUCLEA_SPEAKER_VOLUME_PERCENT`).
-
-Conecte apenas o MAX98357A: LRC em GPIO21, BCLK em GPIO14, DIN em GPIO13,
-SD em 3V3, GND em GND e VIN em 5V; GAIN pode ficar aberto. Ligue o alto-falante
-somente entre SPK+ e SPK-, nunca entre uma saida e GND. Desligue a alimentacao
-antes de alterar fios. O USB do ESP pode limitar a potencia e causar distorcao
-ou reinicializacao no volume maximo. Uma fonte regulada de 5V adequada pode
-alimentar apenas o VIN do MAX, mantendo GND comum e sem unir dois positivos de 5V.
-
-Para preparar e gravar, em `wake-word/esp32_wakeword`, com FFmpeg no PATH
-e terminal ESP-IDF habilitado:
+O modo de teste musical e seu PCM foram removidos. A compilacao normal com
+visor habilitado gera uma imagem LittleFS contendo somente os oito GIFs.
+Execute o flash completo, nao apenas `app-flash`, para substituir tambem a
+particao de arquivos e remover a musica da memoria acessivel do ESP:
 
 ```powershell
-python tools/prepare_speaker_music.py
+cd esp32_wakeword
 idf.py -B build-speaker -p COM9 build flash monitor
 ```
 
-O conversor usa o unico MP3 na raiz de NucleaTools; para outro caminho,
-use `--input "caminho/musica.mp3"`. Preserva o original e converte o canal
-esquerdo completo em PCM16 mono 24 kHz. O PCM gerado e ignorado pelo Git.
-O ESP le pequenos blocos da flash, sem carregar a musica inteira na RAM.
-
-Este teste substitui os GIFs na particao de arquivos pela musica, sem apagar
-as credenciais Wi-Fi na NVS. Para voltar ao assistente, desmarque
-`Test speaker only` em `idf.py -B build-speaker menuconfig` e execute novamente
-o comando completo `build flash monitor`: isso tambem restaura os GIFs.
-Nao use `erase-flash`. Para reduzir o volume do teste, altere
-`Speaker music test volume (percent)` no mesmo menu.
+Substitua `COM9` pela porta atual. Isso preserva as credenciais na NVS.
+Nao use `erase-flash`. O agente nao atualiza a memoria fisica da placa
+apenas alterando ou compilando os arquivos no computador.
 
 ## Compilar e gravar
 
@@ -752,20 +804,20 @@ para voltar ao comportamento anterior sem sons.
 - O volume segue `NUCLEA_SPEAKER_VOLUME_PERCENT`, sem alterar o valor configurado.
   O padrao atual e 100%, o maximo digital sem amplificacao adicional.
 
-Os arquivos `main/assets/onsfx.pcm` e `offsfx.pcm` sao embutidos no firmware
+Os arquivos `main/assets/recording/onsfx.pcm` e `offsfx.pcm` sao embutidos no firmware
 como PCM16 little-endian, mono, 24 kHz, sem cabecalho WAV. Nao precisam do
 gateway, TTS, rede, MP3 decoder ou FFmpeg no ESP. Os originais `onsfx.mp4` e
-`offsfx.mp4` da raiz foram preservados; sao fontes de audio reconhecidas pelo FFmpeg.
+`offsfx.mp4` ficam em `main/assets/recording/source/`, sem alteracoes.
 Somente o silencio inicial/final do `onsfx` foi removido.
 O `offsfx` recebeu +6,63 dB para aproximar seu nivel RMS do `onsfx`, sem
 recortar sua duracao nem saturar as amostras PCM. Isso nao garante o mesmo
 volume percebido, pois os efeitos possuem timbres diferentes.
 
-Para regenerar a partir da raiz de `NucleaTools` (FFmpeg instalado):
+Para regenerar em `esp32_wakeword/main/assets/recording` (FFmpeg instalado):
 
 ```powershell
-ffmpeg -y -i onsfx.mp4 -map 0:a:0 -af "atrim=start=0.53:end=1.38,asetpts=PTS-STARTPTS" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le wake-word/esp32_wakeword/main/assets/onsfx.pcm
-ffmpeg -y -i offsfx.mp4 -map 0:a:0 -af "volume=6.63dB" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le wake-word/esp32_wakeword/main/assets/offsfx.pcm
+ffmpeg -y -i source/onsfx.mp4 -map 0:a:0 -af "atrim=start=0.53:end=1.38,asetpts=PTS-STARTPTS" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le onsfx.pcm
+ffmpeg -y -i source/offsfx.mp4 -map 0:a:0 -af "volume=6.63dB" -ac 1 -ar 24000 -c:a pcm_s16le -f s16le offsfx.pcm
 ```
 
 O recorte acima corresponde ao `onsfx` fornecido; ajuste se trocar o arquivo.
@@ -785,10 +837,12 @@ dos originais. Para gravar os efeitos, basta recompilar e fazer flash normalment
 | GND | GND |
 
 O firmware ESP-IDF utiliza os arquivos existentes em
-`nuclea_gif_player_fixed/data/`: `sleep.gif`, `wake.gif` e `nuclea-blink.gif`.
+`nuclea_gif_player_fixed/data/`: `sleep.gif`, `wake.gif`, `nuclea-blink.gif`,
+`smile.gif`, `elegant.gif`, `dizzy.gif`, `angry.gif` e `cry.gif`.
 Nao e preciso gravar o sketch Arduino nem executar o uploader LittleFS
 separadamente. A imagem LittleFS e gerada durante o build e incluida no flash.
-Nao altere a pasta dos GIFs sem manter os tres nomes e a resolucao 280x240.
+Mantenha os nomes e a resolucao 280x240. Os tres GIFs originais sao obrigatorios;
+uma expressao opcional ausente/invalida usa blink, sem desativar todo o visor.
 
 Por padrao, o visor mostra o robo dormindo desde a inicializacao, inclusive
 durante a configuracao Wi-Fi. Isso e apenas um estado visual, nao deep sleep.
@@ -799,9 +853,37 @@ Uma wakeword aceita inicia a gravacao e envia o evento de abertura dos olhos.
 Os 30 frames de `wake.gif` sao decodificados no boot e guardados completos em
 PSRAM (4.032.000 bytes), sem pular frames nem criar um GIF invertido na flash.
 Depois, `nuclea-blink.gif` permanece em loop durante a gravacao e o HTTP.
+Quando o primeiro pacote PCM valido da resposta TTS chega, ocorre um sorteio:
+**45% blink, 30% smile e 25% elegant**. A expressao escolhida toca um ciclo
+inteiro e retorna ao blink. Onsfx, offsfx, pings e erros sem audio nao geram
+esse sorteio. Um pacote aceito indica inicio de recebimento, nao garante
+que toda a resposta terminara sem erro.
 O tempo de inatividade comeca ao concluir ou falhar o envio: por padrao,
 30 segundos. A transicao normal fecha os olhos e retorna a `sleep.gif`.
-Uma nova deteccao pode interromper o fechamento.
+Todas as trocas aguardam o fim do ciclo atual e a duracao do ultimo frame,
+inclusive acordar, dormir e as novas expressoes. Uma nova deteccao durante o
+fechamento agenda a reabertura apos ele terminar. Isso adia somente o visual:
+captura, cancelamento de resposta e gravacao nao aguardam o GIF.
+
+### Reacoes a chacoalhos (preparado para o futuro piezo)
+
+A API `RobotDisplay::ObserveMotion(bool strong)` esta pronta para receber
+amostras de uma envoltoria de movimento ja filtrada, idealmente a cada 20 ms:
+
+- Mais de 1 segundo de movimento forte continuo confirma um evento.
+- Pulsos curtos ou lacunas de amostragem maiores que 100 ms nao qualificam.
+- Movimento mantido gera somente um evento; exige 250 ms de quietude para rearmar.
+- Primeiro evento: dizzy e depois blink.
+- Segundo: dizzy, angry e depois blink.
+- Terceiro: dizzy, cry e depois blink; reinicia a contagem.
+- Dois minutos sem novo evento confirmado reiniciam a sequencia no proximo evento.
+
+As reacoes aguardam o fim do GIF atual e sao enfileiradas com memoria limitada.
+Eventos excedentes sao descartados com aviso; nada corta uma animacao no meio.
+Ainda nao ha leitura fisica do piezo nem GPIO reservado. Quando o modulo for
+definido, sera necessario implementar e calibrar a entrada e sua envoltoria.
+Nao conecte um disco piezo diretamente ao ESP: sua tensao precisa ser
+limitada/condicionada para a faixa da entrada escolhida.
 
 No menu `Nuclea robot display`, ajuste o tempo, clock SPI e offsets do painel,
 ou desabilite o visor. O padrao e SPI 40 MHz, orientacao horizontal e offsets
@@ -837,7 +919,9 @@ python -m unittest tools.test_capture_stack_budget
 idf.py -p COM9 flash monitor
 ```
 
-O build tambem verifica tres cenarios da maquina de estados por `static_assert`.
+O build verifica a maquina visual por `static_assert`: pesos do sorteio,
+trocas apenas entre ciclos, sequencia/timeout dos chacoalhos, fila limitada,
+retorno ao blink, duracao minima, rearme e falhas de amostragem do sensor.
 O controle de gravacao verifica cinco cenarios adicionais por `static_assert`:
 silencio com WAV de 5 s, renovacao da margem de 1,5 s, volume continuo limitado
 a 12 s, silencio inicial sem encerramento antecipado e buffer cheio sem escrita.
